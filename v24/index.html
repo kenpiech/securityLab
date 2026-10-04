@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="DESIGN PROTOTYPE for a class assignment. securityLab, its API, packages, endpoints, and prices are placeholders and do not exist. Do not sign up, install, or call anything shown here.">
+  <title>securityLab — v24</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --night: #0a0c11;
+      --night2: #11141b;
+      --nline: #222631;
+      --ntext: #ece9e1;
+      --nmute: #8a8f9b;
+      --paper: #f4f1ea;
+      --ink: #121212;
+      --body: #4a4842;
+      --pline: #dcd7cc;
+      --accent: #ff4b2b;
+      --green: #5fd39a;
+      --sans: "Geist", system-ui, -apple-system, Segoe UI, sans-serif;
+      --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+    body { background: var(--night); color: var(--ntext); font: 400 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+    .proto { background: #000; color: #9a9a94; font: 12px var(--mono); border-bottom: 1px solid var(--nline); }
+    .proto .in { display: flex; justify-content: space-between; gap: 12px; padding: 6px 28px; }
+    .proto a { white-space: nowrap; }
+    .proto a:hover { color: #fff; }
+    .ph-short { display: none; }
+
+    header { position: sticky; top: 0; z-index: 10; background: rgba(10,12,17,.82); backdrop-filter: blur(12px); border-bottom: 1px solid var(--nline); }
+    header .in { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 28px; }
+    .logo { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 17px; letter-spacing: -.01em; }
+    .logo svg { width: 22px; height: 22px; }
+    .logo b { color: var(--accent); font-weight: 700; }
+    .nav { display: flex; gap: 30px; font-size: 14px; color: var(--nmute); }
+    .nav a:hover { color: var(--ntext); }
+    .btn { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 18px; border-radius: 999px; font: 500 14px var(--sans); white-space: nowrap; transition: transform .15s, background .15s; }
+    .btn.hot { background: var(--accent); color: #fff; }
+    .btn.hot:hover { background: #ff6446; transform: translateY(-1px); }
+    .btn.ghost { border: 1px solid var(--nline); color: var(--ntext); }
+    .btn.ghost:hover { border-color: #3a3f4c; }
+    .btn.big { height: 50px; padding: 0 24px; font-size: 15px; }
+    .cta-short { display: none; }
+
+    /* ---------- hero ---------- */
+    .hero { padding: 104px 28px 72px; max-width: 1280px; margin: 0 auto; position: relative; }
+    .eyebrow { font: 500 13px var(--mono); color: var(--nmute); display: flex; align-items: center; gap: 10px; margin-bottom: 26px; }
+    .eyebrow .pill { color: #f0c766; border: 1px solid #4a3c17; background: #221b0b; border-radius: 999px; padding: 1px 9px; font-size: 11.5px; }
+    .hero h1 { margin: 0; font-weight: 700; font-size: clamp(54px, 9.4vw, 148px); line-height: .9; letter-spacing: -.055em; }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero .sub { max-width: 36em; margin: 30px 0 36px; font-size: 20px; color: #bdb9b0; }
+    .hero .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero .scrollcue { margin-top: 64px; display: flex; align-items: center; gap: 14px; font: 12px var(--mono); color: var(--nmute); }
+    .hero .scrollcue i { width: 1px; height: 36px; background: linear-gradient(var(--accent), transparent); display: inline-block; }
+
+    /* ---------- story ---------- */
+    .story { position: relative; border-top: 1px solid var(--nline); }
+    .story .grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); max-width: 1280px; margin: 0 auto; }
+    .steps { padding: 0 28px; }
+    .step { min-height: 88vh; display: flex; flex-direction: column; justify-content: center; padding: 40px 0; opacity: .32; transition: opacity .35s; }
+    .step.on { opacity: 1; }
+    .step .t { font: 600 13px var(--mono); color: var(--accent); margin-bottom: 14px; letter-spacing: .02em; }
+    .step h3 { margin: 0 0 12px; font-size: clamp(28px, 3vw, 40px); line-height: 1.05; letter-spacing: -.035em; font-weight: 650; }
+    .step p { margin: 0; color: #b5b1a8; font-size: 17px; max-width: 26em; }
+    .step .mobile-card { display: none; }
+
+    .stagewrap { position: relative; }
+    .stage { position: sticky; top: 64px; height: calc(100vh - 64px); padding: 36px 28px 36px 12px; display: flex; flex-direction: column; justify-content: center; }
+    .stagebox { border: 1px solid var(--nline); border-radius: 22px; background:
+        radial-gradient(1200px 400px at 70% -10%, rgba(255,75,43,.10), transparent 60%),
+        radial-gradient(800px 400px at -10% 110%, rgba(95,211,154,.05), transparent 60%),
+        var(--night2);
+      padding: 26px 28px 28px; box-shadow: 0 40px 80px -40px rgba(0,0,0,.8); }
+    .stagebar { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 26px; }
+    .clock { font: 600 clamp(30px, 3.4vw, 46px)/1 var(--mono); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+    .clock small { font-size: .42em; color: var(--nmute); letter-spacing: 0; margin-left: 10px; font-weight: 500; }
+    .stepno { font: 12px var(--mono); color: var(--nmute); }
+    .stepno b { color: var(--ntext); font-weight: 500; }
+
+    .flow { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); align-items: start; padding: 6px 0 22px; }
+    .flow .rail { position: absolute; left: 12.5%; right: 12.5%; top: 34px; height: 1px; background: var(--nline); }
+    .flow .rail i { position: absolute; left: 0; top: 0; height: 1px; width: 0; background: var(--accent); transition: width .6s cubic-bezier(.2,.7,.2,1); }
+    .node { position: relative; text-align: center; display: flex; flex-direction: column; align-items: center; z-index: 1; }
+    .node .ic { width: 68px; height: 68px; border-radius: 50%; display: grid; place-items: center; background: var(--night2); border: 1px solid var(--nline); color: #6f7480; transition: color .35s, border-color .35s, background .35s; }
+    .node .ic svg { width: 32px; height: 32px; }
+    .node b { margin-top: 12px; font-size: 13.5px; font-weight: 600; color: #6f7480; transition: color .35s; }
+    .node span { font-size: 12px; color: #5d626d; margin-top: 2px; line-height: 1.35; max-width: 12em; transition: color .35s; }
+    .node.lit .ic { color: var(--ntext); border-color: #3a3f4c; }
+    .node.lit b { color: var(--ntext); }
+    .node.lit span { color: var(--nmute); }
+    .node.hot .ic { color: var(--accent); border-color: rgba(255,75,43,.55); background: rgba(255,75,43,.08); }
+    .node.hot b { color: var(--accent); }
+    .node .tag { position: absolute; top: -10px; right: calc(50% - 46px); font: 600 10px var(--mono); padding: 2px 7px; border-radius: 999px; opacity: 0; transform: translateY(4px); transition: opacity .3s, transform .3s; white-space: nowrap; }
+    .node .tag.show { opacity: 1; transform: none; }
+    .tag.red { background: var(--accent); color: #fff; }
+    .tag.grn { background: var(--green); color: #07140d; }
+    .tag.gry { background: #2a2e39; color: #b5b1a8; }
+    .node.dim { opacity: .45; }
+    .node.cur .ic { box-shadow: 0 0 0 1px var(--accent), 0 0 0 7px rgba(255,75,43,.14), 0 0 26px rgba(255,75,43,.35); transition: box-shadow .35s; }
+    .node.cur.ok .ic { color: var(--green); background: rgba(95,211,154,.07); box-shadow: 0 0 0 1px var(--green), 0 0 0 7px rgba(95,211,154,.14), 0 0 26px rgba(95,211,154,.3); }
+
+    .wa { display: flex; justify-content: flex-end; margin: -6px 0 14px; }
+    .wa span { font: 500 12px var(--mono); color: #5d626d; border: 1px dashed var(--nline); border-radius: 999px; padding: 4px 12px; transition: all .35s; }
+    .wa span.lit { color: var(--accent); border-color: var(--accent); background: rgba(255,75,43,.08); }
+
+    .card { border: 1px solid var(--nline); border-radius: 14px; background: #07090d; min-height: 220px; overflow: hidden; }
+    .card .h { display: flex; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--nline); font: 12px var(--mono); color: var(--nmute); }
+    .card .h b { font-weight: 500; color: var(--green); }
+    .card .h b.r { color: var(--accent); }
+    .card pre { margin: 0; padding: 16px 18px 18px; font: 13px/1.75 var(--mono); color: #e3e0d8; white-space: pre-wrap; word-break: break-word; }
+    .cbody.in { animation: cin .28s ease both; }
+    @keyframes cin { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .c1 { color: #6f7480; } .c2 { color: #ffb38a; } .c3 { color: #9ecbff; } .c4 { color: #ff7b72; } .c5 { color: #7ee2a8; } .ph { color: #e8735a; }
+
+    /* ---------- light sections ---------- */
+    .paper { background: var(--paper); color: var(--ink); }
+    .paper .wrap, .nightsec .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+    .sec { padding: 112px 0; }
+    .kicker { font: 500 13px var(--mono); color: var(--accent); margin-bottom: 14px; }
+    .paper h2, .nightsec h2 { margin: 0 0 16px; font-size: clamp(36px, 4.6vw, 64px); line-height: .98; letter-spacing: -.045em; font-weight: 700; max-width: 14em; }
+    .paper p { color: var(--body); }
+    .lede { font-size: 19px; max-width: 34em; margin: 0; }
+    .integ { display: grid; grid-template-columns: 1fr 1.15fr; gap: 64px; align-items: center; }
+    .integ ul { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 12px; }
+    .integ li { display: grid; grid-template-columns: 28px 1fr; font-size: 16px; color: var(--body); }
+    .integ li::before { content: "→"; color: var(--accent); font-weight: 600; }
+    .integ li code { font: 13.5px var(--mono); background: #e9e4d8; padding: 1px 6px; border-radius: 5px; color: var(--ink); }
+    .codebox { background: var(--night); border-radius: 18px; overflow: hidden; box-shadow: 0 40px 70px -35px rgba(0,0,0,.45); }
+    .codebox .tabs { display: flex; gap: 4px; padding: 10px 12px 0; border-bottom: 1px solid var(--nline); }
+    .codebox .tabs button { all: unset; cursor: pointer; font: 500 13px var(--sans); color: var(--nmute); padding: 8px 12px 10px; border-bottom: 2px solid transparent; }
+    .codebox .tabs button[aria-selected="true"] { color: #fff; border-bottom-color: var(--accent); }
+    .codebox pre { margin: 0; padding: 20px 22px 24px; font: 13px/1.75 var(--mono); color: #e3e0d8; overflow-x: auto; min-height: 260px; }
+
+    .tri { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 0; margin-top: 56px; border-top: 2px solid var(--ink); }
+    .tri > div { padding: 28px 28px 8px 0; }
+    .tri > div + div { padding-left: 28px; border-left: 1px solid var(--pline); }
+    .tri h3 { margin: 0 0 6px; font-size: 13px; font-family: var(--mono); font-weight: 500; color: #8a857a; letter-spacing: .02em; text-transform: uppercase; }
+    .big { font-weight: 700; font-size: 64px; letter-spacing: -.05em; line-height: 1; margin: 10px 0 6px; display: flex; align-items: center; flex-wrap: wrap; gap: 4px 0; }
+    .ph-tag { display: inline-block; font: 500 11px/1.4 ui-monospace, Menlo, monospace; letter-spacing: .04em; text-transform: uppercase; padding: 2px 7px; border: 1px dashed currentColor; border-radius: 4px; opacity: .75; vertical-align: middle; margin-left: 12px; white-space: nowrap; }
+    .tri .note { font-size: 15px; color: var(--body); margin: 0 0 14px; }
+    .tri ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; font-size: 15px; color: var(--body); }
+    .tri ul li::before { content: "✓"; color: var(--accent); font-weight: 700; margin-right: 10px; }
+    .mods { display: grid; gap: 0; }
+    .mods div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--pline); }
+    .mods div:first-child { padding-top: 4px; }
+    .mods code { font: 600 15px var(--mono); }
+    .mods small { display: block; font-size: 13.5px; color: var(--body); margin-top: 2px; }
+    .st { font: 500 11px var(--mono); padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+    .st.beta { background: #fde5dd; color: #b8361a; }
+    .st.plan { border: 1px solid var(--pline); color: #8a857a; }
+
+    /* ---------- night sections ---------- */
+    .nightsec { background: var(--night); }
+    .agents { display: grid; grid-template-columns: 1fr 1.15fr; gap: 64px; align-items: start; }
+    .agents p { color: #b5b1a8; font-size: 17px; }
+    .prompt { border: 1px solid var(--nline); border-radius: 16px; background: var(--night2); overflow: hidden; }
+    .prompt .h { display: flex; justify-content: space-between; align-items: center; padding: 11px 16px; border-bottom: 1px solid var(--nline); font: 500 12px var(--mono); color: var(--nmute); }
+    .prompt .h button { all: unset; cursor: pointer; color: var(--accent); font: 500 12px var(--sans); }
+    .prompt p { margin: 0; padding: 18px; font: 13px/1.75 var(--mono); color: var(--ntext); }
+    .prompt .tools { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 18px 16px; }
+    .prompt .tools span { font: 11.5px var(--mono); color: var(--nmute); border: 1px solid var(--nline); border-radius: 6px; padding: 2px 8px; }
+    .facts { margin-top: 26px; display: grid; gap: 0; border-top: 1px solid var(--nline); }
+    .facts div { display: grid; grid-template-columns: 130px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--nline); font-size: 14.5px; }
+    .facts dt { font: 12px var(--mono); color: var(--nmute); padding-top: 2px; }
+    .facts dd { margin: 0; color: var(--ntext); }
+    .facts code { font: 13px var(--mono); }
+
+    .final { text-align: center; padding: 140px 28px 120px; border-top: 1px solid var(--nline); background: radial-gradient(900px 380px at 50% 0%, rgba(255,75,43,.16), transparent 70%); }
+    .final .ms { font: 700 clamp(80px, 14vw, 200px)/.85 var(--sans); letter-spacing: -.06em; }
+    .final .ms em { font-style: normal; color: var(--accent); }
+    .final p { color: #b5b1a8; font-size: 19px; max-width: 30em; margin: 26px auto 34px; }
+    .finalcta { display: flex; justify-content: center; }
+    .final .mail { display: block; margin-top: 16px; font: 12.5px var(--mono); color: var(--nmute); }
+    .final .mail .ph-tag { color: var(--nmute); }
+
+    footer { border-top: 1px solid var(--nline); padding: 28px; font-size: 13.5px; color: var(--nmute); }
+    footer .in { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    footer a { margin-left: 18px; }
+    footer a:hover { color: var(--ntext); }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+
+    @media (max-width: 960px) {
+      .proto .in, header .in { padding-left: 16px; padding-right: 16px; }
+      .nav { display: none; }
+      .hero { padding: 64px 16px 48px; }
+      .story .grid { grid-template-columns: 1fr; }
+      .stagewrap { display: none; }
+      .steps { padding: 0 16px; }
+      .step { min-height: 0; opacity: 1; padding: 40px 0; border-bottom: 1px solid var(--nline); }
+      .step:last-child { border-bottom: 0; }
+      .step .mobile-card { display: block; margin-top: 20px; }
+      .paper .wrap, .nightsec .wrap { padding: 0 16px; }
+      .sec { padding: 80px 0; }
+      .integ, .agents { grid-template-columns: 1fr; gap: 40px; }
+      .tri { grid-template-columns: 1fr; }
+      .tri > div, .tri > div + div { padding: 24px 0; border-left: 0; border-bottom: 1px solid var(--pline); }
+      .final { padding: 96px 16px 88px; }
+      footer { padding: 24px 16px; }
+      footer a { margin: 0 16px 0 0; }
+    }
+    @media (max-width: 600px) {
+      .ph-long { display: none; } .ph-short { display: inline; }
+      .cta-long { display: none; } .cta-short { display: inline; }
+      .facts div { grid-template-columns: 1fr; gap: 2px; }
+      .big { font-size: 52px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="proto"><div class="in"><a href="/">← Gallery</a><span><span class="ph-long">Design prototype · API, packages &amp; prices are placeholders · </span><span class="ph-short">Prototype · placeholders · </span>v24</span></div></div>
+
+  <header>
+    <div class="in">
+      <div class="logo"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.2" fill="#ff4b2b"/></svg><span>security<b>Lab</b></span></div>
+      <nav class="nav"><a href="#story">How it works</a><a href="#integrate">Integrate</a><a href="#pricing">Pricing</a><a href="#agents">For agents</a></nav>
+      <a class="btn hot" href="#access"><span class="cta-long">Request early access</span><span class="cta-short">Early access</span></a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">whereami <span class="pill">Private beta</span></div>
+    <h1>You have<br><em>12</em> milliseconds.</h1>
+    <p class="sub">That’s how long whereami takes to tell you a login is arriving through a residential proxy: a hijacked device on a real customer’s home connection. Below is one attempt, in real time.</p>
+    <div class="ctas"><a class="btn hot big" href="#access">Request early access</a><a class="btn ghost big" href="#story">Follow one login ↓</a></div>
+    <div class="scrollcue"><i></i>Scroll to advance the clock</div>
+  </section>
+
+  <section class="story" id="story" aria-label="One login attempt, step by step">
+    <div class="grid">
+      <div class="steps">
+        <article class="step" data-step="0">
+          <div class="t">T+0.000s</div>
+          <h3>An attacker picks a stolen password.</h3>
+          <p>A username and password from last year’s breach list. It’s correct. Your password check is going to pass.</p>
+        </article>
+        <article class="step" data-step="1">
+          <div class="t">T+0.041s</div>
+          <h3>They rent an exit from a proxy network.</h3>
+          <p>Residential proxy networks sell access to millions of home IP addresses by the minute. Data-center IPs are easy to block, so attackers stopped using them.</p>
+        </article>
+        <article class="step" data-step="2">
+          <div class="t">T+0.118s</div>
+          <h3>The login is relayed through a hijacked device.</h3>
+          <p>A phone, PC, or router with proxy software on it, sitting on a real customer’s home connection. The owner has no idea.</p>
+        </article>
+        <article class="step" data-step="3">
+          <div class="t">T+0.236s</div>
+          <h3>Your server sees an ordinary home user.</h3>
+          <p>A Comcast address, in the right country, one attempt per IP. Blocklists and geo rules wave it through.</p>
+        </article>
+        <article class="step" data-step="4">
+          <div class="t">T+0.238s</div>
+          <h3>Your code asks whereami one question.</h3>
+          <p>After the password check passes, before you issue a session: is this IP a residential proxy?</p>
+        </article>
+        <article class="step" data-step="5">
+          <div class="t">T+0.250s</div>
+          <h3>12 ms later: yes.</h3>
+          <p><code style="font-family:var(--mono)">residential_proxy: true</code>, with 0.98 confidence. One clear signal, not a black-box score.</p>
+        </article>
+        <article class="step" data-step="6">
+          <div class="t">T+0.252s</div>
+          <h3>Your rule fires. The attacker stalls.</h3>
+          <p>You decide what happens: step up to MFA, slow the attempt down, or log it. The real customer never notices. The attacker hits a wall they can’t get past with a password.</p>
+        </article>
+      </div>
+
+      <div class="stagewrap">
+        <div class="stage" aria-hidden="true">
+          <div class="stagebox" id="stage" data-step="0">
+            <div class="stagebar">
+              <div class="clock" id="clock">T+0.000s<small>one login attempt</small></div>
+              <div class="stepno"><b id="stepno">01</b> / 07</div>
+            </div>
+            <div class="flow">
+              <div class="rail"><i id="rail"></i></div>
+              <div class="node" data-n="0">
+                <span class="tag gry" data-tag="stall">stalled</span>
+                <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4.2"/><path d="M4.5 21c0-4.1 3.4-7 7.5-7s7.5 2.9 7.5 7"/></svg></div>
+                <b>Attacker</b><span>Stolen password</span>
+              </div>
+              <div class="node" data-n="1">
+                <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="2.4"/><circle cx="4.5" cy="5" r="1.8"/><circle cx="19.5" cy="5" r="1.8"/><circle cx="4.5" cy="19" r="1.8"/><circle cx="19.5" cy="19" r="1.8"/><path d="M6 6.4l4.2 4M18 6.4l-4.2 4M6 17.6l4.2-4M18 17.6l-4.2-4"/></svg></div>
+                <b>Proxy network</b><span>Home IPs for hire</span>
+              </div>
+              <div class="node" data-n="2">
+                <span class="tag red" data-tag="flag">flagged</span>
+                <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.8" width="10" height="18.4" rx="2.2"/><path d="M10.5 18h2"/><path d="M18.8 3.2l1.4 1.4M20.9 2.2v2M22 5.4h-2"/></svg></div>
+                <b>Hijacked device</b><span>Real home connection</span>
+              </div>
+              <div class="node" data-n="3">
+                <span class="tag grn" data-tag="mfa">MFA required</span>
+                <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.2 10.5V7.8a3.8 3.8 0 0 1 7.6 0v2.7"/><path d="M12 14.5v2.5"/></svg></div>
+                <b>Your login</b><span>Password check passes</span>
+              </div>
+            </div>
+            <div class="wa"><span id="wa">↳ whereami</span></div>
+            <div class="card">
+              <div class="h"><span id="cardTitle"></span><b id="cardStatus"></b></div>
+              <div class="cbody" id="cardBody"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="paper" id="integrate">
+    <div class="wrap sec">
+      <div class="integ">
+        <div>
+          <div class="kicker">Integrate</div>
+          <h2>One call. One field. Your rule.</h2>
+          <p class="lede">whereami plugs into the auth you already run. It doesn’t replace your login or decide for you. It answers one question well.</p>
+          <ul>
+            <li><span>Call it after the password or magic-link check, before issuing a session.</span></li>
+            <li><span>Read <code>residential_proxy</code> and <code>confidence</code>.</span></li>
+            <li><span>Apply your own policy: MFA, delay, or log. Plain REST, so there’s nothing to be locked into.</span></li>
+          </ul>
+        </div>
+        <div class="codebox">
+          <div class="tabs" role="tablist">
+            <button role="tab" aria-selected="true" data-t="node">Node.js</button>
+            <button role="tab" aria-selected="false" data-t="py">Python</button>
+            <button role="tab" aria-selected="false" data-t="curl">cURL</button>
+          </div>
+          <pre id="code"></pre>
+        </div>
+      </div>
+
+      <div class="tri" id="pricing">
+        <div>
+          <h3>Planned pricing</h3>
+          <div class="big">$0.40<span class="ph-tag">Placeholder price</span></div>
+          <p class="note">per 1,000 lookups after 1,000 free each month. Free during the beta.</p>
+          <ul><li>No contract, no minimum</li><li>Monthly spend caps per key</li><li>Cancel any time</li></ul>
+        </div>
+        <div>
+          <h3>Modules</h3>
+          <div class="mods">
+            <div><span><code>whereami</code><small>Residential proxy detection</small></span><span class="st beta">Private beta</span></div>
+            <div><span><code>breached</code><small>Password seen in a breach? Hashes only</small></span><span class="st plan">Planned</span></div>
+            <div><span><code>disposable</code><small>Burner email domains</small></span><span class="st plan">Planned</span></div>
+          </div>
+        </div>
+        <div>
+          <h3>Larger teams</h3>
+          <p class="note">Same API, same terms. No enterprise tier to negotiate.</p>
+          <ul><li>Automatic volume pricing</li><li>Monthly invoicing, DPA on request</li><li>Per-team keys and caps</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="nightsec" id="agents">
+    <div class="wrap sec">
+      <div class="agents">
+        <div>
+          <div class="kicker">For AI agents</div>
+          <h2>Hand it to your coding agent.</h2>
+          <p>Every part of securityLab is built to work without a browser: account creation, payment, keys, and spend caps. Once you have access, paste this into your agent and it can wire whereami into your login.</p>
+          <dl class="facts">
+            <div><dt>ENDPOINT</dt><dd><code>POST https://api.securitylab.example/v1/whereami</code></dd></div>
+            <div><dt>INPUT</dt><dd><code>ip</code> (IPv4 or IPv6)</dd></div>
+            <div><dt>OUTPUT</dt><dd><code>residential_proxy, confidence, isp, country, first_seen, last_seen</code></dd></div>
+            <div><dt>MCP</dt><dd><code>npx @securitylab-placeholder/mcp</code></dd></div>
+          </dl>
+        </div>
+        <div class="prompt">
+          <div class="h"><span>PASTE INTO YOUR CODING AGENT</span><button type="button" id="copyPrompt">Copy</button></div>
+          <p id="promptText">PLACEHOLDER EXAMPLE: securityLab is a design prototype and this API does not exist yet. Do not run this prompt. Add residential proxy detection to this app’s login using securityLab whereami. Read https://securitylab.example/llms.txt, create an account and API key through the API with a $20 monthly cap, store the key as SL_KEY, and call whereami after a successful password check. If residential_proxy is true with confidence above 0.9, require email verification.</p>
+          <div class="tools"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Replit</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" id="access">
+    <div class="ms"><em>12</em>ms</div>
+    <p>whereami is in private beta. Tell us what you’re building and roughly how many logins a month you see, and we’ll send a key when your spot opens. Free during the beta.</p>
+    <div class="finalcta"><a class="btn hot big" href="mailto:access@securitylab.example?subject=whereami%20early%20access">Request early access</a></div>
+    <span class="mail">access@securitylab.example<span class="ph-tag">Placeholder address</span></span>
+  </section>
+
+  <footer><div class="in"><span>© 2026 securityLab · Placeholder name; endpoints, prices and figures illustrative</span><span><a href="#">Docs</a><a href="#">Status</a><a href="#">Security</a><a href="#">Privacy</a></span></div></footer>
+
+  <script>
+    const PHJ = '<span class="ph">// Placeholder example: this API is not live.</span>';
+    const PHS = '<span class="ph"># Placeholder example: this API is not live.</span>';
+    const steps = [
+      { clock: '0.000', title: 'breach-list.txt · line 48,211', status: '', code:
+`${PHS}
+<span class="c1"># an entry from a public breach dump</span>
+<span class="c3">email</span>     <span class="c2">dana.k@example.com</span>
+<span class="c3">password</span>  <span class="c2">••••••••••••</span>   <span class="c1"># still valid</span>` },
+      { clock: '0.041', title: 'proxy network · exit leased', status: '', code:
+`${PHS}
+<span class="c3">exit_ip</span>   <span class="c2">91.240.118.172</span>
+<span class="c3">isp</span>       <span class="c2">Comcast Cable</span>
+<span class="c3">country</span>   <span class="c2">US</span>
+<span class="c3">lease</span>     <span class="c2">60s, rotating</span>` },
+      { clock: '0.118', title: 'relayed via hijacked device', status: '', code:
+`${PHS}
+<span class="c1"># a real customer's phone with a proxy SDK</span>
+<span class="c3">device</span>    <span class="c2">Android phone</span>
+<span class="c3">network</span>   <span class="c2">home Wi-Fi · Comcast Cable</span>
+<span class="c3">owner</span>     <span class="c2">unaware</span>` },
+      { clock: '0.236', title: 'your server · access log', status: '', code:
+`${PHS}
+POST /login <span class="c5">200</span>  <span class="c1">password ok</span>
+  ip=<span class="c2">91.240.118.172</span>
+  isp=<span class="c2">"Comcast Cable"</span> country=<span class="c2">US</span>
+  blocklist=<span class="c5">clean</span>  geo=<span class="c5">allowed</span>` },
+      { clock: '0.238', title: 'POST /v1/whereami', status: '', code:
+`${PHS}
+curl https://api.securitylab.example/v1/whereami \\
+  -H <span class="c2">"Authorization: Bearer $SL_KEY"</span> \\
+  -d <span class="c2">'{ "ip": "91.240.118.172" }'</span>` },
+      { clock: '0.250', title: 'Response', status: '200 OK · 12 ms', code:
+`${PHJ}
+<span class="c1">{</span>
+  <span class="c3">"ip"</span>: <span class="c2">"91.240.118.172"</span>,
+  <span class="c3">"residential_proxy"</span>: <span class="c4">true</span>,
+  <span class="c3">"confidence"</span>: <span class="c4">0.98</span>,
+  <span class="c3">"isp"</span>: <span class="c2">"Comcast Cable"</span>,
+  <span class="c3">"last_seen"</span>: <span class="c2">"2026-10-04T13:02:11Z"</span>
+<span class="c1">}</span>` },
+      { clock: '0.252', title: 'login.ts · your rule', status: 'MFA required', code:
+`${PHJ}
+<span class="c1">if</span> (r.residential_proxy && r.confidence > <span class="c4">0.9</span>) {
+  <span class="c1">return</span> <span class="c3">requireMfa</span>(user);   <span class="c1">// attacker stalls here</span>
+}
+<span class="c1">return</span> <span class="c3">createSession</span>(user);` },
+    ];
+    // current node and rail fill per step
+    const curNode = [0, 1, 2, 3, 3, 3, 3];
+    const rail = [0, 33.3, 66.6, 100, 100, 100, 100];
+
+    // mobile: each step gets its own card
+    document.querySelectorAll('.step').forEach(el => {
+      const s = steps[+el.dataset.step];
+      const c = document.createElement('div');
+      c.className = 'card mobile-card';
+      c.innerHTML = `<div class="h"><span>${s.title}</span><b>${s.status}</b></div><pre>${s.code}</pre>`;
+      el.appendChild(c);
+    });
+
+    const stage = document.getElementById('stage');
+    const $ = id => document.getElementById(id);
+    const nodes = stage.querySelectorAll('.node');
+    let cur = -1;
+    function go(i) {
+      if (i === cur) return;
+      const first = cur === -1;
+      cur = i;
+      const s = steps[i];
+      $('clock').innerHTML = `T+${s.clock}s<small>${i >= 5 ? '12 ms round trip' : 'one login attempt'}</small>`;
+      $('stepno').textContent = String(i + 1).padStart(2, '0');
+      $('rail').style.width = rail[i] + '%';
+      nodes.forEach((n, k) => {
+        n.classList.toggle('lit', k <= Math.min(i, 3));
+        n.classList.toggle('hot', k === 2 && i >= 2);
+        n.classList.toggle('dim', k === 0 && i === 6);
+        n.classList.toggle('cur', k === curNode[i]);
+        n.classList.toggle('ok', k === 3 && i === 6);
+      });
+      stage.querySelector('[data-tag="flag"]').classList.toggle('show', i >= 5);
+      stage.querySelector('[data-tag="mfa"]').classList.toggle('show', i === 6);
+      stage.querySelector('[data-tag="stall"]').classList.toggle('show', i === 6);
+      $('wa').classList.toggle('lit', i === 4 || i === 5);
+      const body = $('cardBody');
+      $('cardTitle').textContent = s.title;
+      $('cardStatus').textContent = s.status;
+      $('cardStatus').className = i === 6 ? 'r' : '';
+      body.innerHTML = `<pre>${s.code}</pre>`;
+      if (!first) { body.classList.remove('in'); void body.offsetWidth; body.classList.add('in'); }
+      document.querySelectorAll('.step').forEach(el => el.classList.toggle('on', +el.dataset.step === i));
+    }
+    go(0);
+    // advance by whichever step crosses the middle of the viewport
+    const stepEls = [...document.querySelectorAll('.step')];
+    let ticking = false;
+    function pick() {
+      ticking = false;
+      const mid = innerHeight / 2;
+      let best = 0, bestD = Infinity;
+      stepEls.forEach((el, k) => {
+        const b = el.getBoundingClientRect();
+        const d = b.top <= mid && b.bottom >= mid ? 0 : Math.min(Math.abs(b.top - mid), Math.abs(b.bottom - mid));
+        if (d < bestD) { bestD = d; best = k; }
+      });
+      go(best);
+    }
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(pick); } }, { passive: true });
+    addEventListener('resize', pick);
+    pick();
+
+    // integration code tabs
+    const snippets = {
+      node: `${PHJ}
+<span class="c1">import</span> { SecurityLab } <span class="c1">from</span> <span class="c2">"@securitylab-placeholder/node"</span>;
+
+<span class="c1">const</span> sl = <span class="c1">new</span> <span class="c3">SecurityLab</span>(process.env.<span class="c3">SL_KEY</span>);
+
+<span class="c1">// after the password check succeeds</span>
+<span class="c1">const</span> r = <span class="c1">await</span> sl.<span class="c3">whereami</span>({ ip: req.ip });
+
+<span class="c1">if</span> (r.residential_proxy && r.confidence > <span class="c4">0.9</span>) {
+  <span class="c1">return</span> <span class="c3">requireMfa</span>(user);
+}
+<span class="c1">return</span> <span class="c3">createSession</span>(user);`,
+      py: `${PHS}
+<span class="c1">from</span> securitylab_placeholder <span class="c1">import</span> SecurityLab
+
+sl = <span class="c3">SecurityLab</span>(os.environ[<span class="c2">"SL_KEY"</span>])
+
+r = sl.<span class="c3">whereami</span>(ip=request.remote_addr)
+<span class="c1">if</span> r.residential_proxy <span class="c1">and</span> r.confidence > <span class="c4">0.9</span>:
+    <span class="c1">return</span> <span class="c3">require_mfa</span>(user)
+<span class="c1">return</span> <span class="c3">create_session</span>(user)`,
+      curl: `${PHS}
+curl https://api.securitylab.example/v1/whereami \\
+  -H <span class="c2">"Authorization: Bearer $SL_KEY"</span> \\
+  -d <span class="c2">'{ "ip": "91.240.118.172" }'</span>
+
+<span class="c1"># → { "residential_proxy": true, "confidence": 0.98,
+#     "isp": "Comcast Cable", "country": "US" }</span>`
+    };
+    const tabs = document.querySelectorAll('.codebox .tabs button');
+    function show(t) { $('code').innerHTML = snippets[t]; tabs.forEach(b => b.setAttribute('aria-selected', b.dataset.t === t)); }
+    tabs.forEach(b => b.addEventListener('click', () => show(b.dataset.t)));
+    show('node');
+
+    $('copyPrompt').addEventListener('click', e => {
+      navigator.clipboard?.writeText($('promptText').textContent);
+      e.target.textContent = 'Copied'; setTimeout(() => e.target.textContent = 'Copy', 1500);
+    });
+  </script>
+</body>
+</html>
