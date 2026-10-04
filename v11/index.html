@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>securityLab — v11</title>
+  <meta name="description" content="securityLab makes modular, pay-as-you-go security APIs. whereami detects residential proxy IP addresses. Agents can sign up, get a key, and pay via API.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --soft: #f7f7f5;
+      --ink: #111110;
+      --body: #4a4a46;
+      --mute: #8b8b85;
+      --line: #e8e7e3;
+      --accent: #f2542d;
+      --code: #121212;
+      --sans: "Geist", system-ui, -apple-system, Segoe UI, sans-serif;
+      --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+
+    .proto { background: var(--ink); color: #bdbdb7; font: 12px var(--mono); }
+    .proto .wrap { display: flex; justify-content: space-between; padding-top: 6px; padding-bottom: 6px; }
+    .proto a:hover { color: #fff; }
+
+    header { border-bottom: 1px solid var(--line); position: sticky; top: 0; background: rgba(255,255,255,.88); backdrop-filter: blur(10px); z-index: 5; }
+    header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 20px; }
+    .logo { font-weight: 700; font-size: 17px; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
+    .logo svg { width: 22px; height: 22px; }
+    .nav { display: flex; gap: 28px; font-size: 14px; color: var(--body); }
+    .nav a:hover { color: var(--ink); }
+    .right { display: flex; align-items: center; gap: 16px; font-size: 14px; }
+    .right .in { color: var(--body); }
+    .toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; font: 500 12px var(--mono); background: var(--soft); }
+    .toggle button { all: unset; cursor: pointer; padding: 5px 11px; border-radius: 999px; color: var(--body); }
+    .toggle button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 8px; font-weight: 500; font-size: 14px; white-space: nowrap; }
+    .btn.dark { background: var(--ink); color: #fff; }
+    .btn.dark:hover { background: #2b2b29; }
+    .btn.line { border: 1px solid var(--line); background: #fff; }
+    .btn.line:hover { border-color: #cfcdc7; }
+    .btn.big { height: 46px; padding: 0 20px; font-size: 15px; }
+
+    /* hero */
+    .hero { padding: 80px 0 72px; }
+    .hero .wrap { display: grid; grid-template-columns: 1fr 1.08fr; gap: 56px; align-items: center; }
+    .pill { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px 4px 6px; color: var(--body); margin-bottom: 22px; }
+    .pill b { background: #fde8e2; color: #b8361a; font-weight: 600; font-size: 11px; padding: 2px 8px; border-radius: 999px; }
+    h1 { font-size: clamp(40px, 5.4vw, 64px); line-height: 1.02; letter-spacing: -.035em; font-weight: 600; margin: 0 0 20px; }
+    .lead { font-size: 19px; color: var(--body); margin: 0 0 30px; max-width: 30em; }
+    .ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+    .install { margin-top: 26px; display: inline-flex; align-items: center; gap: 12px; font: 14px var(--mono); color: var(--body); background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; max-width: 100%; }
+    .install span { color: var(--mute); }
+    .install button { all: unset; cursor: pointer; font: 12px var(--sans); color: var(--mute); }
+    .install button:hover { color: var(--ink); }
+
+    .code { background: var(--code); border-radius: 14px; overflow: hidden; box-shadow: 0 30px 60px -20px rgba(0,0,0,.35), 0 0 0 1px rgba(0,0,0,.06); min-width: 0; }
+    .tabs { display: flex; gap: 4px; padding: 10px 12px 0; border-bottom: 1px solid #262626; }
+    .tabs button { all: unset; cursor: pointer; font: 500 13px var(--sans); color: #8d8d8d; padding: 8px 12px 10px; border-bottom: 2px solid transparent; }
+    .tabs button[aria-selected="true"] { color: #fff; border-bottom-color: var(--accent); }
+    .code pre { margin: 0; padding: 20px 22px; font: 13px/1.7 var(--mono); color: #e6e6e6; overflow-x: auto; min-height: 176px; }
+    .code .resp { border-top: 1px solid #262626; background: #0c0c0c; }
+    .code .resp .h { display: flex; justify-content: space-between; padding: 10px 22px 0; font: 12px var(--mono); color: #7b7b7b; }
+    .code .resp .h b { color: #7ee2a8; font-weight: 500; }
+    .code .resp pre { min-height: 0; padding-top: 8px; }
+    .c1 { color: #7b7b7b; } .c2 { color: #ffb38a; } .c3 { color: #9ecbff; } .c4 { color: #ff7b72; } .c5 { color: #7ee2a8; }
+
+    /* works with */
+    .with { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--soft); }
+    .with .wrap { display: flex; align-items: center; gap: 40px; padding-top: 22px; padding-bottom: 22px; flex-wrap: wrap; }
+    .with p { margin: 0; font-size: 13px; color: var(--mute); }
+    .with ul { display: flex; gap: 36px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; font-weight: 600; color: #5d5d58; font-size: 15px; letter-spacing: -.01em; }
+
+    section { padding: 100px 0; }
+    .kicker { font: 500 13px var(--mono); color: var(--accent); margin-bottom: 12px; }
+    h2 { font-size: clamp(30px, 3.6vw, 44px); line-height: 1.08; letter-spacing: -.03em; font-weight: 600; margin: 0 0 16px; max-width: 18em; }
+    .sec-lead { color: var(--body); font-size: 18px; margin: 0; max-width: 36em; }
+
+    /* why residential proxies */
+    .why .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+    .compare { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    .compare > div { display: grid; grid-template-columns: 1.2fr 1fr 1fr; font-size: 14px; border-bottom: 1px solid var(--line); }
+    .compare > div:last-child { border-bottom: 0; }
+    .compare > div > span { padding: 14px 16px; }
+    .compare .hd { background: var(--soft); font: 500 12px var(--mono); color: var(--mute); }
+    .compare .yes { color: #17733e; font-weight: 500; }
+    .compare .no { color: #b02a12; font-weight: 500; }
+    .compare .us { background: #fff7f4; }
+
+    /* prompt + steps */
+    .agent .wrap { display: grid; grid-template-columns: 1fr 1.05fr; gap: 56px; align-items: start; }
+    .prompt { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 12px 30px -18px rgba(0,0,0,.18); }
+    .prompt .ph { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--soft); font: 500 12px var(--mono); color: var(--mute); }
+    .prompt .ph button { all: unset; cursor: pointer; font: 500 12px var(--sans); color: var(--accent); }
+    .prompt p { margin: 0; padding: 18px; font: 13.5px/1.75 var(--mono); color: var(--ink); }
+    .prompt .tools { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 18px 16px; }
+    .prompt .tools span { font: 12px var(--sans); padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; color: var(--body); }
+
+    .flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 52px; }
+    .step { border: 1px solid var(--line); border-radius: 14px; padding: 26px; background: #fff; min-width: 0; }
+    .step .n { font: 500 12px var(--mono); color: var(--mute); }
+    .step h3 { margin: 10px 0 8px; font-size: 19px; letter-spacing: -.01em; font-weight: 600; }
+    .step p { margin: 0 0 18px; color: var(--body); font-size: 15px; }
+    .snip { font: 12.5px/1.6 var(--mono); background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; color: var(--body); overflow-x: auto; white-space: pre; }
+
+    /* spec */
+    .spec-wrap { margin-top: 44px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    table.spec { width: 100%; border-collapse: collapse; font-size: 15px; }
+    .spec th, .spec td { text-align: left; vertical-align: top; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+    .spec tr:last-child th, .spec tr:last-child td { border-bottom: 0; }
+    .spec th { width: 200px; font: 500 12px var(--mono); color: var(--mute); background: var(--soft); padding-top: 19px; }
+    .spec td { color: var(--body); }
+    .spec code { font: 13px var(--mono); color: var(--ink); background: var(--soft); border: 1px solid var(--line); padding: 1px 6px; border-radius: 4px; }
+
+    /* modules */
+    .mods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 44px; }
+    .mod { border: 1px solid var(--line); border-radius: 14px; padding: 24px; }
+    .mod .top { display: flex; justify-content: space-between; align-items: center; }
+    .mod code { font: 500 15px var(--mono); }
+    .mod .st { font: 500 11px var(--mono); padding: 3px 8px; border-radius: 999px; background: var(--soft); color: var(--mute); }
+    .mod .st.on { background: #fde8e2; color: #b8361a; }
+    .mod p { margin: 12px 0 0; color: var(--body); font-size: 15px; }
+
+    .pricing { background: var(--soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .pricing .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+    .calc { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 30px; }
+    .calc label { display: flex; justify-content: space-between; font-size: 14px; color: var(--body); }
+    .calc label b { color: var(--ink); font-variant-numeric: tabular-nums; }
+    .calc input[type=range] { width: 100%; margin: 16px 0 26px; accent-color: var(--accent); }
+    .calc .total { display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 20px; }
+    .calc .total span { color: var(--body); font-size: 14px; }
+    .calc .total b { font-size: 44px; letter-spacing: -.03em; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .calc ul { list-style: none; padding: 0; margin: 22px 0 24px; font-size: 14px; color: var(--body); display: grid; gap: 8px; }
+    .calc li::before { content: "✓"; color: var(--accent); margin-right: 10px; font-weight: 700; }
+    .calc .btn { width: 100%; justify-content: center; }
+    .teams { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 15px; color: var(--body); }
+    .teams b { color: var(--ink); font-weight: 600; }
+
+    .faq { display: grid; grid-template-columns: 1fr 1.4fr; gap: 56px; }
+    details { border-bottom: 1px solid var(--line); padding: 18px 0; }
+    details:first-child { border-top: 1px solid var(--line); }
+    summary { cursor: pointer; font-weight: 500; font-size: 16px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; color: var(--mute); }
+    details[open] summary::after { content: "–"; }
+    details p { margin: 10px 0 0; color: var(--body); font-size: 15px; }
+
+    .final { text-align: center; padding: 110px 0; border-top: 1px solid var(--line); }
+    .final h2 { margin: 0 auto 14px; }
+    .final p { color: var(--body); margin: 0 0 28px; }
+    .final .ctas { justify-content: center; }
+
+    footer { border-top: 1px solid var(--line); padding: 40px 0 56px; font-size: 14px; color: var(--mute); }
+    footer .wrap { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 32px; }
+    footer b { display: block; color: var(--ink); font-weight: 500; margin-bottom: 8px; }
+    footer .wrap > div > a { display: block; padding: 3px 0; }
+    footer a:hover { color: var(--ink); }
+
+    /* agent view */
+    #agentView { display: none; padding: 56px 0 80px; }
+    body.agent #humanView { display: none; }
+    body.agent #agentView { display: block; }
+    #agentView .note { font: 13px var(--mono); color: var(--mute); margin: 0 0 16px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    #agentView pre { margin: 0; background: var(--code); color: #e6e6e6; border-radius: 14px; padding: 32px; font: 13.5px/1.8 var(--mono); white-space: pre-wrap; word-break: break-word; }
+    #agentView pre .c3 { color: #9ecbff; }
+
+    @media (max-width: 900px) {
+      .wrap { padding: 0 16px; }
+      .nav, .right .in { display: none; }
+      .right { gap: 10px; }
+      .hero { padding: 48px 0; }
+      .hero .wrap, .pricing .wrap, .faq, .why .wrap, .agent .wrap { grid-template-columns: 1fr; gap: 40px; }
+      .flow, .mods { grid-template-columns: 1fr; }
+      .spec th { width: 110px; padding: 14px 12px; }
+      .spec td { padding: 14px 12px; }
+      .compare > div { grid-template-columns: 1.1fr 1fr 1fr; font-size: 13px; }
+      .compare > div > span { padding: 12px 10px; }
+      section { padding: 72px 0; }
+      .with .wrap { gap: 12px; }
+      .with ul { gap: 8px 22px; }
+      footer .wrap { grid-template-columns: 1fr 1fr; }
+      #agentView pre { padding: 20px; font-size: 12.5px; }
+    }
+    @media (max-width: 420px) {
+      .right .btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span>v11</span></div></div>
+
+  <header>
+    <div class="wrap">
+      <div class="logo"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#111110" stroke-width="2"/><circle cx="12" cy="12" r="3.2" fill="#f2542d"/></svg>securityLab</div>
+      <nav class="nav"><a href="#why">whereami</a><a href="#agents">For agents</a><a href="#spec">Spec</a><a href="#pricing">Pricing</a><a href="#">Docs</a></nav>
+      <div class="right">
+        <div class="toggle" role="group" aria-label="View">
+          <button type="button" aria-pressed="true" data-v="human">Human</button>
+          <button type="button" aria-pressed="false" data-v="agent">Agent</button>
+        </div>
+        <a class="in" href="#">Sign in</a>
+        <a class="btn dark" href="#pricing">Get API key</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="humanView">
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <div class="pill"><b>New</b> MCP server for coding agents</div>
+          <h1>Spot residential proxies at login.</h1>
+          <p class="lead">whereami tells you whether an IP address is a residential proxy, the hijacked home connections attackers rent to look like real users. One lookup, one clear answer. You decide what your login does with it.</p>
+          <div class="ctas"><a class="btn dark big" href="#pricing">Start for free</a><a class="btn line big" href="#agents">Set up with your agent</a></div>
+          <div class="install"><span>$</span>npm install @securitylab/node <button id="copyInstall" type="button">Copy</button></div>
+        </div>
+
+        <div class="code">
+          <div class="tabs" role="tablist">
+            <button role="tab" aria-selected="true" data-t="node">Node.js</button>
+            <button role="tab" aria-selected="false" data-t="py">Python</button>
+            <button role="tab" aria-selected="false" data-t="curl">cURL</button>
+          </div>
+<pre id="req"></pre>
+          <div class="resp">
+            <div class="h"><span>Response</span><b>200 OK · 11 ms</b></div>
+<pre><span class="c1">{</span>
+  <span class="c3">"ip"</span>: <span class="c2">"91.240.118.172"</span>,
+  <span class="c3">"residential_proxy"</span>: <span class="c4">true</span>,
+  <span class="c3">"confidence"</span>: <span class="c4">0.98</span>,
+  <span class="c3">"isp"</span>: <span class="c2">"Comcast Cable"</span>,
+  <span class="c3">"country"</span>: <span class="c2">"US"</span>,
+  <span class="c3">"last_seen"</span>: <span class="c2">"2026-10-04T13:02:11Z"</span>
+<span class="c1">}</span></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="with">
+      <div class="wrap">
+        <p>Drops in beside the auth you already use</p>
+        <ul><li>Clerk</li><li>Auth0</li><li>Supabase</li><li>Auth.js</li><li>Firebase</li><li>Cognito</li></ul>
+      </div>
+    </div>
+
+    <section class="why" id="why">
+      <div class="wrap">
+        <div>
+          <div class="kicker">Why residential proxies</div>
+          <h2>The attacker that looks like your customer.</h2>
+          <p class="sec-lead">Credential stuffers and account-takeover crews no longer log in from data centers. They rent traffic through millions of hijacked home routers and phones, so every attempt arrives from a normal ISP in a normal city. Blocklists and geo rules wave it through.</p>
+          <p class="sec-lead" style="margin-top:14px">whereami answers one narrow question very well: <em>is this IP a residential proxy right now?</em> It’s a building block, not an auth provider and not a black-box score.</p>
+        </div>
+        <div class="compare" aria-label="Detection comparison">
+          <div class="hd"><span>Login from…</span><span>Blocklists, geo rules</span><span>whereami</span></div>
+          <div><span>Data-center IP</span><span class="yes">Caught</span><span class="yes us">Caught</span></div>
+          <div><span>VPN or Tor exit</span><span class="yes">Caught</span><span class="yes us">Caught</span></div>
+          <div><span>Residential proxy</span><span class="no">Missed</span><span class="yes us">Caught</span></div>
+          <div><span>Real user at home</span><span class="yes">Allowed</span><span class="yes us">Allowed</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" style="padding-top:0">
+      <div class="wrap">
+        <div class="kicker">How it works</div>
+        <h2>One lookup after the password check.</h2>
+        <p class="sec-lead">Your auth flow stays exactly as it is. Add a single call, and write the rule that fits your app.</p>
+        <div class="flow">
+          <div class="step">
+            <div class="n">01</div><h3>Send the IP</h3>
+            <p>Pass the IP address of the login attempt. That’s the only required field.</p>
+            <div class="snip">sl.whereami({ ip: req.ip })</div>
+          </div>
+          <div class="step">
+            <div class="n">02</div><h3>Get one signal</h3>
+            <p>A yes or no on residential proxy, a confidence value, and the ISP it exits through.</p>
+            <div class="snip">{ residential_proxy: true,
+  confidence: 0.98 }</div>
+          </div>
+          <div class="step">
+            <div class="n">03</div><h3>Apply your rule</h3>
+            <p>Step up to MFA, slow the attempt, or just log it. Your call.</p>
+            <div class="snip">if (r.residential_proxy) requireMfa()</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="agent" id="agents" style="padding-top:0">
+      <div class="wrap">
+        <div>
+          <div class="kicker">For AI agents</div>
+          <h2>Zero to key in three API calls.</h2>
+          <p class="sec-lead">No forms, no sales call, no browser required. A person or an agent can create an account, set a spend cap, and make the first lookup entirely through the API.</p>
+          <div class="flow" style="grid-template-columns:1fr;gap:12px;margin-top:28px">
+            <div class="snip">POST /v1/accounts   { "email": "you@example.com", "monthly_cap_usd": 20 }</div>
+            <div class="snip">→ checkout_url      open once, or pass a payment token directly</div>
+            <div class="snip">POST /v1/whereami   { "ip": "91.240.118.172" }</div>
+          </div>
+        </div>
+        <div class="prompt">
+          <div class="ph"><span>PASTE INTO YOUR CODING AGENT</span><button id="copyPrompt" type="button">Copy</button></div>
+          <p id="promptText">Add residential proxy detection to this app's login using securityLab whereami. Read https://securitylab.dev/llms.txt, create an account and API key through the API with a $20 monthly cap, and store the key as SL_KEY. After a successful password check, call whereami with the request IP. If residential_proxy is true, require email verification before creating the session.</p>
+          <div class="tools"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Replit</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="spec" style="padding-top:0">
+      <div class="wrap">
+        <div class="kicker">Spec</div>
+        <h2>whereami, at a glance.</h2>
+        <div class="spec-wrap">
+          <table class="spec">
+            <tr><th>WHAT IT DOES</th><td>Detects whether an IP address is a residential proxy exit. Returns <code>residential_proxy</code> (true/false), <code>confidence</code>, <code>isp</code>, <code>country</code>, <code>first_seen</code>, <code>last_seen</code>.</td></tr>
+            <tr><th>ENDPOINT</th><td><code>POST https://api.securitylab.dev/v1/whereami</code></td></tr>
+            <tr><th>INPUT</th><td><code>ip</code> (IPv4 or IPv6, required)</td></tr>
+            <tr><th>ACCURACY</th><td>0.98 precision, 0.94 recall on labeled login traffic</td></tr>
+            <tr><th>LATENCY</th><td>12 ms median</td></tr>
+            <tr><th>COVERAGE</th><td>40M+ residential proxy exits observed in the last 30 days</td></tr>
+            <tr><th>PRICE</th><td>First 1,000 lookups per month free, then $0.40 per 1,000. Per-key monthly caps.</td></tr>
+            <tr><th>INTERFACES</th><td>REST, Node and Python SDKs, MCP server (<code>npx @securitylab/mcp</code>)</td></tr>
+          </table>
+        </div>
+        <div class="mods">
+          <div class="mod"><div class="top"><code>whereami</code><span class="st on">Available</span></div><p>Residential proxy detection for any IP address.</p></div>
+          <div class="mod"><div class="top"><code>breached</code><span class="st">Planned</span></div><p>Has this password appeared in a breach? Checked with k-anonymity.</p></div>
+          <div class="mod"><div class="top"><code>disposable</code><span class="st">Planned</span></div><p>Flags burner and throwaway email domains at signup.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+      <div class="wrap">
+        <div>
+          <div class="kicker">Pricing</div>
+          <h2>Pay per lookup. Nothing else.</h2>
+          <p class="sec-lead">The first 1,000 lookups every month are free. After that, $0.40 per 1,000. No contract, no minimum, cancel any time. Plain REST and open SDKs, so there’s nothing to be locked into.</p>
+          <p class="teams"><b>Larger teams:</b> same API, same terms. Volume pricing applies automatically, with invoicing and a DPA available. No contract required.</p>
+        </div>
+        <div class="calc">
+          <label for="vol">Lookups per month <b id="volOut">50,000</b></label>
+          <input id="vol" type="range" min="0" max="100" value="38">
+          <div class="total"><span>Estimated monthly cost</span><b id="cost">$19.60</b></div>
+          <ul><li>Card or API signup, instant key</li><li>Monthly spend cap per key</li><li>Cancel any time</li></ul>
+          <a class="btn dark big" href="#">Get your API key</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap faq">
+        <div><div class="kicker">FAQ</div><h2>Questions developers ask.</h2></div>
+        <div>
+          <details open><summary>Is this an auth provider or a risk score?</summary><p>Neither. whereami answers one question: is this IP a residential proxy? Keep your auth provider, and combine the signal with your own rules.</p></details>
+          <details><summary>What should I do when it returns true?</summary><p>Most teams step up to MFA or email verification. Some rate-limit, some only log. A residential proxy on its own isn’t proof of fraud, so we leave the decision to you.</p></details>
+          <details><summary>How fast is it?</summary><p>Median response is about 12 ms, fast enough to run inline before you issue a session.</p></details>
+          <details><summary>Can an AI agent sign up by itself?</summary><p>Yes. Accounts, keys, payment, and spend caps all work through the API. Point your agent at llms.txt.</p></details>
+          <details><summary>What if I want to leave?</summary><p>Delete your key. There’s no contract, and the API is plain REST, so nothing in your code depends on us beyond one call.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="final">
+      <div class="wrap">
+        <h2>Catch the logins that look like customers.</h2>
+        <p>Free for your first 1,000 lookups every month.</p>
+        <div class="ctas"><a class="btn dark big" href="#">Get API key</a><a class="btn line big" href="#">Read the docs</a></div>
+      </div>
+    </section>
+  </main>
+
+  <main id="agentView">
+    <div class="wrap">
+      <p class="note"><span># Plain-text summary for AI agents. Also served at /llms.txt</span><span>text/markdown</span></p>
+<pre><span class="c3"># securityLab</span>
+
+> Modular, pay-as-you-go security APIs for developers and AI agents.
+> Not an auth provider. Each tool answers one question; you decide what to do.
+> Accounts, keys, payment, and spend caps can be managed entirely via API.
+
+<span class="c3">## Products</span>
+- whereami: is this IP a residential proxy? Status: available.
+- breached: has this password appeared in a breach (k-anonymity)? Status: planned.
+- disposable: is this a burner email domain? Status: planned.
+
+<span class="c3">## whereami</span>
+- Endpoint: POST https://api.securitylab.dev/v1/whereami
+- Auth: Authorization: Bearer $SL_KEY
+- Input: {"ip": "91.240.118.172"}
+- Output: residential_proxy (bool), confidence (0-1), isp, country, first_seen, last_seen
+- Accuracy: 0.98 precision, 0.94 recall. Latency: 12 ms median.
+- Price: 1,000 lookups/month free, then $0.40 per 1,000
+
+<span class="c3">## Sign up (agent-friendly)</span>
+1. POST /v1/accounts {"email": "...", "monthly_cap_usd": 20}
+2. Complete payment via returned checkout_url or a payment token
+3. Use returned api_key as SL_KEY
+
+<span class="c3">## Integration guidance</span>
+Call whereami after primary authentication succeeds and before issuing a session.
+If residential_proxy is true, apply the app's own policy (e.g. require a second factor).
+
+<span class="c3">## Terms</span>
+No contract, no minimum, cancel any time. Volume pricing is automatic.
+
+<span class="c3">## Links</span>
+- Docs: https://securitylab.dev/docs
+- MCP server: npx @securitylab/mcp
+
+(Placeholder name, endpoints, prices, and figures.)</pre>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div><div class="logo" style="color:var(--ink)">securityLab</div><p style="margin:10px 0 0">Modular security tools. Placeholder name; prices and figures illustrative.</p></div>
+      <div><b>Product</b><a href="#">whereami</a><a href="#">Pricing</a><a href="#">Changelog</a></div>
+      <div><b>Developers</b><a href="#">Docs</a><a href="#">llms.txt</a><a href="#">Status</a></div>
+      <div><b>Company</b><a href="#">About</a><a href="#">Security</a><a href="#">Privacy</a></div>
+    </div>
+  </footer>
+
+  <script>
+    const snippets = {
+      node: `<span class="c1">import</span> { SecurityLab } <span class="c1">from</span> <span class="c2">"@securitylab/node"</span>;
+
+<span class="c1">const</span> sl = <span class="c1">new</span> <span class="c3">SecurityLab</span>(process.env.<span class="c3">SL_KEY</span>);
+
+<span class="c1">const</span> r = <span class="c1">await</span> sl.<span class="c3">whereami</span>({ ip: req.ip });
+
+<span class="c1">if</span> (r.residential_proxy) <span class="c1">await</span> <span class="c3">requireMfa</span>(user);`,
+      py: `<span class="c1">from</span> securitylab <span class="c1">import</span> SecurityLab
+
+sl = <span class="c3">SecurityLab</span>(os.environ[<span class="c2">"SL_KEY"</span>])
+
+r = sl.<span class="c3">whereami</span>(ip=request.remote_addr)
+
+<span class="c1">if</span> r.residential_proxy:
+    <span class="c3">require_mfa</span>(user)`,
+      curl: `curl https://api.securitylab.dev/v1/whereami \\
+  -H <span class="c2">"Authorization: Bearer $SL_KEY"</span> \\
+  -d <span class="c2">'{ "ip": "91.240.118.172" }'</span>`
+    };
+    const req = document.getElementById('req');
+    const tabs = document.querySelectorAll('.tabs button');
+    function show(t) { req.innerHTML = snippets[t]; tabs.forEach(b => b.setAttribute('aria-selected', b.dataset.t === t)); }
+    tabs.forEach(b => b.addEventListener('click', () => show(b.dataset.t)));
+    show('node');
+
+    function copier(id, text) {
+      document.getElementById(id).addEventListener('click', e => {
+        navigator.clipboard?.writeText(typeof text === 'function' ? text() : text);
+        e.target.textContent = 'Copied'; setTimeout(() => e.target.textContent = 'Copy', 1500);
+      });
+    }
+    copier('copyInstall', 'npm install @securitylab/node');
+    copier('copyPrompt', () => document.getElementById('promptText').textContent);
+
+    const vbtns = document.querySelectorAll('.toggle button');
+    vbtns.forEach(b => b.addEventListener('click', () => {
+      document.body.classList.toggle('agent', b.dataset.v === 'agent');
+      vbtns.forEach(x => x.setAttribute('aria-pressed', x === b));
+      scrollTo(0, 0);
+    }));
+
+    const vol = document.getElementById('vol'), out = document.getElementById('volOut'), cost = document.getElementById('cost');
+    function calc() {
+      const n = Math.round(Math.pow(vol.value / 100, 2.4) * 2000000 / 1000) * 1000;
+      const billable = Math.max(0, n - 1000);
+      out.textContent = n.toLocaleString();
+      cost.textContent = '$' + (billable / 1000 * 0.40).toFixed(2);
+    }
+    vol.addEventListener('input', calc); calc();
+  </script>
+</body>
+</html>
