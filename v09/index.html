@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>securityLab — v09</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Inter+Tight:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fbfbf9;
+      --ink: #161615;
+      --body: #4b4b47;
+      --mute: #8f8f88;
+      --line: #e4e3de;
+      --risk: #d9381e;
+      --ok: #2f7d4f;
+      --warn: #c98a12;
+      --serif: "Newsreader", Georgia, serif;
+      --sans: "Inter Tight", system-ui, sans-serif;
+      --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--sans); }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+    .proto { font: 11px var(--mono); color: var(--mute); border-bottom: 1px solid var(--line); }
+    .proto .wrap { display: flex; justify-content: space-between; padding-top: 6px; padding-bottom: 6px; }
+    .proto a:hover { color: var(--ink); }
+
+    header .wrap { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+    .logo { font-weight: 600; font-size: 16px; letter-spacing: -.01em; }
+    .logo b { color: var(--risk); }
+    nav { display: flex; gap: 26px; font-size: 14px; color: var(--body); align-items: center; }
+    nav a:hover { color: var(--ink); }
+    .btn { display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 4px; font-weight: 500; font-size: 14px; background: var(--ink); color: #fff !important; }
+    .btn:hover { background: #333; }
+    .btn.out { background: transparent; color: var(--ink) !important; border: 1px solid var(--ink); }
+    .btn.out:hover { background: #f0efea; }
+
+    /* hero */
+    .hero { padding: 56px 0 40px; border-top: 1px solid var(--line); }
+    .hero .wrap { display: grid; grid-template-columns: 1fr 1.25fr; gap: 64px; align-items: start; }
+    .over { font: 500 12px var(--mono); color: var(--mute); margin-bottom: 18px; }
+    h1 { font: 500 clamp(40px, 5vw, 64px)/1.04 var(--serif); letter-spacing: -.02em; margin: 0 0 20px; }
+    .lead { font-size: 18px; color: var(--body); margin: 0 0 28px; }
+    .ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    figure { margin: 0; }
+    .chart { border: 1px solid var(--line); background: #fff; padding: 22px 22px 14px; }
+    .chart h3 { margin: 0; font: 600 15px var(--sans); }
+    .chart .sub { font-size: 13px; color: var(--mute); margin: 2px 0 10px; }
+    .chart svg { width: 100%; height: auto; display: block; }
+    .legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; color: var(--body); margin-top: 6px; }
+    .legend i { display: inline-block; width: 14px; height: 3px; vertical-align: middle; margin-right: 6px; }
+    figcaption { font-size: 12px; color: var(--mute); margin-top: 10px; }
+
+    /* live feed */
+    .feed { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #fff; }
+    .feed .wrap { padding-top: 28px; padding-bottom: 28px; }
+    .feed .top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+    .feed .top b { font: 600 14px var(--sans); }
+    .feed .top span { font: 12px var(--mono); color: var(--mute); }
+    .live { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--risk); margin-right: 8px; animation: p 1.6s infinite; }
+    @keyframes p { 50% { opacity: .3; } }
+    table.log { width: 100%; border-collapse: collapse; font: 13px var(--mono); }
+    .log th { text-align: left; font-weight: 500; color: var(--mute); font-size: 11px; padding: 6px 12px 6px 0; border-bottom: 1px solid var(--line); }
+    .log td { padding: 9px 12px 9px 0; border-bottom: 1px solid #f0efeb; white-space: nowrap; }
+    .log tr.new td { animation: fade .8s ease; }
+    @keyframes fade { from { background: #fff7e8; } to { background: transparent; } }
+    .bar { display: inline-block; height: 6px; border-radius: 3px; vertical-align: middle; margin-right: 8px; }
+    .act { font-weight: 500; }
+    .act.allow { color: var(--ok); } .act.challenge { color: var(--warn); } .act.deny { color: var(--risk); }
+
+    section { padding: 96px 0; }
+    .head { display: grid; grid-template-columns: 1fr 1.25fr; gap: 64px; margin-bottom: 48px; }
+    h2 { font: 500 clamp(30px, 3.4vw, 42px)/1.1 var(--serif); letter-spacing: -.015em; margin: 0; }
+    .head p { margin: 0; color: var(--body); font-size: 17px; }
+
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 2px solid var(--ink); }
+    .stat { padding: 20px 20px 0 0; }
+    .stat b { display: block; font: 500 44px/1 var(--serif); letter-spacing: -.02em; }
+    .stat span { display: block; font-size: 14px; color: var(--body); margin-top: 8px; max-width: 16em; }
+
+    table.bench { width: 100%; border-collapse: collapse; font-size: 15px; }
+    .bench th { text-align: right; font: 500 12px var(--mono); color: var(--mute); padding: 10px 0 10px 16px; border-bottom: 2px solid var(--ink); }
+    .bench th:first-child, .bench td:first-child { text-align: left; padding-left: 0; }
+    .bench td { text-align: right; padding: 14px 0 14px 16px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+    .bench tr.us td { font-weight: 600; background: #fff4f1; }
+    .bench tr.us td:first-child { box-shadow: inset 3px 0 0 var(--risk); padding-left: 12px; }
+    .note { font-size: 12px; color: var(--mute); margin-top: 12px; }
+
+    .method { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .method h3 { font: 600 17px var(--sans); margin: 0 0 8px; }
+    .method p { margin: 0; color: var(--body); font-size: 15px; }
+    .method .n { font: 500 12px var(--mono); color: var(--risk); display: block; margin-bottom: 10px; }
+
+    .cta { background: var(--ink); color: #f3f2ee; }
+    .cta .wrap { display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; align-items: center; padding-top: 72px; padding-bottom: 72px; }
+    .cta h2 { color: #fff; }
+    .cta p { color: #b9b8b1; margin: 12px 0 0; }
+    .cta .ctas { justify-content: flex-end; }
+    .cta .btn { background: #fff; color: var(--ink) !important; }
+    .cta .btn.out { background: transparent; color: #fff !important; border-color: #fff; }
+
+    footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-top: 24px; padding-bottom: 40px; font-size: 13px; color: var(--mute); }
+
+    @media (max-width: 900px) {
+      .wrap { padding: 0 16px; }
+      nav a:not(.btn) { display: none; }
+      .hero .wrap, .head, .cta .wrap { grid-template-columns: 1fr; gap: 32px; }
+      .stats { grid-template-columns: 1fr 1fr; row-gap: 24px; }
+      .method { grid-template-columns: 1fr; }
+      .log .hide { display: none; }
+      .bench .hide { display: none; }
+      .cta .ctas { justify-content: flex-start; }
+      section { padding: 64px 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span>v09</span></div></div>
+  <header>
+    <div class="wrap">
+      <div class="logo">security<b>Lab</b></div>
+      <nav><a href="#evidence">Evidence</a><a href="#benchmark">Benchmark</a><a href="#method">Method</a><a href="#">Docs</a><a href="#">Pricing</a><a class="btn" href="#start">Get API key</a></nav>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <div class="over">whereami · login-time detection</div>
+        <h1>Catch account takeovers without blocking your real users.</h1>
+        <p class="lead">whereami scores every login attempt from its IP address and metadata. It flags the attackers that IP blocklists miss, and lets the travelers and VPN users that geo rules wrongly block straight through.</p>
+        <div class="ctas"><a class="btn" href="#start">Try it free</a><a class="btn out" href="#benchmark">See the benchmark</a></div>
+      </div>
+      <figure class="chart">
+        <h3>Precision vs. recall on account-takeover attempts</h3>
+        <div class="sub">Higher and further right is better</div>
+        <svg viewBox="0 0 560 320" role="img" aria-label="Precision-recall curves: whereami stays above 0.95 precision until 0.92 recall; blocklists and geo rules fall off much earlier">
+          <g font-family="IBM Plex Mono, monospace" font-size="10" fill="#8f8f88">
+            <line x1="44" y1="280" x2="540" y2="280" stroke="#e4e3de"/>
+            <line x1="44" y1="210" x2="540" y2="210" stroke="#f0efeb"/>
+            <line x1="44" y1="140" x2="540" y2="140" stroke="#f0efeb"/>
+            <line x1="44" y1="70"  x2="540" y2="70"  stroke="#f0efeb"/>
+            <line x1="44" y1="14"  x2="540" y2="14"  stroke="#f0efeb"/>
+            <text x="8" y="284">0.6</text><text x="8" y="214">0.7</text><text x="8" y="144">0.8</text><text x="8" y="74">0.9</text><text x="8" y="18">1.0</text>
+            <text x="40" y="300">0</text><text x="160" y="300">0.25</text><text x="284" y="300">0.5</text><text x="408" y="300">0.75</text><text x="528" y="300">1</text>
+            <text x="250" y="316" fill="#4b4b47">Recall</text>
+          </g>
+          <!-- geo rules -->
+          <path d="M44 120 C120 150, 180 210, 230 250 S300 276, 330 280" fill="none" stroke="#b9b8b1" stroke-width="2" stroke-dasharray="5 4"/>
+          <!-- blocklist -->
+          <path d="M44 40 C120 50, 200 80, 260 130 S340 230, 380 280" fill="none" stroke="#6f6f69" stroke-width="2"/>
+          <!-- whereami -->
+          <path d="M44 22 C200 22, 380 28, 470 35 S520 110, 534 230" fill="none" stroke="#d9381e" stroke-width="3"/>
+          <circle cx="470" cy="35" r="5" fill="#d9381e"/>
+          <text x="400" y="58" font-family="Inter Tight, sans-serif" font-size="12" fill="#161615">0.97 precision at 0.92 recall</text>
+        </svg>
+        <div class="legend"><span><i style="background:#d9381e"></i>whereami</span><span><i style="background:#6f6f69"></i>IP blocklist</span><span><i style="background:#b9b8b1"></i>Geo rules</span></div>
+        <figcaption>Illustrative. 2.1M labeled login attempts across 40 customer apps, Q3 2026.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="feed">
+    <div class="wrap">
+      <div class="top"><b><span class="live"></span>Recent decisions</b><span>sample stream · anonymized · illustrative</span></div>
+      <table class="log">
+        <thead><tr><th>TIME</th><th>IP</th><th class="hide">NETWORK</th><th class="hide">SIGNALS</th><th>RISK</th><th>ACTION</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <section id="evidence">
+    <div class="wrap">
+      <div class="head">
+        <h2>What sits behind each score.</h2>
+        <p>whereami combines network intelligence we collect ourselves with behavior across the accounts we protect. Every response says which signals fired, so you can see why.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>38M</b><span>residential proxy exit IPs tracked in the last 30 days</span></div>
+        <div class="stat"><b>18 ms</b><span>median response time, measured at the edge</span></div>
+        <div class="stat"><b>94%</b><span>of credential-stuffing logins flagged on first attempt</span></div>
+        <div class="stat"><b>0.3%</b><span>of legitimate logins challenged</span></div>
+      </div>
+      <p class="note">Figures are illustrative placeholders.</p>
+    </div>
+  </section>
+
+  <section id="benchmark" style="padding-top:0">
+    <div class="wrap">
+      <div class="head">
+        <h2>Benchmark against common approaches.</h2>
+        <p>Same dataset, same thresholds tuned for 1% false positives. We publish the dataset description and evaluation code so you can check our work.</p>
+      </div>
+      <table class="bench">
+        <thead><tr><th>Approach</th><th>Precision</th><th>Recall</th><th class="hide">False positives</th><th class="hide">Median latency</th></tr></thead>
+        <tbody>
+          <tr class="us"><td>whereami</td><td>0.97</td><td>0.92</td><td class="hide">0.3%</td><td class="hide">18 ms</td></tr>
+          <tr><td>Commercial IP reputation feed</td><td>0.88</td><td>0.61</td><td class="hide">1.0%</td><td class="hide">35 ms</td></tr>
+          <tr><td>Open-source IP blocklists</td><td>0.81</td><td>0.44</td><td class="hide">1.0%</td><td class="hide">2 ms</td></tr>
+          <tr><td>Country-based geo rules</td><td>0.62</td><td>0.38</td><td class="hide">4.7%</td><td class="hide">1 ms</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Illustrative results. Full methodology in our evaluation report.</p>
+    </div>
+  </section>
+
+  <section id="method" style="padding-top:0">
+    <div class="wrap">
+      <div class="head"><h2>How we evaluate.</h2><p>Accuracy claims in security are cheap. These are the rules we hold ourselves to.</p></div>
+      <div class="method">
+        <div><span class="n">01</span><h3>Labeled by outcome</h3><p>Attempts are labeled by what happened next (confirmed takeover, chargeback, user report), not by our own model.</p></div>
+        <div><span class="n">02</span><h3>Held-out time windows</h3><p>We train on past months and test on later ones, so scores reflect attackers we hadn’t seen yet.</p></div>
+        <div><span class="n">03</span><h3>Published and reproducible</h3><p>Dataset description, metrics code, and quarterly results are public.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta" id="start">
+    <div class="wrap">
+      <div><h2>Run it on your own logins.</h2><p>1,000 free checks every month, then $0.40 per 1,000. No contract. Get a key in under a minute.</p></div>
+      <div class="ctas"><a class="btn" href="#">Get API key</a><a class="btn out" href="#">Read the docs</a></div>
+    </div>
+  </div>
+
+  <footer><div class="wrap"><span>© 2026 securityLab</span><span>Placeholder name. All figures illustrative.</span></div></footer>
+
+  <script>
+    const pool = [
+      ['185.220.101.34', 'AS9009 · residential proxy', 'impossible_travel, new_network', .91, 'challenge'],
+      ['73.162.48.201', 'AS7922 · Comcast', '—', .04, 'allow'],
+      ['45.134.26.9', 'AS49505 · hosting', 'ip_velocity, abuse_recent', .98, 'deny'],
+      ['2a02:c7f:8e1a::1', 'AS5607 · Sky UK', '—', .07, 'allow'],
+      ['104.28.55.12', 'AS13335 · VPN', 'vpn, known_account_device', .22, 'allow'],
+      ['91.240.118.172', 'AS204957 · proxy pool', 'residential_proxy, ua_mismatch', .87, 'challenge'],
+      ['24.48.201.77', 'AS5769 · Videotron', 'new_network', .18, 'allow'],
+      ['193.32.162.40', 'AS210644 · hosting', 'abuse_recent, ip_velocity', .96, 'deny'],
+      ['98.97.12.204', 'AS14593 · Starlink', 'new_network', .26, 'allow'],
+      ['185.107.56.88', 'AS43350 · VPN', 'impossible_travel', .74, 'challenge'],
+    ];
+    const tbody = document.getElementById('rows');
+    const color = r => r > .8 ? '#d9381e' : r > .5 ? '#c98a12' : '#2f7d4f';
+    let i = 0;
+    function row(fresh) {
+      const [ip, net, sig, risk, act] = pool[i++ % pool.length];
+      const t = new Date().toLocaleTimeString('en-GB');
+      const tr = document.createElement('tr');
+      if (fresh) tr.className = 'new';
+      tr.innerHTML = `<td>${t}</td><td>${ip}</td><td class="hide">${net}</td><td class="hide">${sig}</td>
+        <td><span class="bar" style="width:${Math.round(risk * 60)}px;background:${color(risk)}"></span>${risk.toFixed(2)}</td>
+        <td class="act ${act}">${act}</td>`;
+      tbody.prepend(tr);
+      while (tbody.children.length > 6) tbody.lastChild.remove();
+    }
+    for (let k = 0; k < 6; k++) row(false);
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(() => row(true), 2200);
+  </script>
+</body>
+</html>
