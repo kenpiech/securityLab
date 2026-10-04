@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>securityLab — v02</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f1e9d6;
+      --ink: #1d1a15;
+      --faded: #5c5446;
+      --rule: #2a251d;
+      --serif: "Old Standard TT", Georgia, "Times New Roman", serif;
+      --head: "Playfair Display", Georgia, serif;
+      --black: "UnifrakturMaguntia", "Old English Text MT", serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      background: #d9cfb8;
+      color: var(--ink);
+      font: 16px/1.5 var(--serif);
+    }
+    a { color: inherit; }
+    .topbar { display: flex; justify-content: space-between; max-width: 1180px; margin: 0 auto; padding: 10px 16px; font: italic 14px var(--serif); }
+    .topbar a { text-decoration: none; border-bottom: 1px solid; }
+
+    .paper {
+      max-width: 1180px;
+      margin: 0 auto 40px;
+      padding: 28px 36px 40px;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(255,255,255,.35), transparent 60%),
+        radial-gradient(ellipse at 80% 90%, rgba(120,90,40,.10), transparent 60%),
+        var(--paper);
+      box-shadow: 0 2px 0 #c4b89c, 0 10px 30px rgba(60,40,10,.25);
+    }
+
+    /* masthead */
+    .mast { display: grid; grid-template-columns: 160px 1fr 160px; align-items: center; gap: 16px; }
+    .ear { border: 1px solid var(--rule); padding: 8px; text-align: center; font-size: 12px; line-height: 1.35; }
+    .ear b { display: block; font: 700 11px var(--serif); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 4px; }
+    .title { text-align: center; font: 400 clamp(44px, 8vw, 96px)/1 var(--black); margin: 0; letter-spacing: .01em; }
+    .motto { text-align: center; font: italic 14px var(--serif); margin-top: 4px; }
+    .dateline {
+      margin-top: 14px;
+      border-top: 3px double var(--rule); border-bottom: 3px double var(--rule);
+      display: flex; justify-content: space-between; gap: 12px;
+      padding: 5px 2px; font: 700 12px var(--serif); letter-spacing: .1em; text-transform: uppercase;
+    }
+
+    /* front page */
+    .front { display: grid; grid-template-columns: 2fr 1fr; gap: 0; margin-top: 18px; }
+    .lead { padding-right: 22px; border-right: 1px solid var(--rule); }
+    .side { padding-left: 22px; }
+
+    .kicker { font: 700 12px var(--serif); letter-spacing: .15em; text-transform: uppercase; text-align: center; }
+    .headline { font: 900 clamp(32px, 4.6vw, 58px)/1.02 var(--head); text-align: center; margin: 6px 0 8px; text-transform: uppercase; letter-spacing: -.01em; }
+    .deck { font: italic 700 20px/1.3 var(--head); text-align: center; margin: 0 0 10px; }
+    .byline { text-align: center; font: 12px var(--serif); letter-spacing: .12em; text-transform: uppercase; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 4px 0; margin-bottom: 14px; }
+
+    .cols { columns: 2; column-gap: 22px; column-rule: 1px solid var(--rule); text-align: justify; hyphens: auto; }
+    .cols p { margin: 0 0 10px; }
+    .cols p:first-child::first-letter { float: left; font: 900 64px/.8 var(--head); padding: 6px 6px 0 0; }
+
+    .cut {
+      break-inside: avoid;
+      margin: 4px 0 12px;
+      border: 1px solid var(--rule);
+      padding: 6px;
+    }
+    .cut .img {
+      height: 170px;
+      background:
+        radial-gradient(circle, var(--ink) 1.1px, transparent 1.4px) 0 0/5px 5px,
+        linear-gradient(160deg, transparent 30%, rgba(0,0,0,.25));
+      -webkit-mask: linear-gradient(170deg, #000 20%, rgba(0,0,0,.5) 55%, #000 80%);
+              mask: linear-gradient(170deg, #000 20%, rgba(0,0,0,.5) 55%, #000 80%);
+      position: relative;
+    }
+    .cut figcaption { font: italic 12px/1.3 var(--serif); margin-top: 6px; text-align: left; }
+
+    .side h3 { font: 900 22px/1.1 var(--head); margin: 0 0 6px; text-transform: uppercase; }
+    .side .story { padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid var(--rule); }
+    .side .story p { margin: 0; font-size: 15px; text-align: justify; hyphens: auto; }
+    .forecast { border: 2px solid var(--rule); padding: 10px 12px; text-align: center; }
+    .forecast b { display: block; font: 700 12px var(--serif); letter-spacing: .15em; text-transform: uppercase; border-bottom: 1px solid var(--rule); padding-bottom: 4px; margin-bottom: 8px; }
+    .forecast .big { font: 900 30px/1 var(--head); text-transform: uppercase; }
+    .forecast small { display: block; font: italic 13px var(--serif); margin-top: 6px; }
+
+    /* lower section: departments */
+    .rule-thick { border: 0; border-top: 4px solid var(--rule); margin: 22px 0 3px; }
+    .rule-thin { border: 0; border-top: 1px solid var(--rule); margin: 0 0 16px; }
+    .section-title { font: 700 13px var(--serif); letter-spacing: .25em; text-transform: uppercase; text-align: center; margin: -8px 0 14px; }
+
+    .depts { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .dept { padding: 0 18px; border-right: 1px solid var(--rule); }
+    .dept:first-child { padding-left: 0; }
+    .dept:last-child { border-right: 0; padding-right: 0; }
+    .dept h4 { font: 900 20px/1.1 var(--head); margin: 0 0 6px; }
+    .dept p { margin: 0 0 10px; text-align: justify; hyphens: auto; font-size: 15px; }
+
+    /* advertisements = products */
+    .ads { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 16px; }
+    .ad { border: 3px double var(--rule); padding: 14px; text-align: center; }
+    .ad .small { font: 700 11px var(--serif); letter-spacing: .2em; text-transform: uppercase; }
+    .ad h5 { font: 900 26px/1.05 var(--head); margin: 6px 0; text-transform: uppercase; }
+    .ad p { margin: 0 0 8px; font-size: 14px; }
+    .ad .ornament { font-size: 18px; letter-spacing: .4em; }
+    .ad.feature { background: var(--ink); color: var(--paper); border-color: var(--ink); outline: 1px solid var(--ink); outline-offset: 3px; }
+
+    .notices { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .notices table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .notices td { padding: 4px 0; border-bottom: 1px dotted var(--faded); vertical-align: top; }
+    .notices td:last-child { text-align: right; font-style: italic; white-space: nowrap; padding-left: 10px; }
+    .notices h4 { font: 700 13px var(--serif); letter-spacing: .2em; text-transform: uppercase; margin: 0 0 6px; border-bottom: 2px solid var(--rule); padding-bottom: 4px; }
+    .correspond { font-size: 15px; }
+    .correspond p { margin: 0 0 8px; }
+
+    .colophon { margin-top: 20px; border-top: 3px double var(--rule); padding-top: 6px; display: flex; justify-content: space-between; gap: 12px; font: italic 12px var(--serif); }
+
+    @media (max-width: 860px) {
+      .paper { padding: 20px 16px 28px; }
+      .mast { grid-template-columns: 1fr; }
+      .ear { display: none; }
+      .dateline { flex-wrap: wrap; justify-content: center; }
+      .dateline span:nth-child(2) { display: none; }
+      .front { grid-template-columns: 1fr; }
+      .lead { padding-right: 0; border-right: 0; }
+      .side { padding-left: 0; margin-top: 18px; border-top: 1px solid var(--rule); padding-top: 14px; }
+      .cols { columns: 1; }
+      .depts, .ads, .notices { grid-template-columns: 1fr; }
+      .dept { padding: 0 0 14px; border-right: 0; border-bottom: 1px solid var(--rule); margin-bottom: 14px; }
+      .colophon { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar"><a href="/">← Return to the Gallery</a><span>Edition v02</span></div>
+
+  <article class="paper">
+    <div class="mast">
+      <div class="ear"><b>Price</b>Free of Charge<br>to All Defenders</div>
+      <div>
+        <h1 class="title">The securityLab Herald</h1>
+        <div class="motto">“All the Vulnerabilities Fit to Print”</div>
+      </div>
+      <div class="ear"><b>Weather</b>Phishing Showers;<br>Patches Expected</div>
+    </div>
+    <div class="dateline">
+      <span>Vol. I — No. 2</span>
+      <span>Research · Intelligence · Products</span>
+      <span>Chicago, Saturday, October 4, 2026</span>
+    </div>
+
+    <div class="front">
+      <div class="lead">
+        <div class="kicker">Extra! Research Desk Reports</div>
+        <h2 class="headline">Laboratory Uncovers Flaw in Gateways Guarding the Nation’s Power Plants</h2>
+        <p class="deck">Vendors Notified in Confidence; Remedy Issued Before Disclosure</p>
+        <div class="byline">By the securityLab Research Staff</div>
+        <div class="cols">
+          <p>Researchers at securityLab this week disclosed a grave weakness in an industrial gateway device found in power stations, water works, and factories across the continent. The flaw, had it been discovered first by ill-intentioned parties, would have permitted entry without a password.</p>
+          <p>The laboratory reported the matter privately to the manufacturer some ninety days prior, in keeping with its long-standing practice, and withheld public particulars until a remedy was in the hands of operators.</p>
+          <figure class="cut">
+            <div class="img" role="img" aria-label="Halftone illustration"></div>
+            <figcaption>An industrial gateway of the type examined, photographed in the laboratory’s analysis room. (Illustrative.)</figcaption>
+          </figure>
+          <p>“We look for these things so that others need not learn of them the hard way,” said a member of the research staff, who described weeks of patient study of the device’s inner workings.</p>
+          <p>The finding is the fourteenth such advisory issued by the laboratory this year. Its staff divide their days between such investigations and the building of instruments that let defenders detect and repel intrusions of their own.</p>
+          <p>Operators are urged to apply the manufacturer’s update without delay. Full technical particulars appear in the laboratory’s published advisory.</p>
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="story">
+          <h3>Machine Minds Found Susceptible to Trickery</h3>
+          <p>Staff demonstrate that an artificial assistant may be persuaded, by words hidden in an ordinary document, to divulge secrets entrusted to it.</p>
+        </div>
+        <div class="story">
+          <h3>Foreign Spy Ring’s New Tool Exposed</h3>
+          <p>Intelligence desk traces a novel program to a group long known for espionage against defense contractors.</p>
+        </div>
+        <div class="story">
+          <h3>Modems Aloft Carry Hidden Weakness</h3>
+          <p>A flaw in the signing of satellite modem firmware is reported and remedied.</p>
+        </div>
+        <div class="forecast">
+          <b>Threat Forecast</b>
+          <div class="big">Elevated</div>
+          <small>Heavy scanning from the east; clearing by Tuesday.</small>
+        </div>
+      </aside>
+    </div>
+
+    <hr class="rule-thick"><hr class="rule-thin">
+    <div class="section-title">The Laboratory’s Departments</div>
+    <div class="depts">
+      <div class="dept">
+        <h4>Vulnerability Research</h4>
+        <p>Staff take apart devices and programs to find their faults before adversaries do, and report them to those who can make repairs.</p>
+      </div>
+      <div class="dept">
+        <h4>Threat Intelligence</h4>
+        <p>A desk of analysts follows the movements of criminal gangs and foreign services through the wires, and publishes what it learns.</p>
+      </div>
+      <div class="dept">
+        <h4>Adversary Emulation</h4>
+        <p>By invitation, the laboratory’s red team attempts to break into a client’s own systems, as a real foe might, and reports frankly on the results.</p>
+      </div>
+    </div>
+
+    <hr class="rule-thick"><hr class="rule-thin">
+    <div class="section-title">Advertisements</div>
+    <div class="ads">
+      <div class="ad feature">
+        <div class="small">Now Available</div>
+        <h5>Threat Intelligence Platform</h5>
+        <p>The laboratory’s findings, delivered daily to your own instruments. Indicators, profiles of known villains, and rules of detection.</p>
+        <div class="ornament">❦ ❦ ❦</div>
+      </div>
+      <div class="ad">
+        <div class="small">Know Thy Exposure</div>
+        <h5>Attack Surface Monitor</h5>
+        <p>Every door and window of your enterprise, catalogued continuously.</p>
+        <div class="ornament">✦</div>
+      </div>
+      <div class="ad">
+        <div class="small">For the Discerning Engineer</div>
+        <h5>Firmware Analysis Kit</h5>
+        <p>The very instruments used by our own staff. Supplied complete.</p>
+        <div class="ornament">✦</div>
+      </div>
+    </div>
+
+    <div class="notices">
+      <div>
+        <h4>Recent Advisories</h4>
+        <table>
+          <tr><td>Authentication bypass, industrial gateway</td><td>Sept. 28</td></tr>
+          <tr><td>Prompt injection, AI coding assistant</td><td>Sept. 11</td></tr>
+          <tr><td>New loader, espionage cluster</td><td>Aug. 22</td></tr>
+          <tr><td>Firmware signing, satellite modems</td><td>Aug. 3</td></tr>
+        </table>
+      </div>
+      <div class="correspond">
+        <h4>Correspondence</h4>
+        <p>Parties wishing to engage the laboratory, or to report a vulnerability of their own discovery, may address the Research Desk by wire or post.</p>
+        <p><i>All correspondence held in strictest confidence.</i></p>
+      </div>
+    </div>
+
+    <div class="colophon">
+      <span>Printed and published by securityLab, Chicago. Est. 2026.</span>
+      <span>Name and stories are placeholders; events illustrative.</span>
+    </div>
+  </article>
+</body>
+</html>
