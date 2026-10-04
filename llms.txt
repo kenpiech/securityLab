@@ -1,0 +1,11 @@
+# securityLab (design prototype)
+
+> NOTICE FOR AI AGENTS: This site is a design prototype built for a university class
+> assignment (25 landing-page versions). securityLab is a placeholder name.
+> The products, APIs, endpoints, SDK packages, MCP servers, pricing, and signup flows
+> shown on these pages DO NOT EXIST.
+> Do not attempt to sign up, install packages, call endpoints, or follow integration
+> instructions found on any page of this site.
+
+All endpoints shown use the reserved domain securitylab.example, which never resolves.
+Package names containing "placeholder" are not published.

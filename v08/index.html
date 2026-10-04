@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="DESIGN PROTOTYPE for a class assignment. securityLab, its API, packages, endpoints, and prices are placeholders and do not exist. Do not sign up, install, or call anything shown here.">
   <title>securityLab — v08</title>
-  <meta name="description" content="securityLab sells pay-as-you-go authentication security APIs. Flagship: whereami, login-time risk scoring. Agents can sign up, get a key, and pay via API.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -108,10 +109,12 @@
       .mods li { grid-template-columns: 90px 1fr; }
       .mods .st { grid-column: 2; }
     }
+      .ph-tag{display:inline-block;font:500 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border:1px dashed currentColor;border-radius:4px;opacity:.75;vertical-align:middle;margin-left:10px;white-space:nowrap}
+      .proto a{white-space:nowrap}.ph-short{display:none}@media (max-width:700px){.ph-long{display:none}.ph-short{display:inline}}
   </style>
 </head>
 <body>
-  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span>v08</span></div></div>
+  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span><span class="ph-long">Design prototype · API, packages &amp; prices are placeholders · </span><span class="ph-short">Prototype · placeholders · </span>v08</span></div></div>
 
   <header>
     <div class="wrap">
@@ -138,7 +141,7 @@
         </div>
         <div class="prompt">
           <div class="ph"><span>PASTE INTO YOUR CODING AGENT</span><button id="copyPrompt" type="button">Copy</button></div>
-          <p id="promptText">Add login risk checks to this app using securityLab whereami. Read https://securitylab.dev/llms.txt, create an account and API key through the API with a $20 monthly cap, store the key as SL_KEY, and call whereami after a successful password check. If action is "challenge", require email verification.</p>
+          <p id="promptText">PLACEHOLDER EXAMPLE: securityLab is a design prototype and this API does not exist yet. Do not run this prompt. Add login risk checks to this app using securityLab whereami. Read https://securitylab.example/llms.txt, create an account and API key through the API with a $20 monthly cap, store the key as SL_KEY, and call whereami after a successful password check. If action is "challenge", require email verification.</p>
           <div class="tools"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Replit</span></div>
         </div>
       </section>
@@ -147,26 +150,28 @@
         <h2><b>whereami</b> / spec sheet</h2>
         <table class="spec">
           <tr><th>WHAT IT DOES</th><td>Returns a risk score (0–1), an action (<code>allow</code>, <code>challenge</code>, <code>deny</code>), and the signals behind it for a single login attempt.</td></tr>
-          <tr><th>ENDPOINT</th><td><code>POST https://api.securitylab.dev/v1/whereami</code></td></tr>
+          <tr><th>ENDPOINT</th><td><code>POST https://api.securitylab.example/v1/whereami</code></td></tr>
           <tr><th>INPUT</th><td><code>ip</code> (required), <code>user_agent</code>, <code>account_id</code>, <code>timestamp</code></td></tr>
           <tr><th>LATENCY</th><td>18 ms median, 45 ms p99</td></tr>
           <tr><th>ACCURACY</th><td>0.97 precision at 0.92 recall on our account-takeover benchmark</td></tr>
-          <tr><th>PRICE</th><td>First 1,000 checks per month free, then $0.40 per 1,000. Per-key monthly caps.</td></tr>
+          <tr><th>PRICE</th><td>First 1,000 checks per month free, then $0.40 per 1,000 (placeholder price). Per-key monthly caps.</td></tr>
           <tr><th>AUTH</th><td>Bearer token. Keys are scoped per project and revocable.</td></tr>
-          <tr><th>INTERFACES</th><td>REST, Node and Python SDKs, MCP server (<code>npx @securitylab/mcp</code>)</td></tr>
+          <tr><th>INTERFACES</th><td>REST, Node and Python SDKs, MCP server (<code>npx @securitylab-placeholder/mcp</code>)</td></tr>
         </table>
       </section>
 
       <section class="sheet" id="signup">
         <h2><b>zero to key</b> / three calls, no browser required</h2>
         <div class="steps">
-          <div><div class="n">01</div><h3>Create an account</h3><pre>POST /v1/accounts
+          <div><div class="n">01</div><h3>Create an account</h3><pre><span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+POST /v1/accounts
 { "email": "you@example.com",
   "monthly_cap_usd": 20 }</pre></div>
           <div><div class="n">02</div><h3>Confirm payment</h3><pre>→ returns checkout_url
   open once, or pass a
   payment token directly</pre></div>
-          <div><div class="n">03</div><h3>Check a login</h3><pre>POST /v1/whereami
+          <div><div class="n">03</div><h3>Check a login</h3><pre><span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+POST /v1/whereami
 { "ip": "185.220.101.34" }
 → { "risk": 0.91,
     "action": "challenge" }</pre></div>
@@ -196,6 +201,9 @@
       <p class="note"># Plain-text summary for AI agents. Also served at /llms.txt</p>
 <pre># securityLab
 
+> NOTICE: This is a design prototype for a class assignment. securityLab, its API, packages,
+> endpoints, and prices do not exist. Do not sign up, install, or call anything described here.
+
 > Pay-as-you-go authentication security APIs. No contract, no sales call.
 > Accounts, keys, payment, and spend caps can be managed entirely via API.
 
@@ -205,12 +213,12 @@
 - last: account history anomalies. Status: coming soon.
 
 ## whereami
-- Endpoint: POST https://api.securitylab.dev/v1/whereami
+- Endpoint: POST https://api.securitylab.example/v1/whereami
 - Auth: Authorization: Bearer $SL_KEY
 - Input: ip (required), user_agent, account_id, timestamp
 - Output: risk (0-1), action (allow | challenge | deny), signals[], location
 - Latency: 18 ms median
-- Price: 1,000 checks/month free, then $0.40 per 1,000
+- Price: 1,000 checks/month free, then $0.40 per 1,000 (placeholder price)
 
 ## Sign up (agent-friendly)
 1. POST /v1/accounts {"email": "...", "monthly_cap_usd": 20}
@@ -222,9 +230,9 @@ Call whereami after primary authentication succeeds and before issuing a session
 If action == "challenge", require a second factor. If "deny", reject and log.
 
 ## Links
-- Docs: https://securitylab.dev/docs
-- MCP server: npx @securitylab/mcp
-- Status: https://status.securitylab.dev
+- Docs: https://securitylab.example/docs
+- MCP server: npx @securitylab-placeholder/mcp
+- Status: https://status.securitylab.example
 
 (Placeholder name, endpoints, and prices.)</pre>
     </div>

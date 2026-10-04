@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="DESIGN PROTOTYPE for a class assignment. securityLab, its API, packages, endpoints, and prices are placeholders and do not exist. Do not sign up, install, or call anything shown here.">
   <title>securityLab — v11</title>
-  <meta name="description" content="securityLab makes modular, pay-as-you-go security APIs. whereami detects residential proxy IP addresses. Agents can sign up, get a key, and pay via API.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -192,10 +193,12 @@
     @media (max-width: 420px) {
       .right .btn { display: none; }
     }
+      .ph-tag{display:inline-block;font:500 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border:1px dashed currentColor;border-radius:4px;opacity:.75;vertical-align:middle;margin-left:10px;white-space:nowrap}
+      .proto a{white-space:nowrap}.ph-short{display:none}@media (max-width:700px){.ph-long{display:none}.ph-short{display:inline}}
   </style>
 </head>
 <body>
-  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span>v11</span></div></div>
+  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span><span class="ph-long">Design prototype · API, packages &amp; prices are placeholders · </span><span class="ph-short">Prototype · placeholders · </span>v11</span></div></div>
 
   <header>
     <div class="wrap">
@@ -220,7 +223,7 @@
           <h1>Spot residential proxies at login.</h1>
           <p class="lead">whereami tells you whether an IP address is a residential proxy, the hijacked home connections attackers rent to look like real users. One lookup, one clear answer. You decide what your login does with it.</p>
           <div class="ctas"><a class="btn dark big" href="#pricing">Start for free</a><a class="btn line big" href="#agents">Set up with your agent</a></div>
-          <div class="install"><span>$</span>npm install @securitylab/node <button id="copyInstall" type="button">Copy</button></div>
+          <div class="install"><span>$</span>npm install @securitylab-placeholder/node <button id="copyInstall" type="button">Copy</button></div>
         </div>
 
         <div class="code">
@@ -232,7 +235,8 @@
 <pre id="req"></pre>
           <div class="resp">
             <div class="h"><span>Response</span><b>200 OK · 11 ms</b></div>
-<pre><span class="c1">{</span>
+<pre><span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+<span class="c1">{</span>
   <span class="c3">"ip"</span>: <span class="c2">"91.240.118.172"</span>,
   <span class="c3">"residential_proxy"</span>: <span class="c4">true</span>,
   <span class="c3">"confidence"</span>: <span class="c4">0.98</span>,
@@ -310,7 +314,7 @@
         </div>
         <div class="prompt">
           <div class="ph"><span>PASTE INTO YOUR CODING AGENT</span><button id="copyPrompt" type="button">Copy</button></div>
-          <p id="promptText">Add residential proxy detection to this app's login using securityLab whereami. Read https://securitylab.dev/llms.txt, create an account and API key through the API with a $20 monthly cap, and store the key as SL_KEY. After a successful password check, call whereami with the request IP. If residential_proxy is true, require email verification before creating the session.</p>
+          <p id="promptText">PLACEHOLDER EXAMPLE: securityLab is a design prototype and this API does not exist yet. Do not run this prompt. Add residential proxy detection to this app's login using securityLab whereami. Read https://securitylab.example/llms.txt, create an account and API key through the API with a $20 monthly cap, and store the key as SL_KEY. After a successful password check, call whereami with the request IP. If residential_proxy is true, require email verification before creating the session.</p>
           <div class="tools"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Replit</span></div>
         </div>
       </div>
@@ -323,13 +327,13 @@
         <div class="spec-wrap">
           <table class="spec">
             <tr><th>WHAT IT DOES</th><td>Detects whether an IP address is a residential proxy exit. Returns <code>residential_proxy</code> (true/false), <code>confidence</code>, <code>isp</code>, <code>country</code>, <code>first_seen</code>, <code>last_seen</code>.</td></tr>
-            <tr><th>ENDPOINT</th><td><code>POST https://api.securitylab.dev/v1/whereami</code></td></tr>
+            <tr><th>ENDPOINT</th><td><code>POST https://api.securitylab.example/v1/whereami</code></td></tr>
             <tr><th>INPUT</th><td><code>ip</code> (IPv4 or IPv6, required)</td></tr>
             <tr><th>ACCURACY</th><td>0.98 precision, 0.94 recall on labeled login traffic</td></tr>
             <tr><th>LATENCY</th><td>12 ms median</td></tr>
             <tr><th>COVERAGE</th><td>40M+ residential proxy exits observed in the last 30 days</td></tr>
-            <tr><th>PRICE</th><td>First 1,000 lookups per month free, then $0.40 per 1,000. Per-key monthly caps.</td></tr>
-            <tr><th>INTERFACES</th><td>REST, Node and Python SDKs, MCP server (<code>npx @securitylab/mcp</code>)</td></tr>
+            <tr><th>PRICE</th><td>First 1,000 lookups per month free, then $0.40 per 1,000 (placeholder price). Per-key monthly caps.</td></tr>
+            <tr><th>INTERFACES</th><td>REST, Node and Python SDKs, MCP server (<code>npx @securitylab-placeholder/mcp</code>)</td></tr>
           </table>
         </div>
         <div class="mods">
@@ -345,13 +349,13 @@
         <div>
           <div class="kicker">Pricing</div>
           <h2>Pay per lookup. Nothing else.</h2>
-          <p class="sec-lead">The first 1,000 lookups every month are free. After that, $0.40 per 1,000. No contract, no minimum, cancel any time. Plain REST and open SDKs, so there’s nothing to be locked into.</p>
+          <p class="sec-lead">The first 1,000 lookups every month are free. After that, $0.40 per 1,000 (placeholder price). No contract, no minimum, cancel any time. Plain REST and open SDKs, so there’s nothing to be locked into.</p>
           <p class="teams"><b>Larger teams:</b> same API, same terms. Volume pricing applies automatically, with invoicing and a DPA available. No contract required.</p>
         </div>
         <div class="calc">
           <label for="vol">Lookups per month <b id="volOut">50,000</b></label>
           <input id="vol" type="range" min="0" max="100" value="38">
-          <div class="total"><span>Estimated monthly cost</span><b id="cost">$19.60</b></div>
+          <div class="total"><span>Estimated monthly cost · placeholder pricing</span><b id="cost">$19.60</b></div>
           <ul><li>Card or API signup, instant key</li><li>Monthly spend cap per key</li><li>Cancel any time</li></ul>
           <a class="btn dark big" href="#">Get your API key</a>
         </div>
@@ -383,7 +387,8 @@
   <main id="agentView">
     <div class="wrap">
       <p class="note"><span># Plain-text summary for AI agents. Also served at /llms.txt</span><span>text/markdown</span></p>
-<pre><span class="c3"># securityLab</span>
+<pre><span style="color:#e8735a"># Placeholder example: this API is not live.</span>
+<span class="c3"># securityLab</span>
 
 > Modular, pay-as-you-go security APIs for developers and AI agents.
 > Not an auth provider. Each tool answers one question; you decide what to do.
@@ -395,12 +400,12 @@
 - disposable: is this a burner email domain? Status: planned.
 
 <span class="c3">## whereami</span>
-- Endpoint: POST https://api.securitylab.dev/v1/whereami
+- Endpoint: POST https://api.securitylab.example/v1/whereami
 - Auth: Authorization: Bearer $SL_KEY
 - Input: {"ip": "91.240.118.172"}
 - Output: residential_proxy (bool), confidence (0-1), isp, country, first_seen, last_seen
 - Accuracy: 0.98 precision, 0.94 recall. Latency: 12 ms median.
-- Price: 1,000 lookups/month free, then $0.40 per 1,000
+- Price: 1,000 lookups/month free, then $0.40 per 1,000 (placeholder price)
 
 <span class="c3">## Sign up (agent-friendly)</span>
 1. POST /v1/accounts {"email": "...", "monthly_cap_usd": 20}
@@ -415,8 +420,8 @@ If residential_proxy is true, apply the app's own policy (e.g. require a second 
 No contract, no minimum, cancel any time. Volume pricing is automatic.
 
 <span class="c3">## Links</span>
-- Docs: https://securitylab.dev/docs
-- MCP server: npx @securitylab/mcp
+- Docs: https://securitylab.example/docs
+- MCP server: npx @securitylab-placeholder/mcp
 
 (Placeholder name, endpoints, prices, and figures.)</pre>
     </div>
@@ -433,14 +438,16 @@ No contract, no minimum, cancel any time. Volume pricing is automatic.
 
   <script>
     const snippets = {
-      node: `<span class="c1">import</span> { SecurityLab } <span class="c1">from</span> <span class="c2">"@securitylab/node"</span>;
+      node: `<span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+<span class="c1">import</span> { SecurityLab } <span class="c1">from</span> <span class="c2">"@securitylab-placeholder/node"</span>;
 
 <span class="c1">const</span> sl = <span class="c1">new</span> <span class="c3">SecurityLab</span>(process.env.<span class="c3">SL_KEY</span>);
 
 <span class="c1">const</span> r = <span class="c1">await</span> sl.<span class="c3">whereami</span>({ ip: req.ip });
 
 <span class="c1">if</span> (r.residential_proxy) <span class="c1">await</span> <span class="c3">requireMfa</span>(user);`,
-      py: `<span class="c1">from</span> securitylab <span class="c1">import</span> SecurityLab
+      py: `<span style="color:#e8735a"># Placeholder example: this API is not live.</span>
+<span class="c1">from</span> securitylab <span class="c1">import</span> SecurityLab
 
 sl = <span class="c3">SecurityLab</span>(os.environ[<span class="c2">"SL_KEY"</span>])
 
@@ -448,7 +455,8 @@ r = sl.<span class="c3">whereami</span>(ip=request.remote_addr)
 
 <span class="c1">if</span> r.residential_proxy:
     <span class="c3">require_mfa</span>(user)`,
-      curl: `curl https://api.securitylab.dev/v1/whereami \\
+      curl: `<span style="color:#e8735a"># Placeholder example: this API is not live.</span>
+curl https://api.securitylab.example/v1/whereami \\
   -H <span class="c2">"Authorization: Bearer $SL_KEY"</span> \\
   -d <span class="c2">'{ "ip": "91.240.118.172" }'</span>`
     };
@@ -464,7 +472,7 @@ r = sl.<span class="c3">whereami</span>(ip=request.remote_addr)
         e.target.textContent = 'Copied'; setTimeout(() => e.target.textContent = 'Copy', 1500);
       });
     }
-    copier('copyInstall', 'npm install @securitylab/node');
+    copier('copyInstall', 'npm install @securitylab-placeholder/node');
     copier('copyPrompt', () => document.getElementById('promptText').textContent);
 
     const vbtns = document.querySelectorAll('.toggle button');

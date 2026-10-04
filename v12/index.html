@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="DESIGN PROTOTYPE for a class assignment. securityLab, its API, packages, endpoints, and prices are placeholders and do not exist. Do not sign up, install, or call anything shown here.">
   <title>securityLab — v12</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -186,10 +188,12 @@
       .fields th:nth-child(2) { display: none; }
       footer a { margin: 0 16px 0 0; }
     }
+      .ph-tag{display:inline-block;font:500 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border:1px dashed currentColor;border-radius:4px;opacity:.75;vertical-align:middle;margin-left:10px;white-space:nowrap}
+      .proto a{white-space:nowrap}.ph-short{display:none}@media (max-width:700px){.ph-long{display:none}.ph-short{display:inline}}
   </style>
 </head>
 <body>
-  <div class="proto"><div class="in"><a href="/">← Gallery</a><span>v12</span></div></div>
+  <div class="proto"><div class="in"><a href="/">← Gallery</a><span><span class="ph-long">Design prototype · API, packages &amp; prices are placeholders · </span><span class="ph-short">Prototype · placeholders · </span>v12</span></div></div>
 
   <header>
     <div class="in">
@@ -235,7 +239,7 @@
           <tr><th>DETECTS</th><td>Whether an IP is a residential proxy exit, with a confidence score</td></tr>
           <tr><th>ENDPOINT</th><td><code class="i">POST /v1/whereami</code></td></tr>
           <tr><th>INPUT</th><td><code class="i">ip</code> (IPv4 or IPv6)</td></tr>
-          <tr><th>PRICE</th><td>1,000 lookups/month free, then $0.40 per 1,000</td></tr>
+          <tr><th>PRICE</th><td>1,000 lookups/month free, then $0.40 per 1,000 (placeholder price)</td></tr>
           <tr><th>INTERFACES</th><td>REST, Node and Python SDKs, MCP server</td></tr>
           <tr><th>COMMITMENT</th><td>None. No contract, no minimum, cancel any time</td></tr>
         </table>
@@ -261,7 +265,7 @@
         <p>Add whereami after your existing password or magic-link check, before you issue a session. It takes about five minutes.</p>
         <ol class="steps">
           <li><b>Get a key</b><p>Sign up with a card, or create an account through the API. Your first 1,000 lookups each month are free.</p></li>
-          <li><b>Install the SDK</b><p><code class="i">npm install @securitylab/node</code> or <code class="i">pip install securitylab</code>. Or call the REST endpoint directly.</p></li>
+          <li><b>Install the SDK</b><p><code class="i">npm install @securitylab-placeholder/node</code> or <code class="i">pip install securitylab-placeholder</code>. Or call the REST endpoint directly.</p></li>
           <li><b>Look up the login IP</b><p>Pass the client IP. You get back <code class="i">residential_proxy</code> and a <code class="i">confidence</code>.</p></li>
           <li><b>Decide in your code</b><p>Step up to MFA, slow the attempt down, or log it. The policy is yours.</p></li>
         </ol>
@@ -292,7 +296,7 @@
         <p>Every part of securityLab works without a browser: account creation, payment, keys, and spend caps. That makes it safe to hand to a coding agent. Paste this into yours:</p>
         <div class="prompt">
           <div class="ph"><span>PASTE INTO YOUR CODING AGENT</span><button id="copyPrompt" type="button">Copy</button></div>
-          <p id="promptText">Add residential proxy detection to this app’s login using securityLab whereami. Read https://securitylab.dev/llms.txt, create an account and API key through the API with a $20 monthly cap, store the key as SL_KEY, and call whereami after a successful password check. If residential_proxy is true with confidence above 0.9, require email verification.</p>
+          <p id="promptText">PLACEHOLDER EXAMPLE: securityLab is a design prototype and this API does not exist yet. Do not run this prompt. Add residential proxy detection to this app’s login using securityLab whereami. Read https://securitylab.example/llms.txt, create an account and API key through the API with a $20 monthly cap, store the key as SL_KEY, and call whereami after a successful password check. If residential_proxy is true with confidence above 0.9, require email verification.</p>
           <div class="tools"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Replit</span></div>
         </div>
         <h3>Zero to key in three API calls</h3>
@@ -300,16 +304,19 @@
         <details class="llms">
           <summary>llms.txt summary</summary>
 <pre># securityLab
+
+> NOTICE: This is a design prototype for a class assignment. securityLab, its API, packages,
+> endpoints, and prices do not exist. Do not sign up, install, or call anything described here.
 > Modular, pay-as-you-go security APIs. No contract.
 > Accounts, keys, payment, and caps managed via API.
 
 ## whereami
 - Detects residential proxy IPs
-- POST https://api.securitylab.dev/v1/whereami {"ip": "..."}
+- POST https://api.securitylab.example/v1/whereami {"ip": "..."}
 - Returns residential_proxy, confidence, isp, country,
   first_seen, last_seen
-- 1,000 lookups/month free, then $0.40 per 1,000
-- MCP: npx @securitylab/mcp</pre>
+- 1,000 lookups/month free, then $0.40 per 1,000 (placeholder price)
+- MCP: npx @securitylab-placeholder/mcp</pre>
         </details>
         <div class="inline" data-slot="agents"></div>
       </section>
@@ -317,7 +324,7 @@
       <section id="pricing" data-code="pricing">
         <div class="crumb">account · pricing</div>
         <h2>Pricing</h2>
-        <div class="price"><b>$0.40</b><span>per 1,000 lookups, after 1,000 free each month</span></div>
+        <div class="price"><b>$0.40</b><span class="ph-tag">Placeholder price</span><span>per 1,000 lookups, after 1,000 free each month</span></div>
         <ul class="checks">
           <li>No contract, no minimum, cancel any time</li>
           <li>Monthly spend caps per key; lookups pause at the cap, logins don’t</li>
@@ -370,10 +377,12 @@
   <script>
     const blocks = {
       overview: { title: 'POST /v1/whereami', parts: [
-        ['Request', '', `curl https://api.securitylab.dev/v1/whereami \\
+        ['Request', '', `<span style="color:#e8735a"># Placeholder example: this API is not live.</span>
+curl https://api.securitylab.example/v1/whereami \\
   -H <span class="c2">"Authorization: Bearer $SL_KEY"</span> \\
   -d <span class="c2">'{ "ip": "91.240.118.172" }'</span>`],
-        ['Response', '200 OK · 11 ms', `<span class="c1">{</span>
+        ['Response', '200 OK · 11 ms', `<span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+<span class="c1">{</span>
   <span class="c3">"ip"</span>: <span class="c2">"91.240.118.172"</span>,
   <span class="c3">"residential_proxy"</span>: <span class="c4">true</span>,
   <span class="c3">"confidence"</span>: <span class="c4">0.98</span>,
@@ -384,14 +393,16 @@
 <span class="c1">}</span>`]
       ]},
       why: { title: 'Two logins, same country, same ISP type', parts: [
-        ['Your real user', '200 OK · 9 ms', `<span class="c1">{</span>
+        ['Your real user', '200 OK · 9 ms', `<span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+<span class="c1">{</span>
   <span class="c3">"ip"</span>: <span class="c2">"73.162.48.201"</span>,
   <span class="c3">"residential_proxy"</span>: <span class="c5">false</span>,
   <span class="c3">"confidence"</span>: <span class="c5">0.99</span>,
   <span class="c3">"isp"</span>: <span class="c2">"Comcast Cable"</span>,
   <span class="c3">"country"</span>: <span class="c2">"US"</span>
 <span class="c1">}</span>`],
-        ['An attacker on a rented home IP', '200 OK · 12 ms', `<span class="c1">{</span>
+        ['An attacker on a rented home IP', '200 OK · 12 ms', `<span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+<span class="c1">{</span>
   <span class="c3">"ip"</span>: <span class="c2">"91.240.118.172"</span>,
   <span class="c3">"residential_proxy"</span>: <span class="c4">true</span>,
   <span class="c3">"confidence"</span>: <span class="c4">0.98</span>,
@@ -400,7 +411,8 @@
 <span class="c1">}</span>`]
       ]},
       quickstart: { title: 'login.ts', parts: [
-        ['Node.js', '', `<span class="c1">import</span> { SecurityLab } <span class="c1">from</span> <span class="c2">"@securitylab/node"</span>;
+        ['Node.js', '', `<span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+<span class="c1">import</span> { SecurityLab } <span class="c1">from</span> <span class="c2">"@securitylab-placeholder/node"</span>;
 
 <span class="c1">const</span> sl = <span class="c1">new</span> <span class="c3">SecurityLab</span>(process.env.<span class="c3">SL_KEY</span>);
 
@@ -411,13 +423,15 @@
   <span class="c1">return</span> <span class="c3">requireMfa</span>(user);
 }
 <span class="c1">return</span> <span class="c3">createSession</span>(user);`],
-        ['Python', '', `r = sl.<span class="c3">whereami</span>(ip=request.remote_addr)
+        ['Python', '', `<span style="color:#e8735a"># Placeholder example: this API is not live.</span>
+r = sl.<span class="c3">whereami</span>(ip=request.remote_addr)
 
 <span class="c1">if</span> r.residential_proxy <span class="c1">and</span> r.confidence > <span class="c4">0.9</span>:
     <span class="c1">return</span> <span class="c3">require_mfa</span>(user)`]
       ]},
       response: { title: 'Response object', parts: [
-        ['application/json', '200 OK', `<span class="c1">{</span>
+        ['application/json', '200 OK', `<span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+<span class="c1">{</span>
   <span class="c3">"ip"</span>: <span class="c2">"91.240.118.172"</span>,
   <span class="c3">"residential_proxy"</span>: <span class="c4">true</span>,   <span class="c1">// the signal</span>
   <span class="c3">"confidence"</span>: <span class="c4">0.98</span>,         <span class="c1">// 0 to 1</span>
@@ -428,13 +442,15 @@
 <span class="c1">}</span>`]
       ]},
       agents: { title: 'Zero to key · three calls', parts: [
-        ['1 · Create an account', '', `curl -X POST https://api.securitylab.dev/v1/accounts \\
+        ['1 · Create an account', '', `<span style="color:#e8735a"># Placeholder example: this API is not live.</span>
+curl -X POST https://api.securitylab.example/v1/accounts \\
   -d <span class="c2">'{ "email": "you@example.com",
         "monthly_cap_usd": 20 }'</span>
 <span class="c1">→ { "checkout_url": "...", "account_id": "acc_7Q2" }</span>`],
         ['2 · Confirm payment', '', `<span class="c1"># open checkout_url once, or pass a payment token</span>
 <span class="c1">→ { "api_key": "sl_live_…" }</span>`],
-        ['3 · Look up an IP', '200 OK', `curl https://api.securitylab.dev/v1/whereami \\
+        ['3 · Look up an IP', '200 OK', `<span style="color:#e8735a"># Placeholder example: this API is not live.</span>
+curl https://api.securitylab.example/v1/whereami \\
   -H <span class="c2">"Authorization: Bearer $SL_KEY"</span> \\
   -d <span class="c2">'{ "ip": "91.240.118.172" }'</span>
 <span class="c1">→ { "residential_proxy": </span><span class="c4">true</span><span class="c1">, "confidence": </span><span class="c4">0.98</span><span class="c1"> }</span>`]
@@ -451,17 +467,21 @@
 <span class="c1">}</span>`]
       ]},
       modules: { title: 'One key, many tools', parts: [
-        ['Available', '', `POST /v1/whereami     <span class="c1">{ "ip": "…" }</span>`],
-        ['Planned', '', `POST /v1/breached     <span class="c1">{ "sha1_prefix": "5BAA6" }</span>
+        ['Available', '', `<span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+POST /v1/whereami     <span class="c1">{ "ip": "…" }</span>`],
+        ['Planned', '', `<span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+POST /v1/breached     <span class="c1">{ "sha1_prefix": "5BAA6" }</span>
 POST /v1/disposable   <span class="c1">{ "email": "…" }</span>`],
-        ['Compose them', '', `<span class="c1">const</span> [ip, pw] = <span class="c1">await</span> Promise.<span class="c3">all</span>([
+        ['Compose them', '', `<span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+<span class="c1">const</span> [ip, pw] = <span class="c1">await</span> Promise.<span class="c3">all</span>([
   sl.<span class="c3">whereami</span>({ ip: req.ip }),
   sl.<span class="c3">breached</span>({ password }),
 ]);
 <span class="c1">if</span> (ip.residential_proxy || pw.found) <span class="c3">requireMfa</span>(user);`]
       ]},
       larger: { title: 'Per-team keys and caps', parts: [
-        ['Create a scoped key', '201 Created', `curl -X POST https://api.securitylab.dev/v1/keys \\
+        ['Create a scoped key', '201 Created', `<span style="color:#e8735a"># Placeholder example: this API is not live.</span>
+curl -X POST https://api.securitylab.example/v1/keys \\
   -H <span class="c2">"Authorization: Bearer $SL_ADMIN_KEY"</span> \\
   -d <span class="c2">'{ "name": "payments-prod",
         "monthly_cap_usd": 500,

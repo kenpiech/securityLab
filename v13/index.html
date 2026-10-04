@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="DESIGN PROTOTYPE for a class assignment. securityLab, its API, packages, endpoints, and prices are placeholders and do not exist. Do not sign up, install, or call anything shown here.">
   <title>securityLab — v13</title>
-  <meta name="description" content="whereami detects residential proxy IP addresses at login time. One of securityLab's modular, pay-as-you-go security tools for developers and AI agents.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -174,10 +175,12 @@
       .block { padding-top: 56px; }
       .final { padding: 80px 0; margin-top: 64px; }
     }
+      .ph-tag{display:inline-block;font:500 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border:1px dashed currentColor;border-radius:4px;opacity:.75;vertical-align:middle;margin-left:10px;white-space:nowrap}
+      .proto a{white-space:nowrap}.ph-short{display:none}@media (max-width:700px){.ph-long{display:none}.ph-short{display:inline}}
   </style>
 </head>
 <body>
-  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span>v13</span></div></div>
+  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span><span class="ph-long">Design prototype · API, packages &amp; prices are placeholders · </span><span class="ph-short">Prototype · placeholders · </span>v13</span></div></div>
 
   <header>
     <div class="wrap">
@@ -269,9 +272,10 @@
     </div>
     <div class="wide">
       <div class="code">
-        <div class="bar"><span>POST https://api.securitylab.dev/v1/whereami</span><b>200 OK · 11 ms</b></div>
+        <div class="bar"><span>POST https://api.securitylab.example/v1/whereami</span><b>200 OK · 11 ms</b></div>
         <div class="split">
-<div><pre><span class="c1">import</span> { SecurityLab } <span class="c1">from</span> <span class="c2">"@securitylab/node"</span>;
+<div><pre><span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+<span class="c1">import</span> { SecurityLab } <span class="c1">from</span> <span class="c2">"@securitylab-placeholder/node"</span>;
 
 <span class="c1">const</span> sl = <span class="c1">new</span> <span class="c3">SecurityLab</span>(process.env.<span class="c3">SL_KEY</span>);
 
@@ -281,7 +285,8 @@
 <span class="c1">if</span> (r.residential_proxy) {
   <span class="c1">return</span> <span class="c3">requireMfa</span>(user);
 }</pre></div>
-<div><pre><span class="c1">{</span>
+<div><pre><span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+<span class="c1">{</span>
   <span class="c3">"ip"</span>: <span class="c2">"91.240.118.172"</span>,
   <span class="c3">"residential_proxy"</span>: <span class="c4">true</span>,
   <span class="c3">"confidence"</span>: <span class="c4">0.98</span>,
@@ -303,9 +308,11 @@
       <h2>You decide what happens next.</h2>
       <p>Because whereami returns a signal instead of a verdict, it fits whatever policy suits your product. A few patterns we see:</p>
       <div class="rules">
-        <div class="rule"><div class="w">Consumer app</div><h3>Step up</h3><pre>if (r.residential_proxy)
+        <div class="rule"><div class="w">Consumer app</div><h3>Step up</h3><pre><span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+if (r.residential_proxy)
   requireMfa()</pre></div>
-        <div class="rule"><div class="w">Admin panel</div><h3>Block</h3><pre>if (r.residential_proxy)
+        <div class="rule"><div class="w">Admin panel</div><h3>Block</h3><pre><span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+if (r.residential_proxy)
   return deny()</pre></div>
         <div class="rule"><div class="w">Fraud team</div><h3>Just log it</h3><pre>audit.log({ ...r,
   user: user.id })</pre></div>
@@ -331,18 +338,20 @@
       <p>Signup, payment, keys, and spend caps all work through the API, so an AI agent can go from zero to a working integration without a browser. Paste this into yours:</p>
       <div class="prompt">
         <div class="ph"><span>PASTE INTO YOUR CODING AGENT</span><button id="copyPrompt" type="button">Copy</button></div>
-        <p id="promptText">Add residential proxy detection to this app's login using securityLab whereami. Read https://securitylab.dev/llms.txt, create an account and API key through the API with a $20 monthly cap, store the key as SL_KEY, and call whereami with the client IP after a successful password check. If residential_proxy is true, require email verification.</p>
+        <p id="promptText">PLACEHOLDER EXAMPLE: securityLab is a design prototype and this API does not exist yet. Do not run this prompt. Add residential proxy detection to this app's login using securityLab whereami. Read https://securitylab.example/llms.txt, create an account and API key through the API with a $20 monthly cap, store the key as SL_KEY, and call whereami with the client IP after a successful password check. If residential_proxy is true, require email verification.</p>
         <div class="tools"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Replit</span></div>
       </div>
       <p>Behind that prompt, it’s three calls:</p>
       <div class="ztk">
-        <div><div class="n">01</div><h3>Create an account</h3><pre>POST /v1/accounts
+        <div><div class="n">01</div><h3>Create an account</h3><pre><span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+POST /v1/accounts
 { "email": "you@example.com",
   "monthly_cap_usd": 20 }</pre></div>
         <div><div class="n">02</div><h3>Confirm payment</h3><pre>→ returns checkout_url
   open once, or pass a
   payment token directly</pre></div>
-        <div><div class="n">03</div><h3>Look up an IP</h3><pre>POST /v1/whereami
+        <div><div class="n">03</div><h3>Look up an IP</h3><pre><span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+POST /v1/whereami
 { "ip": "91.240.118.172" }
 → { "residential_proxy": true }</pre></div>
       </div>
@@ -352,16 +361,16 @@
         <tr><th>OUTPUT</th><td><code>residential_proxy</code>, <code>confidence</code>, <code>isp</code>, <code>country</code>, <code>first_seen</code>, <code>last_seen</code></td></tr>
         <tr><th>LATENCY</th><td>12 ms median</td></tr>
         <tr><th>COVERAGE</th><td>40M+ residential proxy exit IPs seen in the last 30 days</td></tr>
-        <tr><th>INTERFACES</th><td>REST, Node and Python SDKs, MCP server (<code>npx @securitylab/mcp</code>)</td></tr>
+        <tr><th>INTERFACES</th><td>REST, Node and Python SDKs, MCP server (<code>npx @securitylab-placeholder/mcp</code>)</td></tr>
       </table>
     </div>
 
     <div class="col block" id="pricing">
       <span class="step-n">07 — Pricing</span>
       <h2>Pay for lookups. That’s the whole model.</h2>
-      <p>The first 1,000 lookups each month are free; after that it’s $0.40 per 1,000, with a monthly cap you set so there are no surprises.</p>
+      <p>The first 1,000 lookups each month are free; after that it’s $0.40 per 1,000 (placeholder price), with a monthly cap you set so there are no surprises.</p>
       <table class="price">
-        <thead><tr><th>Lookups per month</th><th>You pay</th></tr></thead>
+        <thead><tr><th>Lookups per month</th><th>You pay<span class="ph-tag">Placeholder price</span></th></tr></thead>
         <tbody>
           <tr><td>1,000</td><td>$0</td></tr>
           <tr><td>25,000</td><td>$9.60</td></tr>

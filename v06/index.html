@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="DESIGN PROTOTYPE for a class assignment. securityLab, its API, packages, endpoints, and prices are placeholders and do not exist. Do not sign up, install, or call anything shown here.">
   <title>securityLab — v06</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -107,10 +109,12 @@
       .modules { grid-template-columns: 1fr; }
       footer { grid-template-columns: 1fr 1fr; padding: 40px 16px; }
     }
+      .ph-tag{display:inline-block;font:500 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border:1px dashed currentColor;border-radius:4px;opacity:.75;vertical-align:middle;margin-left:10px;white-space:nowrap}
+      .proto a{white-space:nowrap}.ph-short{display:none}@media (max-width:700px){.ph-long{display:none}.ph-short{display:inline}}
   </style>
 </head>
 <body>
-  <div class="proto"><a href="/">← Gallery</a><span>v06</span></div>
+  <div class="proto"><a href="/">← Gallery</a><span><span class="ph-long">Design prototype · API, packages &amp; prices are placeholders · </span><span class="ph-short">Prototype · placeholders · </span>v06</span></div>
 
   <header class="hero">
     <canvas id="field" aria-hidden="true"></canvas>
@@ -149,7 +153,8 @@
         </div>
         <div class="console">
           <div class="bar"><span>POST /v1/whereami</span><span>200 OK · 21 ms</span></div>
-<pre><span class="k">{</span>
+<pre><span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+<span class="k">{</span>
   <span class="k">"risk"</span>: <span class="r">0.91</span>,
   <span class="k">"action"</span>: <span class="r">"challenge"</span>,
   <span class="k">"ip"</span>: <span class="s">"185.220.101.34"</span>,
@@ -186,7 +191,7 @@
     <div class="wrap">
       <div class="label"><b>03</b> / TERMS</div>
       <div class="terms">
-        <div class="price">$0.40<small>PER 1,000 CHECKS · AFTER 1,000 FREE / MONTH</small></div>
+        <div class="price">$0.40<span class="ph-tag">Placeholder price</span><small>PER 1,000 CHECKS · AFTER 1,000 FREE / MONTH</small></div>
         <dl>
           <div><dt>Contract</dt><dd>None</dd></div>
           <div><dt>Minimum spend</dt><dd>None</dd></div>

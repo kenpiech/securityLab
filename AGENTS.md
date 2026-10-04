@@ -19,6 +19,15 @@ A landing page for securityLab, a cybersecurity company selling modular, pay-as-
 - A real page answers within seconds: what it is, who it's for, why trust it, what to do next. Show the product (API calls, responses, dashboards) rather than decoration.
 - AI agents are first-class visitors: key facts (endpoints, pricing, signup) should be easy for an agent to find and parse.
 
+## Placeholder safety (required on every version)
+These pages are public, and the product does not exist yet. Nothing on them may be usable by an agent that stumbles across them.
+- Domains: only the reserved `securitylab.example` (never resolves). Never a real-looking TLD.
+- Packages: names include `placeholder` (`@securitylab-placeholder/node`, `securitylab-placeholder`, `npx @securitylab-placeholder/mcp`).
+- Every code sample starts with a "Placeholder example: this API is not live." comment.
+- Prices carry a visible "Placeholder price" tag or "(placeholder price)" text.
+- Agent prompts and llms.txt-style text include an explicit do-not-use notice inside the text itself.
+- Every page has `<meta name="robots" content="noindex, nofollow">`, the prototype description meta, and the "Design prototype · placeholders" notice in the top bar.
+
 ## Goal
 Build 25 distinct versions of this landing page (`v01`–`v25`), plus a gallery (`index.html`) that tells the story of the process.
 - **v01–~v12, go wide:** radically different directions in layout, audience, mood, era and tone. A change of colors or fonts alone is not a new direction.

@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="DESIGN PROTOTYPE for a class assignment. securityLab, its API, packages, endpoints, and prices are placeholders and do not exist. Do not sign up, install, or call anything shown here.">
   <title>securityLab — v14</title>
-  <meta name="description" content="securityLab makes modular, pay-as-you-go security APIs. whereami detects residential proxy IP addresses. No contract, no lock-in.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -191,10 +192,12 @@
       section { padding: 64px 0; }
       footer .wrap { grid-template-columns: 1fr 1fr; }
     }
+      .ph-tag{display:inline-block;font:500 11px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border:1px dashed currentColor;border-radius:4px;opacity:.75;vertical-align:middle;margin-left:10px;white-space:nowrap}
+      .proto a{white-space:nowrap}.ph-short{display:none}@media (max-width:700px){.ph-long{display:none}.ph-short{display:inline}}
   </style>
 </head>
 <body>
-  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span>v14</span></div></div>
+  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span><span class="ph-long">Design prototype · API, packages &amp; prices are placeholders · </span><span class="ph-short">Prototype · placeholders · </span>v14</span></div></div>
 
   <header>
     <div class="wrap">
@@ -279,7 +282,8 @@
       </div>
       <div class="codecard">
         <div class="h"><span>login.ts</span><span>Node.js</span></div>
-<pre><span class="c1">import</span> { SecurityLab } <span class="c1">from</span> <span class="c2">"@securitylab/node"</span>;
+<pre><span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+<span class="c1">import</span> { SecurityLab } <span class="c1">from</span> <span class="c2">"@securitylab-placeholder/node"</span>;
 <span class="c1">const</span> sl = <span class="c1">new</span> <span class="c3">SecurityLab</span>(process.env.<span class="c3">SL_KEY</span>);
 
 <span class="c1">// after the password check succeeds</span>
@@ -302,18 +306,20 @@
         </div>
         <div class="prompt">
           <div class="ph"><span>PASTE INTO YOUR CODING AGENT</span><button id="copyPrompt" type="button">Copy</button></div>
-          <p id="promptText">Add residential proxy detection to this app's login using securityLab whereami. Read https://securitylab.dev/llms.txt, create an account and API key through the API with a $20 monthly cap, store the key as SL_KEY, and call whereami after a successful password check. If residential_proxy is true, require email verification.</p>
+          <p id="promptText">PLACEHOLDER EXAMPLE: securityLab is a design prototype and this API does not exist yet. Do not run this prompt. Add residential proxy detection to this app's login using securityLab whereami. Read https://securitylab.example/llms.txt, create an account and API key through the API with a $20 monthly cap, store the key as SL_KEY, and call whereami after a successful password check. If residential_proxy is true, require email verification.</p>
           <div class="tools"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Replit</span></div>
         </div>
       </div>
       <div class="steps">
-        <div class="step"><div class="n">01</div><h3>Create an account</h3><pre>POST /v1/accounts
+        <div class="step"><div class="n">01</div><h3>Create an account</h3><pre><span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+POST /v1/accounts
 { "email": "you@example.com",
   "monthly_cap_usd": 20 }</pre></div>
         <div class="step"><div class="n">02</div><h3>Confirm payment</h3><pre>→ returns checkout_url
   open it once, or pass a
   payment token directly</pre></div>
-        <div class="step"><div class="n">03</div><h3>Look up an IP</h3><pre>POST /v1/whereami
+        <div class="step"><div class="n">03</div><h3>Look up an IP</h3><pre><span style="color:#e8735a">// Placeholder example: this API is not live.</span>
+POST /v1/whereami
 { "ip": "91.240.118.172" }
 → { "residential_proxy": true }</pre></div>
       </div>
@@ -325,10 +331,10 @@
       <div>
         <div class="kicker">Pricing</div>
         <h2>Pay per lookup. No contract.</h2>
-        <p class="sec-lead">The first 1,000 lookups each month are free, then $0.40 per 1,000. No minimums, no annual commitment, no vendor lock-in. Set a monthly cap and you’ll never be surprised.</p>
+        <p class="sec-lead">The first 1,000 lookups each month are free, then $0.40 per 1,000 (placeholder price). No minimums, no annual commitment, no vendor lock-in. Set a monthly cap and you’ll never be surprised.</p>
       </div>
       <div class="pricing-card">
-        <div class="price">$0.40<small>per 1,000 lookups</small></div>
+        <div class="price">$0.40<span class="ph-tag">Placeholder price</span><small>per 1,000 lookups</small></div>
         <ul><li>1,000 free lookups every month</li><li>Instant key, by card or API</li><li>Monthly spend caps per key</li><li>Cancel any time</li></ul>
         <a class="btn dark big" href="#" style="width:100%;justify-content:center">Get your API key</a>
       </div>
@@ -407,7 +413,7 @@
       : `<span class="c2">"${esc(v)}"</span>`;
     function json(obj) {
       const keys = Object.keys(obj);
-      return '<span class="c1">{</span>\n' + keys.map((k, i) => `  <span class="c3">"${k}"</span>: ${val(obj[k])}${i < keys.length - 1 ? ',' : ''}`).join('\n') + '\n<span class="c1">}</span>';
+      return '<span style="color:#e8735a">// Placeholder example: sample data, not a live API.</span>\n<span class="c1">{</span>\n' + keys.map((k, i) => `  <span class="c3">"${k}"</span>: ${val(obj[k])}${i < keys.length - 1 ? ',' : ''}`).join('\n') + '\n<span class="c1">}</span>';
     }
     const isIp = s => /^(\d{1,3}\.){3}\d{1,3}$/.test(s) && s.split('.').every(n => +n <= 255) || /^[0-9a-f:]+$/i.test(s) && s.includes(':');
 
@@ -415,7 +421,8 @@
       const ip = $('ip').value.trim();
       document.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c.dataset.ip === ip));
       const v = $('verdict'), resp = $('resp');
-      $('curl').innerHTML = `curl https://api.securitylab.dev/v1/whereami \\\n  -H <span class="c2">"Authorization: Bearer $SL_KEY"</span> \\\n  -d <span class="c2">'{"ip": "${esc(ip || '…')}"}'</span>`;
+      $('curl').innerHTML = `<span style="color:#e8735a"># Placeholder example: this API is not live.</span>
+curl https://api.securitylab.example/v1/whereami \\\n  -H <span class="c2">"Authorization: Bearer $SL_KEY"</span> \\\n  -d <span class="c2">'{"ip": "${esc(ip || '…')}"}'</span>`;
 
       if (!isIp(ip)) {
         $('status').textContent = '400 Bad Request';
