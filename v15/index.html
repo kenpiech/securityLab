@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>securityLab — v15</title>
+  <meta name="description" content="securityLab makes modular, single-purpose security APIs for developers, AI agents, and companies. Pay per lookup, no contract, no lock-in. First tool: whereami, residential proxy detection.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --soft: #f7f7f5;
+      --ink: #111110;
+      --body: #4a4a46;
+      --mute: #8b8b85;
+      --line: #e8e7e3;
+      --accent: #f2542d;
+      --code: #121212;
+      --sans: "Geist", system-ui, -apple-system, Segoe UI, sans-serif;
+      --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+
+    .proto { background: var(--ink); color: #bdbdb7; font: 12px var(--mono); }
+    .proto .wrap { display: flex; justify-content: space-between; padding-top: 6px; padding-bottom: 6px; }
+    .proto a:hover { color: #fff; }
+
+    header { border-bottom: 1px solid var(--line); position: sticky; top: 0; background: rgba(255,255,255,.88); backdrop-filter: blur(10px); z-index: 5; }
+    header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { font-weight: 700; font-size: 17px; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
+    .logo svg { width: 22px; height: 22px; }
+    .nav { display: flex; gap: 28px; font-size: 14px; color: var(--body); }
+    .nav a:hover { color: var(--ink); }
+    .right { display: flex; align-items: center; gap: 18px; font-size: 14px; }
+    .right .in { color: var(--body); }
+    .btn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 8px; font-weight: 500; font-size: 14px; }
+    .btn.dark { background: var(--ink); color: #fff; }
+    .btn.dark:hover { background: #2b2b29; }
+    .btn.line { border: 1px solid var(--line); background: #fff; }
+    .btn.line:hover { border-color: #cfcdc7; }
+    .btn.big { height: 46px; padding: 0 20px; font-size: 15px; }
+
+    /* hero: company first */
+    .hero { padding: 88px 0 48px; text-align: center; }
+    .pill { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px 4px 6px; color: var(--body); margin-bottom: 24px; }
+    .pill b { background: #fde8e2; color: #b8361a; font-weight: 600; font-size: 11px; padding: 2px 8px; border-radius: 999px; }
+    h1 { font-size: clamp(40px, 6vw, 72px); line-height: 1.0; letter-spacing: -.04em; font-weight: 600; margin: 0 auto 22px; max-width: 13em; }
+    .lead { font-size: 19px; color: var(--body); margin: 0 auto 30px; max-width: 36em; }
+    .ctas { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .facts { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; margin-top: 28px; font: 13px var(--mono); color: var(--mute); }
+    .facts span::before { content: "✓ "; color: var(--accent); }
+
+    /* audience switch */
+    .switch-sec { padding: 24px 0 96px; scroll-margin-top: 64px; }
+    .switch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: var(--soft); border: 1px solid var(--line); border-radius: 14px; padding: 6px; max-width: 760px; margin: 0 auto 28px; }
+    .switch button { all: unset; cursor: pointer; text-align: center; padding: 12px 10px; border-radius: 10px; transition: background .15s; }
+    .switch button b { display: block; font-weight: 600; font-size: 15px; }
+    .switch button span { display: block; font-size: 12.5px; color: var(--mute); }
+    .switch button:hover { background: #efeeea; }
+    .switch button[aria-selected="true"] { background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 0 0 1px var(--line); }
+    .switch button[aria-selected="true"] b { color: var(--ink); }
+    .switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .panel { border: 1px solid var(--line); border-radius: 18px; padding: 44px; background: #fff; box-shadow: 0 30px 60px -40px rgba(0,0,0,.25); }
+    .panel[hidden] { display: none; }
+    .pgrid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 48px; align-items: start; }
+    .kicker { font: 500 13px var(--mono); color: var(--accent); margin-bottom: 12px; }
+    .panel h2 { font-size: clamp(26px, 3vw, 36px); line-height: 1.1; letter-spacing: -.03em; font-weight: 600; margin: 0 0 14px; }
+    .panel p { color: var(--body); margin: 0 0 16px; }
+    .checks { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 8px; font-size: 15px; color: var(--body); }
+    .checks li::before { content: "✓"; color: var(--accent); margin-right: 10px; font-weight: 700; }
+
+    .install { margin: 8px 0 18px; display: inline-flex; align-items: center; gap: 12px; font: 14px var(--mono); color: var(--body); background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; max-width: 100%; }
+    .install span { color: var(--mute); }
+    .install button, .copy { all: unset; cursor: pointer; font: 12px var(--sans); color: var(--mute); }
+    .install button:hover, .copy:hover { color: var(--ink); }
+    .snip { font: 12.5px/1.7 var(--mono); background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; color: var(--body); overflow-x: auto; white-space: pre; }
+
+    .code { background: var(--code); border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
+    .code .bar { display: flex; justify-content: space-between; padding: 12px 18px; border-bottom: 1px solid #262626; font: 12px var(--mono); color: #8d8d8d; }
+    .code pre { margin: 0; padding: 18px 20px; font: 13px/1.7 var(--mono); color: #e6e6e6; overflow-x: auto; }
+    .code .resp { border-top: 1px solid #262626; background: #0c0c0c; }
+    .code .resp .h { display: flex; justify-content: space-between; padding: 10px 20px 0; font: 12px var(--mono); color: #7b7b7b; }
+    .code .resp .h b { color: #7ee2a8; font-weight: 500; }
+    .code .resp pre { padding-top: 8px; }
+    .c1 { color: #7b7b7b; } .c2 { color: #ffb38a; } .c3 { color: #9ecbff; } .c4 { color: #ff7b72; } .c5 { color: #7ee2a8; }
+
+    /* agents panel */
+    .prompt { border: 1px solid var(--line); border-radius: 12px; background: var(--soft); overflow: hidden; }
+    .prompt .ph { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--line); font: 500 11px var(--mono); color: var(--mute); letter-spacing: .02em; }
+    .prompt .ph .copy { color: var(--accent); font-weight: 500; }
+    .prompt p { margin: 0; padding: 16px; font: 13px/1.75 var(--mono); color: var(--ink); }
+    .prompt .tools { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 16px 14px; }
+    .prompt .tools span { font: 11px var(--mono); padding: 3px 8px; border: 1px solid var(--line); border-radius: 4px; color: var(--body); background: #fff; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 28px; }
+    .step { border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+    .step .n { font: 500 12px var(--mono); color: var(--mute); }
+    .step h3 { margin: 6px 0 10px; font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+    .step pre { margin: 0; font: 12px/1.65 var(--mono); color: var(--body); white-space: pre-wrap; word-break: break-word; }
+    .llms { margin-top: 28px; }
+    .llms summary { cursor: pointer; font: 500 14px var(--sans); list-style: none; display: flex; justify-content: space-between; padding: 14px 0; border-top: 1px solid var(--line); }
+    .llms summary::after { content: "+"; color: var(--mute); }
+    .llms[open] summary::after { content: "–"; }
+    .llms pre { margin: 0; background: var(--code); color: #d8d8d8; border-radius: 12px; padding: 20px 22px; font: 12.5px/1.75 var(--mono); white-space: pre-wrap; overflow-x: auto; }
+
+    /* companies panel */
+    table.tiers { width: 100%; border-collapse: collapse; font-size: 15px; }
+    .tiers th { text-align: left; font: 500 12px var(--mono); color: var(--mute); padding: 0 0 10px; border-bottom: 1px solid var(--line); }
+    .tiers th:last-child, .tiers td:last-child { text-align: right; }
+    .tiers td { padding: 13px 0; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+    .tiers tr:last-child td { border-bottom: 0; }
+    .tiers td b { font-weight: 600; }
+    .docs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 22px; }
+    .doc { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; font-size: 14px; }
+    .doc b { display: block; font-weight: 600; font-size: 14.5px; }
+    .doc span { color: var(--mute); font-size: 13px; }
+    .tnote { font-size: 13px; color: var(--mute); margin-top: 12px; }
+
+    section { padding: 100px 0; }
+    .sec-head h2 { font-size: clamp(30px, 3.6vw, 44px); line-height: 1.08; letter-spacing: -.03em; font-weight: 600; margin: 0 0 16px; max-width: 18em; }
+    .sec-lead { color: var(--body); font-size: 18px; margin: 0; max-width: 36em; }
+
+    /* catalog */
+    .catalog { border-top: 1px solid var(--line); }
+    .tools-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-top: 48px; }
+    .tool { border: 1px solid var(--line); border-radius: 16px; padding: 26px; background: #fff; display: flex; flex-direction: column; }
+    .tool .top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+    .tool code.name { font: 500 20px var(--mono); }
+    .badge { font: 500 11px var(--mono); padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+    .badge.live { background: #e3f6ea; color: #17733e; }
+    .badge.plan { background: var(--soft); color: var(--mute); border: 1px solid var(--line); }
+    .tool p { color: var(--body); font-size: 15px; margin: 10px 0 18px; }
+    .tool.planned { background: var(--soft); }
+    .tool .q { margin-top: auto; font: 12.5px var(--mono); color: var(--mute); border-top: 1px dashed var(--line); padding-top: 14px; }
+    table.spec { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: auto; }
+    .spec th, .spec td { text-align: left; vertical-align: top; padding: 9px 12px 9px 0; border-top: 1px solid var(--line); }
+    .spec th { width: 110px; font: 500 11.5px var(--mono); color: var(--mute); padding-top: 11px; }
+    .spec code { font: 12.5px var(--mono); background: var(--soft); padding: 1px 6px; border-radius: 4px; }
+
+    /* why */
+    .why { background: var(--soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .why .wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; }
+    .why p { color: var(--body); margin: 0 0 14px; }
+    .path { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 26px; }
+    .hop { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start; }
+    .hop .dot { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 500 12px var(--mono); border: 1px solid var(--line); background: var(--soft); color: var(--body); }
+    .hop.bad .dot { background: #fde8e2; color: #b8361a; border-color: #f6c9bc; }
+    .hop.home .dot { background: #fff3d6; color: #8a5a00; border-color: #f0dca6; }
+    .hop b { display: block; font-weight: 600; font-size: 15px; }
+    .hop span { display: block; font-size: 14px; color: var(--body); }
+    .hop code { font: 12px var(--mono); background: var(--soft); padding: 1px 5px; border-radius: 4px; }
+    .link { height: 22px; margin-left: 16px; border-left: 2px dotted #d5d3cd; }
+    .verdict { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; align-items: center; font-size: 14px; color: var(--body); flex-wrap: wrap; }
+    .verdict code { font: 500 12.5px var(--mono); background: #fde8e2; color: #b02a12; padding: 4px 10px; border-radius: 6px; }
+
+    /* pricing */
+    .pricing .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+    .calc { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 30px; }
+    .calc label { display: flex; justify-content: space-between; font-size: 14px; color: var(--body); }
+    .calc label b { color: var(--ink); font-variant-numeric: tabular-nums; }
+    .calc input[type=range] { width: 100%; margin: 16px 0 26px; accent-color: var(--accent); }
+    .calc .total { display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 20px; }
+    .calc .total span { color: var(--body); font-size: 14px; }
+    .calc .total b { font-size: 44px; letter-spacing: -.03em; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .calc ul { list-style: none; padding: 0; margin: 22px 0 24px; font-size: 14px; color: var(--body); display: grid; gap: 8px; }
+    .calc li::before { content: "✓"; color: var(--accent); margin-right: 10px; font-weight: 700; }
+    .calc .btn { width: 100%; justify-content: center; }
+
+    .final { text-align: center; padding: 110px 0; border-top: 1px solid var(--line); }
+    .final h2 { font-size: clamp(30px, 3.6vw, 44px); line-height: 1.08; letter-spacing: -.03em; font-weight: 600; margin: 0 auto 14px; }
+    .final p { color: var(--body); margin: 0 0 28px; }
+
+    footer { border-top: 1px solid var(--line); padding: 40px 0 56px; font-size: 14px; color: var(--mute); }
+    footer .wrap { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 32px; }
+    footer b { display: block; color: var(--ink); font-weight: 500; margin-bottom: 8px; }
+    footer a { display: block; padding: 3px 0; }
+    footer a:hover { color: var(--ink); }
+
+    @media (max-width: 900px) {
+      .wrap { padding: 0 16px; }
+      .nav, .right .in { display: none; }
+      .hero { padding: 56px 0 32px; }
+      .switch { gap: 4px; padding: 4px; }
+      .switch button { padding: 10px 4px; }
+      .switch button b { font-size: 14px; }
+      .switch button span { display: none; }
+      .panel { padding: 24px 18px; }
+      .pgrid, .why .wrap, .pricing .wrap { grid-template-columns: 1fr; gap: 32px; }
+      .steps { grid-template-columns: 1fr; }
+      .docs { grid-template-columns: 1fr; }
+      .tools-grid { grid-template-columns: 1fr; }
+      section { padding: 72px 0; }
+      footer .wrap { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span>v15</span></div></div>
+
+  <header>
+    <div class="wrap">
+      <div class="logo"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#111110" stroke-width="2"/><circle cx="12" cy="12" r="3.2" fill="#f2542d"/></svg>securityLab</div>
+      <nav class="nav"><a href="#start">Who it’s for</a><a href="#tools">Tools</a><a href="#why">Why proxies</a><a href="#pricing">Pricing</a><a href="#">Docs</a></nav>
+      <div class="right"><a class="in" href="#">Sign in</a><a class="btn dark" href="#pricing">Get API key</a></div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="wrap">
+      <div class="pill"><b>New</b> whereami: residential proxy detection is live</div>
+      <h1>Modular security tools. No contracts. No lock-in.</h1>
+      <p class="lead">securityLab makes small, single-purpose security APIs that you compose into your own systems. Pay per lookup, start in a minute, and leave whenever you like. Built for developers, the AI agents working for them, and companies of any size.</p>
+      <div class="ctas"><a class="btn dark big" href="#pricing">Get an API key</a><a class="btn line big" href="#tools">Browse the tools</a></div>
+      <div class="facts"><span>1,000 free lookups / month</span><span>No minimum spend</span><span>Plain REST + MCP</span></div>
+    </div>
+  </div>
+
+  <section class="switch-sec" id="start" style="padding-top:24px">
+    <div class="wrap">
+      <div class="switch" role="tablist" aria-label="Choose your path">
+        <button role="tab" id="tab-developers" aria-controls="panel-developers" aria-selected="true" data-k="developers"><b>Developers</b><span>Quickstart in three lines</span></button>
+        <button role="tab" id="tab-agents" aria-controls="panel-agents" aria-selected="false" data-k="agents"><b>AI agents</b><span>Sign up and pay via API</span></button>
+        <button role="tab" id="tab-companies" aria-controls="panel-companies" aria-selected="false" data-k="companies"><b>Companies</b><span>Same terms, at scale</span></button>
+      </div>
+
+      <!-- Developers -->
+      <div class="panel" role="tabpanel" id="panel-developers" aria-labelledby="tab-developers">
+        <div class="pgrid">
+          <div>
+            <div class="kicker">For developers</div>
+            <h2>Add proxy detection to your login in three lines.</h2>
+            <p>Your auth provider keeps doing auth. whereami answers one question: is this IP address a residential proxy? You decide what happens next.</p>
+            <div class="install"><span>$</span>npm install @securitylab/node <button type="button" data-copy="npm install @securitylab/node">Copy</button></div>
+            <div class="snip">const r = await sl.whereami({ ip: req.ip });
+if (r.residential_proxy) await requireMfa(user);
+// otherwise, carry on as normal</div>
+            <ul class="checks"><li>Works next to Clerk, Auth0, Supabase, Auth.js, or your own login</li><li>12 ms median, fast enough to run inline</li><li>Node, Python, and plain REST</li></ul>
+          </div>
+          <div class="code">
+            <div class="bar"><span>POST /v1/whereami</span><span>Node.js</span></div>
+<pre><span class="c1">import</span> { SecurityLab } <span class="c1">from</span> <span class="c2">"@securitylab/node"</span>;
+
+<span class="c1">const</span> sl = <span class="c1">new</span> <span class="c3">SecurityLab</span>(process.env.<span class="c3">SL_KEY</span>);
+<span class="c1">const</span> r = <span class="c1">await</span> sl.<span class="c3">whereami</span>({ ip: <span class="c2">"91.240.118.172"</span> });</pre>
+            <div class="resp">
+              <div class="h"><span>Response</span><b>200 OK · 11 ms</b></div>
+<pre><span class="c1">{</span>
+  <span class="c3">"ip"</span>: <span class="c2">"91.240.118.172"</span>,
+  <span class="c3">"residential_proxy"</span>: <span class="c4">true</span>,
+  <span class="c3">"confidence"</span>: <span class="c4">0.98</span>,
+  <span class="c3">"isp"</span>: <span class="c2">"Comcast Cable"</span>,
+  <span class="c3">"country"</span>: <span class="c2">"US"</span>,
+  <span class="c3">"first_seen"</span>: <span class="c2">"2026-09-14"</span>,
+  <span class="c3">"last_seen"</span>: <span class="c2">"2026-10-04T13:02:11Z"</span>
+<span class="c1">}</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI agents -->
+      <div class="panel" role="tabpanel" id="panel-agents" aria-labelledby="tab-agents" hidden>
+        <div class="pgrid">
+          <div>
+            <div class="kicker">For AI agents and vibe coders</div>
+            <h2>Your agent can sign up, pay, and ship it on its own.</h2>
+            <p>No forms and no sales call. Accounts, keys, payment, and monthly spend caps all work through the API, so it’s safe to hand the whole job to a coding agent.</p>
+            <ul class="checks"><li>Metered, capped, and cancellable by API</li><li>MCP server: <code style="font:13px var(--mono)">npx @securitylab/mcp</code></li><li>Machine-readable summary at /llms.txt</li></ul>
+          </div>
+          <div class="prompt">
+            <div class="ph"><span>PASTE INTO YOUR CODING AGENT</span><button class="copy" type="button" data-copy-from="promptText">Copy</button></div>
+            <p id="promptText">Add residential proxy detection to this app’s login using securityLab whereami. Read https://securitylab.dev/llms.txt, create an account and API key through the API with a $20 monthly cap, and store the key as SL_KEY. After a successful password check, call whereami with the client IP. If residential_proxy is true, require email verification before creating the session.</p>
+            <div class="tools"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Replit</span></div>
+          </div>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="n">01</div><h3>Create an account</h3><pre>POST /v1/accounts
+{ "email": "you@example.com",
+  "monthly_cap_usd": 20 }</pre></div>
+          <div class="step"><div class="n">02</div><h3>Confirm payment</h3><pre>→ returns checkout_url
+  open it once, or pass a
+  payment token directly
+→ returns api_key</pre></div>
+          <div class="step"><div class="n">03</div><h3>Look up an IP</h3><pre>POST /v1/whereami
+{ "ip": "91.240.118.172" }
+→ { "residential_proxy": true,
+    "confidence": 0.98 }</pre></div>
+        </div>
+        <details class="llms">
+          <summary>View /llms.txt</summary>
+<pre># securityLab
+
+> Modular, single-purpose security APIs. Pay per lookup.
+> No contract, no minimum, no lock-in. Accounts, keys, payment,
+> and spend caps can be managed entirely via API.
+
+## Tools
+- whereami: is this IP a residential proxy? Status: available.
+- breached: has this password appeared in a breach? Status: planned.
+- disposable: is this a burner email domain? Status: planned.
+
+## whereami
+- Endpoint: POST https://api.securitylab.dev/v1/whereami
+- Auth: Authorization: Bearer $SL_KEY
+- Input: {"ip": "..."}
+- Output: ip, residential_proxy (bool), confidence (0-1), isp,
+  country, first_seen, last_seen
+- Price: 1,000 lookups/month free, then $0.40 per 1,000
+
+## Sign up
+1. POST /v1/accounts {"email": "...", "monthly_cap_usd": 20}
+2. Complete payment via checkout_url or payment token
+3. Use returned api_key as SL_KEY
+
+## Guidance
+securityLab does not decide allow/deny. Call whereami after primary
+authentication; if residential_proxy is true, apply your own policy
+(e.g. require a second factor).
+
+(Placeholder name, endpoints, and prices.)</pre>
+        </details>
+      </div>
+
+      <!-- Companies -->
+      <div class="panel" role="tabpanel" id="panel-companies" aria-labelledby="tab-companies" hidden>
+        <div class="pgrid">
+          <div>
+            <div class="kicker">For companies</div>
+            <h2>Same API, same terms. Just more of it.</h2>
+            <p>Large teams get the tools a solo developer gets: no contract to negotiate, no minimum commitment, no proprietary SDK to unwind later. Volume discounts apply automatically as usage grows.</p>
+            <ul class="checks"><li>No contract required; cancel any time</li><li>Monthly invoicing and purchase orders</li><li>Plain REST, so switching away is a config change</li><li>Org-wide keys, spend caps, and usage reports</li></ul>
+            <div class="docs">
+              <div class="doc"><b>DPA</b><span>Pre-signed, downloadable</span></div>
+              <div class="doc"><b>Security overview</b><span>For your vendor review</span></div>
+              <div class="doc"><b>Pen test summary</b><span>Annual, third party</span></div>
+              <div class="doc"><b>Uptime history</b><span>Public status page</span></div>
+            </div>
+          </div>
+          <div>
+            <table class="tiers">
+              <thead><tr><th>Monthly lookups</th><th>Price per 1,000</th></tr></thead>
+              <tbody>
+                <tr><td>First 1,000</td><td><b>Free</b></td></tr>
+                <tr><td>1,000 – 10M</td><td><b>$0.40</b></td></tr>
+                <tr><td>10M – 100M</td><td><b>$0.30</b></td></tr>
+                <tr><td>100M+</td><td><b>$0.20</b></td></tr>
+              </tbody>
+            </table>
+            <p class="tnote">Tiers apply automatically to each month’s usage. No commitment needed to get them. Prices illustrative.</p>
+            <div class="snip" style="margin-top:20px">Contract ........... none
+Minimum ............ none
+Notice to cancel ... none
+Data export ........ any time, via API</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="catalog" id="tools">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kicker">The tools</div>
+        <h2>One job each. Use one, or several.</h2>
+        <p class="sec-lead">Each tool answers a single, well-defined security question about a login or signup. They don’t replace your auth provider and they don’t hand you a black-box score. You decide what to do with the answer.</p>
+      </div>
+      <div class="tools-grid">
+        <div class="tool">
+          <div class="top"><code class="name">whereami</code><span class="badge live">Available</span></div>
+          <p>Is this IP address a residential proxy? Detects attackers routing through hijacked home connections, with a confidence value and the ISP they’re hiding behind.</p>
+          <table class="spec">
+            <tr><th>ENDPOINT</th><td><code>POST /v1/whereami</code></td></tr>
+            <tr><th>INPUT</th><td><code>ip</code></td></tr>
+            <tr><th>OUTPUT</th><td><code>residential_proxy</code>, <code>confidence</code>, <code>isp</code>, <code>country</code>, <code>first_seen</code>, <code>last_seen</code></td></tr>
+            <tr><th>ACCURACY</th><td>0.98 precision, 0.94 recall</td></tr>
+            <tr><th>LATENCY</th><td>12 ms median</td></tr>
+          </table>
+        </div>
+        <div class="tool planned">
+          <div class="top"><code class="name">breached</code><span class="badge plan">Planned</span></div>
+          <p>Has this password appeared in a known breach? Checked with k-anonymity, so the password never leaves your server.</p>
+          <div class="q">Q: is this password already in attackers’ lists?</div>
+        </div>
+        <div class="tool planned">
+          <div class="top"><code class="name">disposable</code><span class="badge plan">Planned</span></div>
+          <p>Is this email address on a burner or throwaway domain? Stops fake signups before they cost you anything.</p>
+          <div class="q">Q: will this address exist next week?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="why" id="why">
+    <div class="wrap">
+      <div>
+        <div class="kicker">Why residential proxies</div>
+        <h2 style="font-size:clamp(30px,3.6vw,44px);line-height:1.08;letter-spacing:-.03em;font-weight:600;margin:0 0 16px">The attack your blocklist can’t see.</h2>
+        <p>Attackers with stolen passwords rent access to hijacked home internet connections, often millions of them, by the gigabyte. Their login attempts arrive from ordinary ISPs like Comcast or Verizon, in the same city as your real users.</p>
+        <p>Data-center blocklists and country rules wave that traffic through. whereami recognizes the exit IPs of residential proxy networks, so you can step up verification exactly when it matters.</p>
+        <p style="font:13px var(--mono);color:var(--mute);margin-top:22px">40M+ residential proxy exits seen in the last 30 days (illustrative)</p>
+      </div>
+      <div class="path" aria-label="How a residential proxy login reaches your app">
+        <div class="hop bad"><div class="dot">1</div><div><b>Attacker</b><span>Holds a list of stolen email and password pairs</span></div></div>
+        <div class="link"></div>
+        <div class="hop"><div class="dot">2</div><div><b>Proxy network</b><span>Rents rotating exits for a few dollars per GB</span></div></div>
+        <div class="link"></div>
+        <div class="hop home"><div class="dot">3</div><div><b>Hijacked home connection</b><span>Exit IP <code>91.240.118.172</code> · Comcast Cable · US</span></div></div>
+        <div class="link"></div>
+        <div class="hop"><div class="dot">4</div><div><b>Your login page</b><span>Sees a normal home IP and a correct password</span></div></div>
+        <div class="verdict"><span>whereami on that IP:</span><code>residential_proxy: true · 0.98</code></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <div class="wrap">
+      <div>
+        <div class="kicker">Pricing</div>
+        <h2 style="font-size:clamp(30px,3.6vw,44px);line-height:1.08;letter-spacing:-.03em;font-weight:600;margin:0 0 16px">Pay per lookup. Nothing else.</h2>
+        <p class="sec-lead">The first 1,000 lookups every month are free. After that, $0.40 per 1,000, with volume tiers applied automatically. No contracts, no minimums, no sales calls. Set a monthly cap so you’re never surprised.</p>
+      </div>
+      <div class="calc">
+        <label for="vol">Lookups per month <b id="volOut">50,000</b></label>
+        <input id="vol" type="range" min="0" max="100" value="40">
+        <div class="total"><span>Estimated monthly cost</span><b id="cost">$0.00</b></div>
+        <ul><li>Card or API signup, instant key</li><li>Monthly spend cap</li><li>Cancel any time</li></ul>
+        <a class="btn dark big" href="#">Get your API key</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <h2>Pick a tool. Ship it today.</h2>
+      <p>Free for your first 1,000 lookups every month.</p>
+      <div class="ctas"><a class="btn dark big" href="#">Get API key</a><a class="btn line big" href="#">Read the docs</a></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div><div class="logo" style="color:var(--ink)">securityLab</div><p style="margin:10px 0 0">Placeholder name. Prices and figures are illustrative.</p></div>
+      <div><b>Tools</b><a href="#tools">whereami</a><a href="#tools">breached</a><a href="#tools">disposable</a></div>
+      <div><b>Developers</b><a href="#">Docs</a><a href="#">llms.txt</a><a href="#">Status</a></div>
+      <div><b>Company</b><a href="#">About</a><a href="#">Security</a><a href="#">DPA</a></div>
+    </div>
+  </footer>
+
+  <script>
+    // Audience switch, reflected in the URL hash (#developers, #agents, #companies)
+    const keys = ['developers', 'agents', 'companies'];
+    const tabs = document.querySelectorAll('.switch [role=tab]');
+    function select(k, push) {
+      if (!keys.includes(k)) k = 'developers';
+      tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.k === k));
+      keys.forEach(x => { document.getElementById('panel-' + x).hidden = x !== k; });
+      if (push) history.replaceState(null, '', '#' + k);
+    }
+    tabs.forEach(t => t.addEventListener('click', () => select(t.dataset.k, true)));
+    const initial = location.hash.slice(1);
+    select(initial, false);
+    if (keys.includes(initial)) document.getElementById('start').scrollIntoView();
+    addEventListener('hashchange', () => { const h = location.hash.slice(1); if (keys.includes(h)) select(h, false); });
+
+    // Copy buttons
+    document.querySelectorAll('[data-copy],[data-copy-from]').forEach(b => b.addEventListener('click', () => {
+      const text = b.dataset.copy || document.getElementById(b.dataset.copyFrom).textContent;
+      navigator.clipboard?.writeText(text);
+      const was = b.textContent; b.textContent = 'Copied'; setTimeout(() => b.textContent = was, 1500);
+    }));
+
+    // Pricing estimate with automatic volume tiers
+    const vol = document.getElementById('vol'), out = document.getElementById('volOut'), cost = document.getElementById('cost');
+    const tiers = [[1000, 0], [10e6, 0.40], [100e6, 0.30], [Infinity, 0.20]];
+    function price(n) {
+      let total = 0, prev = 0;
+      for (const [cap, rate] of tiers) { const units = Math.max(0, Math.min(n, cap) - prev); total += units / 1000 * rate; prev = cap; if (n <= cap) break; }
+      return total;
+    }
+    function calc() {
+      const n = Math.round(Math.pow(vol.value / 100, 2.4) * 2000000 / 1000) * 1000;
+      out.textContent = n.toLocaleString();
+      cost.textContent = '$' + price(n).toFixed(2);
+    }
+    vol.addEventListener('input', calc); calc();
+  </script>
+</body>
+</html>
