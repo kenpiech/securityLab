@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>securityLab — v04</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --deep: #0f1c19;
+      --deep2: #16271f;
+      --ivory: #f2ede3;
+      --ink: #1a211e;
+      --mute: #6e746f;
+      --brass: #b5995c;
+      --hair: rgba(26,33,30,.16);
+      --serif: "Instrument Serif", "Cormorant Garamond", Georgia, serif;
+      --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { background: var(--ivory); color: var(--ink); font: 400 16px/1.65 var(--sans); }
+    a { color: inherit; }
+
+    .layout { display: grid; grid-template-columns: minmax(320px, 40%) 1fr; min-height: 100vh; }
+
+    .panel {
+      position: sticky; top: 0; height: 100vh;
+      background: var(--deep); color: var(--ivory);
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: 40px 48px;
+      overflow: hidden;
+    }
+    /* fine concentric rings, a quiet "lens" motif */
+    .panel::before {
+      content: ""; position: absolute; width: 900px; height: 900px; right: -520px; bottom: -380px;
+      background: repeating-radial-gradient(circle, transparent 0 22px, rgba(181,153,92,.16) 22px 23px);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .top { display: flex; justify-content: space-between; font-size: 13px; letter-spacing: .06em; color: rgba(242,237,227,.6); position: relative; }
+    .top a { text-decoration: none; }
+    .top a:hover { color: var(--ivory); }
+    .name { position: relative; }
+    .name h1 { font: 400 clamp(52px, 6.4vw, 96px)/.95 var(--serif); margin: 0; letter-spacing: -.01em; }
+    .name h1 em { color: var(--brass); }
+    .name p { margin: 24px 0 0; max-width: 22em; color: rgba(242,237,227,.72); }
+    .panel nav { position: relative; display: grid; gap: 2px; font-size: 14px; }
+    .panel nav a { text-decoration: none; display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid rgba(242,237,227,.14); color: rgba(242,237,227,.8); }
+    .panel nav a:hover { color: var(--brass); }
+    .panel nav a span { font: italic 15px var(--serif); color: rgba(242,237,227,.45); }
+
+    .content { padding: 96px clamp(24px, 7vw, 112px) 64px; max-width: 900px; }
+    section { padding: 0 0 96px; }
+    .eyebrow { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--mute); margin-bottom: 22px; display: flex; align-items: center; gap: 14px; }
+    .eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--hair); }
+    .intro { font: 400 clamp(28px, 2.9vw, 40px)/1.25 var(--serif); margin: 0; }
+    .intro em { color: #7a6438; }
+
+    .practice { list-style: none; margin: 0; padding: 0; }
+    .practice li { display: grid; grid-template-columns: 64px 1fr; gap: 18px; padding: 26px 0; border-top: 1px solid var(--hair); }
+    .practice li:last-child { border-bottom: 1px solid var(--hair); }
+    .practice .num { font: italic 26px/1 var(--serif); color: var(--brass); }
+    .practice h3 { font: 400 26px/1.15 var(--serif); margin: 0 0 6px; }
+    .practice p { margin: 0; color: #4c534f; max-width: 36em; }
+
+    .pubs { width: 100%; border-collapse: collapse; }
+    .pubs td { padding: 16px 0; border-top: 1px solid var(--hair); vertical-align: baseline; }
+    .pubs tr:last-child td { border-bottom: 1px solid var(--hair); }
+    .pubs td.yr { width: 120px; font-size: 13px; color: var(--mute); }
+    .pubs td.t { font: 400 20px/1.3 var(--serif); }
+    .pubs td.k { text-align: right; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--mute); white-space: nowrap; padding-left: 16px; }
+    .fine { font-size: 12px; color: var(--mute); margin-top: 12px; }
+
+    .offer { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .offer div { border: 1px solid var(--hair); padding: 30px; }
+    .offer div:first-child { background: var(--deep2); color: var(--ivory); border-color: var(--deep2); }
+    .offer div:first-child p { color: rgba(242,237,227,.72); }
+    .offer h3 { font: 400 28px/1.1 var(--serif); margin: 0 0 12px; }
+    .offer p { margin: 0 0 22px; color: #4c534f; font-size: 15px; }
+    .offer a { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--brass); padding-bottom: 3px; }
+
+    .close { font: 400 clamp(30px, 3.2vw, 44px)/1.2 var(--serif); margin: 0 0 28px; }
+    .btn { display: inline-block; padding: 15px 30px; background: var(--ink); color: var(--ivory); text-decoration: none; font-size: 14px; letter-spacing: .06em; }
+    .btn:hover { background: #7a6438; }
+
+    footer { font-size: 12px; color: var(--mute); display: flex; justify-content: space-between; border-top: 1px solid var(--hair); padding-top: 20px; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .panel { position: relative; height: auto; min-height: 88vh; padding: 24px 16px; gap: 48px; }
+      .content { padding: 56px 16px 40px; }
+      .offer { grid-template-columns: 1fr; }
+      .pubs td.k { display: none; }
+      .pubs td.yr { width: 84px; }
+      section { padding-bottom: 64px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="panel">
+      <div class="top"><a href="/">← Gallery</a><span>v04</span></div>
+      <div class="name">
+        <h1>security<em>Lab</em></h1>
+        <p>An independent laboratory for security research, and the products that come out of it.</p>
+      </div>
+      <nav aria-label="Sections">
+        <a href="#practice">Practice <span>i</span></a>
+        <a href="#research">Research <span>ii</span></a>
+        <a href="#products">Products <span>iii</span></a>
+        <a href="#contact">Contact <span>iv</span></a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <section>
+        <div class="eyebrow">Introduction</div>
+        <p class="intro">We study how modern systems are attacked, from industrial devices to AI agents, and we turn that understanding into <em>precise, well-made tools</em> for the people who defend them.</p>
+      </section>
+
+      <section id="practice">
+        <div class="eyebrow">Practice</div>
+        <ul class="practice">
+          <li><span class="num">i.</span><div><h3>Vulnerability research</h3><p>Deep analysis of software, firmware, and hardware, reported responsibly and published in full.</p></div></li>
+          <li><span class="num">ii.</span><div><h3>Threat intelligence</h3><p>Sustained study of the groups targeting critical industries: who they are, what they use, and what they want.</p></div></li>
+          <li><span class="num">iii.</span><div><h3>AI system security</h3><p>Rigorous testing of models and agents for manipulation, leakage, and misuse.</p></div></li>
+          <li><span class="num">iv.</span><div><h3>Adversary emulation</h3><p>Discreet, objective-driven red team engagements with senior researchers.</p></div></li>
+        </ul>
+      </section>
+
+      <section id="research">
+        <div class="eyebrow">Selected research</div>
+        <table class="pubs">
+          <tr><td class="yr">Sept 2026</td><td class="t">An authentication bypass in industrial gateways</td><td class="k">Advisory</td></tr>
+          <tr><td class="yr">Sept 2026</td><td class="t">Instructions hidden in plain sight: injecting AI assistants</td><td class="k">Paper</td></tr>
+          <tr><td class="yr">Aug 2026</td><td class="t">Anatomy of a new espionage loader</td><td class="k">Report</td></tr>
+          <tr><td class="yr">Aug 2026</td><td class="t">Firmware signing in satellite modems</td><td class="k">Advisory</td></tr>
+        </table>
+        <div class="fine">Titles are illustrative.</div>
+      </section>
+
+      <section id="products">
+        <div class="eyebrow">Products</div>
+        <div class="offer">
+          <div><h3>Threat Intelligence Platform</h3><p>The laboratory’s research, delivered continuously as indicators, actor profiles, and detections.</p><a href="#products">Learn more</a></div>
+          <div><h3>Attack Surface Monitor</h3><p>A complete, living inventory of what you expose, prioritized as an adversary would see it.</p><a href="#products">Learn more</a></div>
+          <div><h3>Firmware Analysis Kit</h3><p>Our researchers’ own instruments for unpacking and auditing device firmware.</p><a href="#products">Learn more</a></div>
+          <div><h3>Red Team Engagements</h3><p>Senior-led operations, with a candid debrief and a clear remediation path.</p><a href="#products">Learn more</a></div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <div class="eyebrow">Contact</div>
+        <p class="close">Speak with a researcher.</p>
+        <a class="btn" href="#contact">Arrange a conversation</a>
+      </section>
+
+      <footer><span>© 2026 securityLab</span><span>Placeholder name and content</span></footer>
+    </main>
+  </div>
+</body>
+</html>
