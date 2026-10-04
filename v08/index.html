@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>securityLab — v08</title>
+  <meta name="description" content="securityLab sells pay-as-you-go authentication security APIs. Flagship: whereami, login-time risk scoring. Agents can sign up, get a key, and pay via API.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f5f4ef;
+      --ink: #0e0e0d;
+      --body: #3d3d39;
+      --mute: #85847c;
+      --rule: #cfcdc4;
+      --blue: #2547f4;
+      --sans: "Hanken Grotesk", system-ui, sans-serif;
+      --mono: "Martian Mono", ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { background: var(--paper); color: var(--ink); font: 400 16px/1.6 var(--sans); }
+    a { color: inherit; }
+    .wrap { max-width: 1160px; margin: 0 auto; padding: 0 32px; }
+
+    .proto { border-bottom: 1px solid var(--rule); font: 11px var(--mono); color: var(--mute); }
+    .proto .wrap { display: flex; justify-content: space-between; padding-top: 6px; padding-bottom: 6px; }
+    .proto a { text-decoration: none; }
+    .proto a:hover { color: var(--ink); }
+
+    header .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; border-bottom: 1px solid var(--ink); }
+    .logo { font: 500 14px var(--mono); letter-spacing: -.02em; }
+    .logo span { color: var(--blue); }
+    .hnav { display: flex; gap: 26px; font-size: 14px; align-items: center; }
+    .hnav a { text-decoration: none; color: var(--body); }
+    .hnav a:hover { color: var(--ink); }
+
+    .toggle { display: inline-flex; border: 1px solid var(--ink); border-radius: 999px; padding: 3px; font: 500 11px var(--mono); }
+    .toggle button { all: unset; cursor: pointer; padding: 6px 12px; border-radius: 999px; }
+    .toggle button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+    .key { display: inline-flex; align-items: center; height: 38px; padding: 0 16px; background: var(--blue); color: #fff !important; border-radius: 6px; font-weight: 600; text-decoration: none; }
+    .key:hover { background: #1733c9; }
+
+    /* ---------- human view ---------- */
+    .hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: 48px; padding: 64px 0 56px; border-bottom: 1px solid var(--rule); }
+    .tag { font: 500 11px var(--mono); color: var(--blue); letter-spacing: .02em; margin-bottom: 18px; }
+    h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.02; letter-spacing: -.035em; font-weight: 700; margin: 0 0 20px; }
+    .lead { font-size: 19px; color: var(--body); margin: 0 0 28px; max-width: 30em; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .ghost { display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border: 1px solid var(--ink); border-radius: 6px; font-weight: 600; text-decoration: none; }
+    .ghost:hover { background: #ebe9e2; }
+
+    .prompt { border: 1px solid var(--ink); background: #fff; border-radius: 10px; overflow: hidden; align-self: start; }
+    .prompt .ph { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--rule); font: 500 11px var(--mono); color: var(--mute); }
+    .prompt .ph button { all: unset; cursor: pointer; font: 500 11px var(--mono); color: var(--blue); }
+    .prompt p { margin: 0; padding: 18px; font: 13px/1.75 var(--mono); color: var(--ink); }
+    .prompt .tools { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 18px 16px; }
+    .prompt .tools span { font: 11px var(--mono); padding: 3px 8px; border: 1px solid var(--rule); border-radius: 4px; color: var(--body); }
+
+    /* spec sheet */
+    .sheet { padding: 56px 0; border-bottom: 1px solid var(--rule); }
+    .sheet h2 { font-size: 13px; font-family: var(--mono); font-weight: 500; margin: 0 0 22px; color: var(--mute); letter-spacing: .02em; }
+    .sheet h2 b { color: var(--ink); font-weight: 500; }
+    table.spec { width: 100%; border-collapse: collapse; font-size: 15px; }
+    .spec th, .spec td { text-align: left; vertical-align: top; padding: 14px 16px 14px 0; border-top: 1px solid var(--rule); }
+    .spec tr:last-child th, .spec tr:last-child td { border-bottom: 1px solid var(--rule); }
+    .spec th { width: 220px; font: 500 12px var(--mono); color: var(--mute); padding-top: 17px; }
+    .spec code { font: 13px var(--mono); background: #e9e7df; padding: 2px 6px; border-radius: 4px; }
+
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--ink); border-radius: 10px; overflow: hidden; }
+    .steps > div { padding: 22px; border-right: 1px solid var(--ink); background: #fff; }
+    .steps > div:last-child { border-right: 0; }
+    .steps .n { font: 500 11px var(--mono); color: var(--blue); }
+    .steps h3 { margin: 8px 0 10px; font-size: 18px; letter-spacing: -.01em; }
+    .steps pre { margin: 0; font: 12px/1.65 var(--mono); color: var(--body); white-space: pre-wrap; word-break: break-word; }
+
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+    .two p { color: var(--body); margin: 0 0 14px; }
+    .mods { list-style: none; margin: 0; padding: 0; }
+    .mods li { display: grid; grid-template-columns: 110px 1fr auto; gap: 16px; padding: 14px 0; border-top: 1px solid var(--rule); align-items: baseline; }
+    .mods li:last-child { border-bottom: 1px solid var(--rule); }
+    .mods code { font: 500 14px var(--mono); }
+    .mods .st { font: 11px var(--mono); color: var(--mute); }
+    .mods .st.on { color: var(--blue); }
+
+    footer .wrap { display: flex; justify-content: space-between; gap: 16px; padding-top: 28px; padding-bottom: 48px; font-size: 13px; color: var(--mute); flex-wrap: wrap; }
+    footer a { text-decoration: none; margin-left: 18px; }
+    footer a:hover { color: var(--ink); }
+
+    /* ---------- agent view ---------- */
+    #agent { display: none; padding: 40px 0 64px; }
+    body.agent #human { display: none; }
+    body.agent #agent { display: block; }
+    #agent .note { font: 12px var(--mono); color: var(--mute); margin: 0 0 16px; }
+    #agent pre { margin: 0; background: #fff; border: 1px solid var(--ink); border-radius: 10px; padding: 28px; font: 13px/1.8 var(--mono); white-space: pre-wrap; color: var(--ink); }
+
+    @media (max-width: 900px) {
+      .wrap { padding: 0 16px; }
+      .hnav a:not(.key) { display: none; }
+      .hero, .two { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .steps > div { border-right: 0; border-bottom: 1px solid var(--ink); }
+      .steps > div:last-child { border-bottom: 0; }
+      .spec th { width: 120px; }
+      .mods li { grid-template-columns: 90px 1fr; }
+      .mods .st { grid-column: 2; }
+    }
+  </style>
+</head>
+<body>
+  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span>v08</span></div></div>
+
+  <header>
+    <div class="wrap">
+      <div class="logo">security<span>Lab</span></div>
+      <div class="hnav">
+        <div class="toggle" role="group" aria-label="View">
+          <button type="button" aria-pressed="true" data-v="human">Human</button>
+          <button type="button" aria-pressed="false" data-v="agent">Agent</button>
+        </div>
+        <a href="#spec">Spec</a><a href="#">Docs</a><a href="#">llms.txt</a>
+        <a class="key" href="#signup">Get API key</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="human">
+      <section class="hero">
+        <div>
+          <div class="tag">FOR DEVELOPERS AND THE AGENTS THAT WORK FOR THEM</div>
+          <h1>Security primitives your agent can sign up for, pay for, and ship.</h1>
+          <p class="lead">securityLab sells small authentication security APIs by the call. Our flagship, whereami, scores the risk of each login attempt from its IP and metadata. No forms, no sales call. A person or an agent can go from zero to a working key in one request.</p>
+          <div class="row"><a class="key" href="#signup">Get API key</a><a class="ghost" href="#spec">Read the spec</a></div>
+        </div>
+        <div class="prompt">
+          <div class="ph"><span>PASTE INTO YOUR CODING AGENT</span><button id="copyPrompt" type="button">Copy</button></div>
+          <p id="promptText">Add login risk checks to this app using securityLab whereami. Read https://securitylab.dev/llms.txt, create an account and API key through the API with a $20 monthly cap, store the key as SL_KEY, and call whereami after a successful password check. If action is "challenge", require email verification.</p>
+          <div class="tools"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Replit</span></div>
+        </div>
+      </section>
+
+      <section class="sheet" id="spec">
+        <h2><b>whereami</b> / spec sheet</h2>
+        <table class="spec">
+          <tr><th>WHAT IT DOES</th><td>Returns a risk score (0–1), an action (<code>allow</code>, <code>challenge</code>, <code>deny</code>), and the signals behind it for a single login attempt.</td></tr>
+          <tr><th>ENDPOINT</th><td><code>POST https://api.securitylab.dev/v1/whereami</code></td></tr>
+          <tr><th>INPUT</th><td><code>ip</code> (required), <code>user_agent</code>, <code>account_id</code>, <code>timestamp</code></td></tr>
+          <tr><th>LATENCY</th><td>18 ms median, 45 ms p99</td></tr>
+          <tr><th>ACCURACY</th><td>0.97 precision at 0.92 recall on our account-takeover benchmark</td></tr>
+          <tr><th>PRICE</th><td>First 1,000 checks per month free, then $0.40 per 1,000. Per-key monthly caps.</td></tr>
+          <tr><th>AUTH</th><td>Bearer token. Keys are scoped per project and revocable.</td></tr>
+          <tr><th>INTERFACES</th><td>REST, Node and Python SDKs, MCP server (<code>npx @securitylab/mcp</code>)</td></tr>
+        </table>
+      </section>
+
+      <section class="sheet" id="signup">
+        <h2><b>zero to key</b> / three calls, no browser required</h2>
+        <div class="steps">
+          <div><div class="n">01</div><h3>Create an account</h3><pre>POST /v1/accounts
+{ "email": "you@example.com",
+  "monthly_cap_usd": 20 }</pre></div>
+          <div><div class="n">02</div><h3>Confirm payment</h3><pre>→ returns checkout_url
+  open once, or pass a
+  payment token directly</pre></div>
+          <div><div class="n">03</div><h3>Check a login</h3><pre>POST /v1/whereami
+{ "ip": "185.220.101.34" }
+→ { "risk": 0.91,
+    "action": "challenge" }</pre></div>
+        </div>
+      </section>
+
+      <section class="sheet">
+        <div class="two">
+          <div>
+            <h2><b>why</b> / pay-as-you-go</h2>
+            <p>Enterprise fraud platforms are built for annual contracts and procurement teams. Small companies and solo builders need the same protection for a few dollars a month.</p>
+            <p>Every securityLab product is metered, capped, and cancellable through the API, so it’s safe to hand to an agent.</p>
+          </div>
+          <div>
+            <h2><b>modules</b></h2>
+            <ul class="mods">
+              <li><code>whereami</code><span>Login risk from IP and metadata</span><span class="st on">AVAILABLE</span></li>
+              <li><code>whoami</code><span>Device and client consistency</span><span class="st">BETA</span></li>
+              <li><code>last</code><span>Account history anomalies</span><span class="st">SOON</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="agent">
+      <p class="note"># Plain-text summary for AI agents. Also served at /llms.txt</p>
+<pre># securityLab
+
+> Pay-as-you-go authentication security APIs. No contract, no sales call.
+> Accounts, keys, payment, and spend caps can be managed entirely via API.
+
+## Products
+- whereami: login-time risk scoring from IP + metadata. Status: available.
+- whoami: device/client consistency signals. Status: beta.
+- last: account history anomalies. Status: coming soon.
+
+## whereami
+- Endpoint: POST https://api.securitylab.dev/v1/whereami
+- Auth: Authorization: Bearer $SL_KEY
+- Input: ip (required), user_agent, account_id, timestamp
+- Output: risk (0-1), action (allow | challenge | deny), signals[], location
+- Latency: 18 ms median
+- Price: 1,000 checks/month free, then $0.40 per 1,000
+
+## Sign up (agent-friendly)
+1. POST /v1/accounts {"email": "...", "monthly_cap_usd": 20}
+2. Complete payment via returned checkout_url or payment token
+3. Use returned api_key as SL_KEY
+
+## Integration guidance
+Call whereami after primary authentication succeeds and before issuing a session.
+If action == "challenge", require a second factor. If "deny", reject and log.
+
+## Links
+- Docs: https://securitylab.dev/docs
+- MCP server: npx @securitylab/mcp
+- Status: https://status.securitylab.dev
+
+(Placeholder name, endpoints, and prices.)</pre>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 securityLab · Placeholder name; figures illustrative</span>
+      <span><a href="#">Docs</a><a href="#">Status</a><a href="#">Security</a><a href="#">Privacy</a></span>
+    </div>
+  </footer>
+
+  <script>
+    const btns = document.querySelectorAll('.toggle button');
+    btns.forEach(b => b.addEventListener('click', () => {
+      document.body.classList.toggle('agent', b.dataset.v === 'agent');
+      btns.forEach(x => x.setAttribute('aria-pressed', x === b));
+    }));
+    document.getElementById('copyPrompt').addEventListener('click', e => {
+      navigator.clipboard?.writeText(document.getElementById('promptText').textContent);
+      e.target.textContent = 'Copied'; setTimeout(() => e.target.textContent = 'Copy', 1500);
+    });
+  </script>
+</body>
+</html>
