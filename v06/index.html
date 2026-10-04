@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>securityLab — v06</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050505;
+      --fg: #f1f1ee;
+      --mute: #8a8a85;
+      --line: #222220;
+      --red: #ff3b2f;
+      --sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { background: var(--bg); color: var(--fg); font: 400 16px/1.6 var(--sans); }
+    a { color: inherit; text-decoration: none; }
+
+    .proto { display: flex; justify-content: space-between; padding: 6px 24px; font: 12px var(--mono); color: var(--mute); border-bottom: 1px solid var(--line); }
+    .proto a:hover { color: var(--fg); }
+
+    nav.top { position: absolute; top: 0; left: 0; right: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; padding: 22px 40px; }
+    .logo { font: 700 15px/1 var(--sans); font-stretch: 118%; letter-spacing: .14em; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+    .logo i { width: 10px; height: 10px; background: var(--red); display: inline-block; }
+    .links { display: flex; gap: 32px; font-size: 14px; color: #c9c9c4; }
+    .links a:hover { color: var(--fg); }
+    .actions { display: flex; gap: 12px; align-items: center; font-size: 14px; }
+    .btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; font: 600 13px/1 var(--sans); font-stretch: 110%; letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--fg); }
+    .btn.solid { background: var(--fg); color: var(--bg); }
+    .btn.solid:hover { background: var(--red); border-color: var(--red); color: #fff; }
+    .btn.ghost:hover { background: rgba(255,255,255,.08); }
+
+    /* ---------- hero ---------- */
+    .hero { position: relative; min-height: min(100vh, 920px); display: flex; align-items: flex-end; overflow: hidden; border-bottom: 1px solid var(--line); }
+    canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 8%, rgba(5,5,5,.35) 45%, rgba(5,5,5,.1)); pointer-events: none; }
+    .hero-copy { position: relative; z-index: 2; padding: 0 40px 72px; max-width: 1240px; }
+    .eyebrow { font: 500 12px var(--mono); color: var(--mute); letter-spacing: .08em; margin-bottom: 22px; display: flex; gap: 10px; align-items: center; }
+    .eyebrow b { color: var(--red); font-weight: 500; }
+    h1 { margin: 0; font: 700 clamp(48px, 8.4vw, 132px)/.92 var(--sans); font-stretch: 112%; letter-spacing: -.02em; text-transform: uppercase; }
+    .sub { margin: 28px 0 34px; max-width: 34em; font-size: 19px; color: #c9c9c4; }
+    .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* ---------- statement band ---------- */
+    .band { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); }
+    .band > div { padding: 40px; border-right: 1px solid var(--line); }
+    .band > div:last-child { border-right: 0; }
+    .band .n { font: 700 56px/1 var(--sans); font-stretch: 112%; letter-spacing: -.02em; }
+    .band .n small { font-size: 22px; color: var(--mute); margin-left: 4px; }
+    .band p { margin: 10px 0 0; color: var(--mute); font-size: 14px; max-width: 22em; }
+
+    section { padding: 120px 40px; border-bottom: 1px solid var(--line); }
+    .wrap { max-width: 1240px; margin: 0 auto; }
+    .label { font: 500 12px var(--mono); color: var(--mute); letter-spacing: .08em; margin-bottom: 28px; }
+    .label b { color: var(--red); font-weight: 500; }
+    h2 { margin: 0; font: 600 clamp(34px, 4.6vw, 64px)/1.02 var(--sans); font-stretch: 108%; letter-spacing: -.02em; max-width: 15em; }
+
+    .product { display: grid; grid-template-columns: 1fr 1.1fr; gap: 64px; align-items: start; margin-top: 64px; }
+    .product p { color: #c9c9c4; font-size: 18px; margin: 0 0 22px; max-width: 28em; }
+    .product ul { list-style: none; margin: 32px 0 0; padding: 0; border-top: 1px solid var(--line); }
+    .product li { display: grid; grid-template-columns: 180px 1fr; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .product li span:first-child { color: var(--mute); font-family: var(--mono); font-size: 12px; padding-top: 2px; }
+    .console { border: 1px solid var(--line); background: #0b0b0a; font: 13px/1.75 var(--mono); }
+    .console .bar { display: flex; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--line); color: var(--mute); font-size: 12px; }
+    .console pre { margin: 0; padding: 20px; overflow-x: auto; color: #d6d6d0; }
+    .k { color: #8a8a85; } .s { color: #f1f1ee; } .r { color: var(--red); } .g { color: #9be27c; }
+
+    .modules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: 64px; }
+    .mod { background: var(--bg); padding: 36px; min-height: 260px; display: flex; flex-direction: column; }
+    .mod .name { font: 500 22px var(--mono); }
+    .mod .st { font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; margin-top: 8px; color: var(--mute); }
+    .mod .st.live { color: var(--red); }
+    .mod p { margin: auto 0 0; color: #c9c9c4; font-size: 15px; }
+
+    .terms { display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: end; }
+    .price { font: 700 clamp(64px, 9vw, 140px)/.9 var(--sans); font-stretch: 112%; letter-spacing: -.03em; }
+    .price small { display: block; font: 500 14px var(--mono); letter-spacing: .04em; color: var(--mute); margin-top: 14px; }
+    .terms dl { margin: 0; border-top: 1px solid var(--line); }
+    .terms dl div { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+    .terms dt { color: var(--mute); }
+    .terms dd { margin: 0; }
+
+    .final { text-align: left; }
+    .final h2 { max-width: 12em; margin-bottom: 40px; }
+
+    footer { padding: 48px 40px; display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 32px; font-size: 14px; color: var(--mute); }
+    footer b { display: block; color: var(--fg); font-weight: 600; margin-bottom: 10px; font-size: 13px; }
+    footer a { display: block; padding: 3px 0; }
+    footer a:hover { color: var(--fg); }
+
+    @media (max-width: 900px) {
+      .proto { padding: 6px 16px; }
+      nav.top { padding: 18px 16px; }
+      .links, .actions .ghost { display: none; }
+      .hero-copy { padding: 0 16px 48px; }
+      .band { grid-template-columns: 1fr; }
+      .band > div { border-right: 0; border-bottom: 1px solid var(--line); padding: 28px 16px; }
+      section { padding: 80px 16px; }
+      .product, .terms { grid-template-columns: 1fr; gap: 40px; }
+      .product li { grid-template-columns: 1fr; gap: 2px; }
+      .modules { grid-template-columns: 1fr; }
+      footer { grid-template-columns: 1fr 1fr; padding: 40px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="proto"><a href="/">← Gallery</a><span>v06</span></div>
+
+  <header class="hero">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <nav class="top">
+      <div class="logo"><i></i>securityLab</div>
+      <div class="links"><a href="#product">Product</a><a href="#modules">Modules</a><a href="#pricing">Pricing</a><a href="#">Docs</a></div>
+      <div class="actions"><a class="btn ghost" href="#">Sign in</a><a class="btn solid" href="#pricing">Get API key</a></div>
+    </nav>
+    <div class="hero-copy">
+      <div class="eyebrow"><b>●</b> WHEREAMI — LOGIN-TIME DETECTION</div>
+      <h1>Every login<br>has an origin.</h1>
+      <p class="sub">whereami scores the risk behind each sign-in attempt in real time, from the IP address and the metadata around it. One API call. Pay per check. No contract.</p>
+      <div class="cta"><a class="btn solid" href="#pricing">Get an API key →</a><a class="btn ghost" href="#product">See a response</a></div>
+    </div>
+  </header>
+
+  <div class="band">
+    <div><div class="n">18<small>ms</small></div><p>Median response time, so checks run inline with sign-in.</p></div>
+    <div><div class="n">0.97</div><p>Precision at 0.92 recall on our account-takeover benchmark.</p></div>
+    <div><div class="n">$0</div><p>To start. The first 1,000 checks each month are free.</p></div>
+  </div>
+
+  <section id="product">
+    <div class="wrap">
+      <div class="label"><b>01</b> / PRODUCT</div>
+      <h2>Your auth system knows who. We tell it where, and whether to trust it.</h2>
+      <div class="product">
+        <div>
+          <p>Send the IP address, user agent, and account ID of a login attempt. whereami returns a risk score, a recommended action, and the signals behind it.</p>
+          <p>It sits beside the authentication you already run, whether that’s Clerk, Auth0, Supabase, or your own.</p>
+          <ul>
+            <li><span>ANONYMIZERS</span><span>Residential proxies, VPNs, Tor, hosting ranges</span></li>
+            <li><span>BEHAVIOR</span><span>Impossible travel, IP velocity, first-seen networks</span></li>
+            <li><span>REPUTATION</span><span>Recent abuse, credential-stuffing infrastructure</span></li>
+          </ul>
+        </div>
+        <div class="console">
+          <div class="bar"><span>POST /v1/whereami</span><span>200 OK · 21 ms</span></div>
+<pre><span class="k">{</span>
+  <span class="k">"risk"</span>: <span class="r">0.91</span>,
+  <span class="k">"action"</span>: <span class="r">"challenge"</span>,
+  <span class="k">"ip"</span>: <span class="s">"185.220.101.34"</span>,
+  <span class="k">"network"</span>: {
+    <span class="k">"asn"</span>: <span class="s">"AS9009"</span>,
+    <span class="k">"type"</span>: <span class="r">"residential_proxy"</span>
+  },
+  <span class="k">"location"</span>: { <span class="k">"country"</span>: <span class="s">"RO"</span>, <span class="k">"city"</span>: <span class="s">"Bucharest"</span> },
+  <span class="k">"signals"</span>: [
+    <span class="r">"impossible_travel"</span>,
+    <span class="r">"new_network_for_account"</span>,
+    <span class="r">"ip_velocity_high"</span>
+  ],
+  <span class="k">"tor"</span>: <span class="g">false</span>
+<span class="k">}</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="modules">
+    <div class="wrap">
+      <div class="label"><b>02</b> / MODULES</div>
+      <h2>Small, sharp tools. Use one. Add more when you need them.</h2>
+      <div class="modules">
+        <div class="mod"><div class="name">whereami</div><div class="st live">Available</div><p>Risk scoring for every login attempt, from network and location signals.</p></div>
+        <div class="mod"><div class="name">whoami</div><div class="st">Beta</div><p>Device and client consistency: is this the same browser that signed in yesterday?</p></div>
+        <div class="mod"><div class="name">last</div><div class="st">Coming soon</div><p>Account history anomalies across sessions, surfaced as a single signal.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <div class="label"><b>03</b> / TERMS</div>
+      <div class="terms">
+        <div class="price">$0.40<small>PER 1,000 CHECKS · AFTER 1,000 FREE / MONTH</small></div>
+        <dl>
+          <div><dt>Contract</dt><dd>None</dd></div>
+          <div><dt>Minimum spend</dt><dd>None</dd></div>
+          <div><dt>Signup</dt><dd>Card or API, in under a minute</dd></div>
+          <div><dt>Built for</dt><dd>Developers, small teams, AI agents</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <h2>Know where your logins come from.</h2>
+      <div class="cta"><a class="btn solid" href="#">Get an API key →</a><a class="btn ghost" href="#">Read the docs</a></div>
+    </div>
+  </section>
+
+  <footer>
+    <div><div class="logo" style="color:var(--fg)"><i></i>securityLab</div><p style="margin-top:14px">Placeholder name. Prices and figures are illustrative.</p></div>
+    <div><b>Product</b><a href="#">whereami</a><a href="#">whoami</a><a href="#">Pricing</a></div>
+    <div><b>Developers</b><a href="#">Docs</a><a href="#">API status</a><a href="#">llms.txt</a></div>
+    <div><b>Company</b><a href="#">About</a><a href="#">Security</a><a href="#">Contact</a></div>
+  </footer>
+
+  <script>
+    // Quiet field of points: each is a login. A few turn red.
+    const c = document.getElementById('field'), x = c.getContext('2d');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let W, H, pts = [], dpr = Math.min(devicePixelRatio || 1, 2);
+    function size() {
+      W = c.clientWidth; H = c.clientHeight; c.width = W * dpr; c.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0);
+      pts = [];
+      const step = 22;
+      for (let gy = step; gy < H; gy += step) for (let gx = step; gx < W; gx += step) {
+        // soft band, denser toward the middle, like a horizon
+        const band = Math.exp(-Math.pow((gy / H - 0.42) / 0.28, 2));
+        if (Math.random() < band * 0.9) pts.push({ x: gx + (Math.random() - .5) * 6, y: gy + (Math.random() - .5) * 6, a: .15 + Math.random() * .35, hot: 0 });
+      }
+    }
+    function draw(t) {
+      x.clearRect(0, 0, W, H);
+      for (const p of pts) {
+        if (p.hot > 0) {
+          p.hot -= 0.006;
+          x.fillStyle = `rgba(255,59,47,${Math.max(p.hot, 0)})`;
+          x.beginPath(); x.arc(p.x, p.y, 2.2, 0, 7); x.fill();
+          x.strokeStyle = `rgba(255,59,47,${Math.max(p.hot, 0) * .5})`;
+          x.beginPath(); x.arc(p.x, p.y, 10 * (1.2 - p.hot), 0, 7); x.stroke();
+        } else {
+          x.fillStyle = `rgba(241,241,238,${p.a})`;
+          x.fillRect(p.x, p.y, 1.4, 1.4);
+        }
+      }
+      if (!reduce && Math.random() < 0.06 && pts.length) pts[(Math.random() * pts.length) | 0].hot = 1;
+      if (!reduce) requestAnimationFrame(draw);
+    }
+    size(); addEventListener('resize', size);
+    if (reduce) { for (let i = 0; i < 8; i++) pts[(Math.random() * pts.length) | 0].hot = .9; }
+    draw();
+  </script>
+</body>
+</html>
