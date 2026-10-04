@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="DESIGN PROTOTYPE for a class assignment. securityLab, its API, packages, endpoints, and prices are placeholders and do not exist. Do not sign up, install, or call anything shown here.">
+  <title>securityLab — v25</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f5eedf;
+      --paper: #fffaf0;
+      --ink: #1c1914;
+      --body: #4d473d;
+      --mute: #857d6f;
+      --line: #e1d6bf;
+      --red: #d9381e;
+      --teal: #0e5a52;
+      --teal-2: #0a463f;
+      --mustard: #f0b429;
+      --lilac: #b9a6f2;
+      --code: #17140f;
+      --display: "Unbounded", "Arial Black", sans-serif;
+      --sans: "DM Sans", system-ui, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+      --receipt: "Courier Prime", "Courier New", monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    body { background: var(--cream); color: var(--ink); font: 400 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 6px; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+    .proto { background: var(--ink); color: #c9c2b4; font: 12px var(--mono); }
+    .proto .wrap { display: flex; justify-content: space-between; gap: 12px; padding-top: 6px; padding-bottom: 6px; }
+    .proto a { white-space: nowrap; }
+    .proto a:hover { color: #fff; }
+    .ph-short { display: none; }
+
+    header { position: sticky; top: 0; z-index: 10; background: rgba(245,238,223,.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+    header .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 20px; }
+    .logo { font: 700 19px var(--display); letter-spacing: -.02em; }
+    .logo b { color: var(--red); font-weight: 800; }
+    nav.main { display: flex; gap: 28px; font-size: 15px; color: var(--body); }
+    nav.main a:hover { color: var(--ink); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 999px; font: 500 15px var(--sans); white-space: nowrap; border: 2px solid var(--ink); transition: transform .12s ease, box-shadow .12s ease; }
+    .btn.solid { background: var(--ink); color: var(--cream); }
+    .btn.ghost { background: transparent; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 3px 0 var(--ink); }
+    .btn.big { height: 52px; padding: 0 26px; font-size: 16px; }
+    .cta-short { display: none; }
+
+    .ph-tag { display: inline-block; font: 500 10.5px/1.4 var(--mono); letter-spacing: .05em; text-transform: uppercase; padding: 2px 7px; border: 1px dashed currentColor; border-radius: 4px; opacity: .8; vertical-align: middle; white-space: nowrap; }
+
+    /* ---------- hero + shelf ---------- */
+    .hero { padding: 64px 0 40px; }
+    .hero .wrap { display: grid; grid-template-columns: 1fr 1.15fr; gap: 56px; align-items: center; }
+    .eyebrow { font: 500 13px var(--mono); color: var(--red); margin-bottom: 18px; }
+    h1 { font: 800 clamp(40px, 5.2vw, 70px)/1 var(--display); letter-spacing: -.035em; margin: 0 0 24px; }
+    h1 em { font-style: normal; color: var(--teal); }
+    .lead { font-size: 20px; color: var(--body); margin: 0 0 30px; max-width: 30em; }
+    .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+    .terms { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 26px; font: 13px var(--mono); color: var(--mute); }
+    .terms span::before { content: "✕ "; color: var(--red); }
+
+    .shelf { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto auto auto; gap: 14px; }
+    .tile { position: relative; border-radius: 18px; padding: 18px; border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); display: flex; flex-direction: column; min-height: 168px; }
+    .tile .num { font: 500 12px var(--mono); opacity: .75; }
+    .tile .sym { font: 800 46px/1 var(--display); letter-spacing: -.04em; margin: 8px 0 4px; }
+    .tile .name { font: 500 15px var(--mono); }
+    .tile .q { font-size: 14px; line-height: 1.4; margin-top: 8px; }
+    .tile .status { position: absolute; top: 16px; right: 16px; font: 500 11px var(--mono); padding: 2px 8px; border-radius: 999px; border: 1.5px solid currentColor; }
+    .tile.feat { grid-column: 1 / 3; grid-row: 1 / 3; background: var(--teal); color: var(--paper); cursor: pointer; text-align: left; font: inherit; }
+    .tile.feat .sym { font-size: clamp(72px, 8vw, 112px); margin-top: auto; }
+    .tile.feat .name { font-size: 18px; }
+    .tile.feat .q { font: 700 clamp(19px, 1.8vw, 24px)/1.25 var(--sans); margin-top: 12px; max-width: 16em; }
+    .tile.feat .meta { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,250,240,.25); font: 13px var(--mono); }
+    .tile.feat .open { margin-left: auto; font: 500 13px var(--sans); background: var(--paper); color: var(--teal); border-radius: 999px; padding: 6px 12px; }
+    .tile.feat:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 var(--ink); }
+    .tile.feat[aria-expanded="true"] .open::after { content: " ↑"; }
+    .tile.feat[aria-expanded="false"] .open::after { content: " ↓"; }
+    .tile.br { background: var(--mustard); }
+    .tile.di { background: var(--lilac); }
+    .tile.sug { grid-column: 1 / 4; min-height: 0; flex-direction: row; align-items: center; gap: 14px; background: transparent; border-style: dashed; box-shadow: none; padding: 14px 18px; }
+    .tile.sug .plus { font: 800 26px/1 var(--display); }
+    .tile.sug p { margin: 0; font-size: 15px; color: var(--body); }
+    .tile.sug a { margin-left: auto; font: 500 14px var(--sans); border-bottom: 2px solid var(--red); white-space: nowrap; }
+
+    /* ---------- detail drawer ---------- */
+    .drawer { background: var(--teal); color: var(--paper); overflow: hidden; }
+    .drawer[hidden] { display: none; }
+    .drawer .wrap { display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; padding-top: 56px; padding-bottom: 64px; }
+    .drawer h2 { font: 700 clamp(26px, 2.8vw, 36px)/1.1 var(--display); letter-spacing: -.03em; margin: 0 0 14px; }
+    .drawer p { color: rgba(255,250,240,.82); margin: 0 0 18px; }
+    .drawer .k { font: 500 12px var(--mono); color: var(--mustard); margin-bottom: 10px; letter-spacing: .02em; }
+    .strip { display: grid; grid-template-columns: 1fr 22px 1fr 22px 1fr 22px 1fr; align-items: start; gap: 4px; margin: 26px 0 30px; padding: 22px 0; border-top: 1px solid rgba(255,250,240,.2); border-bottom: 1px solid rgba(255,250,240,.2); }
+    .strip .n { text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .strip .n svg { width: 36px; height: 36px; margin-bottom: 8px; }
+    .strip .n b { font: 500 13px var(--sans); }
+    .strip .n span { font-size: 12px; line-height: 1.35; color: rgba(255,250,240,.65); max-width: 11em; }
+    .strip .n.hot { color: var(--mustard); }
+    .strip .n.hot span { color: var(--mustard); opacity: .9; }
+    .strip .ar { text-align: center; padding-top: 10px; color: rgba(255,250,240,.45); font: 16px var(--mono); }
+    .try h3 { font: 500 15px var(--sans); margin: 0 0 10px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .try h3 span { font: 12px var(--mono); color: rgba(255,250,240,.6); }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chips button { all: unset; cursor: pointer; font: 13px var(--mono); padding: 7px 11px; border-radius: 999px; border: 1.5px solid rgba(255,250,240,.35); color: var(--paper); }
+    .chips button:hover { border-color: var(--paper); }
+    .chips button[aria-pressed="true"] { background: var(--paper); color: var(--teal); border-color: var(--paper); }
+    .chips button:focus-visible { outline: 2px solid var(--mustard); outline-offset: 2px; }
+    .answer { margin: 16px 0 0; font-size: 16px; color: var(--paper); min-height: 3.2em; }
+    .answer .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; }
+
+    .code { background: var(--code); border-radius: 16px; overflow: hidden; border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--teal-2); align-self: start; }
+    .code .bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid #2c2720; font: 12px var(--mono); color: #9d958a; }
+    .code .bar b { color: #fff; font-weight: 500; }
+    .code .bar button { all: unset; cursor: pointer; font: 12px var(--sans); color: #9d958a; }
+    .code .bar button:hover { color: #fff; }
+    .code .h { display: flex; justify-content: space-between; padding: 12px 18px 0; font: 12px var(--mono); color: #7c756a; }
+    .code .h b { color: #8fe3a8; font-weight: 500; }
+    .code pre { margin: 0; padding: 10px 18px 18px; font: 12.5px/1.75 var(--mono); color: #ece6da; overflow-x: auto; }
+    .code .sep { border-top: 1px solid #2c2720; }
+    .c0 { color: #f08a6c; } .c1 { color: #7c756a; } .c2 { color: #ffc58a; } .c3 { color: #a8d1ff; } .c4 { color: #ff8b77; } .c5 { color: #8fe3a8; }
+
+    section.band { padding: 104px 0; }
+    .sec-k { font: 500 13px var(--mono); color: var(--red); margin-bottom: 14px; }
+    h2.big { font: 800 clamp(32px, 4vw, 54px)/1.02 var(--display); letter-spacing: -.035em; margin: 0 0 18px; }
+    .sec-lead { font-size: 19px; color: var(--body); max-width: 32em; margin: 0; }
+
+    /* ---------- receipt ---------- */
+    .receipt-row { display: grid; grid-template-columns: 1fr 440px; gap: 72px; align-items: center; }
+    .notes { list-style: none; margin: 32px 0 0; padding: 0; display: grid; gap: 18px; }
+    .notes li { display: grid; grid-template-columns: 34px 1fr; gap: 12px; }
+    .notes .ix { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font: 700 13px var(--display); background: var(--ink); color: var(--cream); }
+    .notes b { display: block; font-weight: 700; }
+    .notes span { color: var(--body); font-size: 16px; }
+
+    .receipt { position: relative; background: var(--paper); font: 15px/1.55 var(--receipt); color: #2a261f; padding: 38px 34px 34px; transform: rotate(1.2deg); filter: drop-shadow(0 18px 24px rgba(60,40,10,.18));
+      --zig: radial-gradient(circle at 8px 0, transparent 7px, #000 7.5px) -8px 0 / 16px 100% repeat-x;
+      -webkit-mask: linear-gradient(#000, #000) top / 100% calc(100% - 14px) no-repeat, radial-gradient(circle at 50% 100%, transparent 7px, #000 7.5px) bottom / 16px 14px repeat-x;
+              mask: linear-gradient(#000, #000) top / 100% calc(100% - 14px) no-repeat, radial-gradient(circle at 50% 100%, transparent 7px, #000 7.5px) bottom / 16px 14px repeat-x;
+    }
+    .receipt .shop { text-align: center; }
+    .receipt .shop .logo { font-size: 20px; }
+    .receipt .shop small { display: block; font: 13px var(--receipt); color: #6e675a; margin-top: 4px; }
+    .receipt hr { border: 0; border-top: 2px dashed #b9b0a0; margin: 16px 0; }
+    .receipt .ln { display: flex; align-items: baseline; gap: 6px; }
+    .receipt .ln span:first-child { white-space: nowrap; }
+    .receipt .ln i { flex: 1; border-bottom: 2px dotted #c9c0b0; transform: translateY(-4px); min-width: 12px; }
+    .receipt .ln span:last-child { white-space: nowrap; }
+    .receipt .sub { font-size: 13px; color: #6e675a; margin: -2px 0 6px; }
+    .receipt .ln.zero span:last-child { color: var(--teal); font-weight: 700; }
+    .receipt .total { font-weight: 700; font-size: 19px; }
+    .receipt .beta { text-align: center; margin-top: 10px; font-size: 13px; color: #6e675a; }
+    .receipt .bars { height: 42px; margin: 18px auto 6px; width: 78%; background: repeating-linear-gradient(90deg, #2a261f 0 2px, transparent 2px 4px, #2a261f 4px 7px, transparent 7px 9px, #2a261f 9px 10px, transparent 10px 13px); }
+    .receipt .thanks { text-align: center; font-size: 13px; }
+    .receipt .stamp { position: absolute; top: 20px; right: 12px; transform: rotate(9deg); font: 700 13px var(--mono); letter-spacing: .08em; color: var(--red); border: 2.5px solid var(--red); border-radius: 6px; padding: 4px 10px; background: rgba(255,250,240,.85); }
+
+    /* ---------- agents ---------- */
+    .agents { background: var(--ink); color: var(--cream); }
+    .agents .sec-k { color: var(--mustard); }
+    .agents .sec-lead { color: #c9c2b4; }
+    .agents .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 44px; }
+    .prompt { background: #24201a; border: 1.5px solid #3a342b; border-radius: 16px; overflow: hidden; }
+    .prompt .bar { display: flex; justify-content: space-between; padding: 12px 18px; border-bottom: 1px solid #3a342b; font: 12px var(--mono); color: #9d958a; }
+    .prompt .bar button { all: unset; cursor: pointer; font: 500 12px var(--sans); color: var(--mustard); }
+    .prompt p { margin: 0; padding: 18px; font: 13px/1.75 var(--mono); color: #ece6da; }
+    .prompt .tools { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 18px 18px; }
+    .prompt .tools span { font: 12px var(--mono); padding: 2px 9px; border-radius: 999px; border: 1px solid #4a4237; color: #c9c2b4; }
+    .agents .code { box-shadow: none; border-color: #3a342b; }
+
+    /* ---------- teams ---------- */
+    .teams { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+    .same { border: 2px solid var(--ink); border-radius: 18px; overflow: hidden; background: var(--paper); box-shadow: 4px 4px 0 var(--ink); }
+    .same > div { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1px solid var(--line); }
+    .same > div:last-child { border-bottom: 0; }
+    .same > div > span { padding: 13px 16px; font-size: 15px; }
+    .same > div > span + span { border-left: 1px solid var(--line); }
+    .same .hd span { font: 500 12px var(--mono); color: var(--mute); background: var(--cream); }
+    .same .hd span:first-child { color: transparent; }
+    .same span.k { color: var(--mute); font-size: 14px; }
+
+    .access { background: var(--red); color: var(--paper); border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+    .access .wrap { display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; align-items: center; padding-top: 88px; padding-bottom: 88px; }
+    .access h2 { font: 800 clamp(32px, 4.2vw, 56px)/1 var(--display); letter-spacing: -.035em; margin: 0 0 16px; }
+    .access p { margin: 0; color: rgba(255,250,240,.9); font-size: 18px; }
+    .access .act { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+    .access .btn { background: var(--paper); color: var(--ink); border-color: var(--ink); }
+    .access .addr { font: 13px var(--mono); color: rgba(255,250,240,.85); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+    footer { padding: 36px 0 56px; font-size: 14px; color: var(--mute); }
+    footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    footer a { margin-left: 18px; }
+    footer a:hover { color: var(--ink); }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
+    @media (max-width: 1020px) {
+      .hero .wrap, .drawer .wrap, .receipt-row, .agents .grid, .teams, .access .wrap { grid-template-columns: 1fr; gap: 40px; }
+      .receipt-row { justify-items: center; }
+      .receipt { width: min(440px, 100%); }
+      nav.main { display: none; }
+    }
+    @media (max-width: 640px) {
+      .wrap { padding: 0 16px; }
+      .ph-long { display: none; } .ph-short { display: inline; }
+      .cta-long { display: none; } .cta-short { display: inline; }
+      .hero { padding: 40px 0 28px; }
+      .shelf { grid-template-columns: 1fr 1fr; }
+      .tile.feat { grid-column: 1 / 3; grid-row: auto; }
+      .tile.sug { grid-column: 1 / 3; flex-wrap: wrap; }
+      .tile.sug a { margin-left: 0; }
+      .tile .sym { font-size: 38px; }
+      .tile .q { font-size: 13px; }
+      .strip { grid-template-columns: 1fr; gap: 2px; }
+      .strip .ar { transform: rotate(90deg); padding: 0; }
+      section.band { padding: 72px 0; }
+      .receipt { padding: 32px 20px 30px; font-size: 14px; transform: none; }
+      .receipt .stamp { right: 2px; top: 8px; font-size: 11px; }
+      .same > div > span { padding: 11px 10px; font-size: 14px; }
+      footer a { margin: 0 16px 0 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span><span class="ph-long">Design prototype · API, packages &amp; prices are placeholders · </span><span class="ph-short">Prototype · placeholders · </span>v25</span></div></div>
+
+  <header>
+    <div class="wrap">
+      <a class="logo" href="#top">security<b>Lab</b></a>
+      <nav class="main" aria-label="Main"><a href="#shelf">Tools</a><a href="#pricing">Pricing</a><a href="#agents">For agents</a><a href="#teams">Teams</a></nav>
+      <a class="btn solid" href="#access"><span class="cta-long">Request early access</span><span class="cta-short">Early access</span></a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" id="shelf">
+      <div class="wrap">
+        <div>
+          <div class="eyebrow">Modular security tools · private beta</div>
+          <h1>Security tools you can pick up <em>one at a time.</em></h1>
+          <p class="lead">securityLab makes small, single-purpose security APIs. Take the one you need off the shelf, pay per call, and put it back whenever you like. They plug into the auth you already run.</p>
+          <div class="ctas"><a class="btn solid big" href="#access">Request early access</a><a class="btn ghost big" href="#whereami">See whereami</a></div>
+          <div class="terms"><span>No contract</span><span>No minimum</span><span>No lock-in</span></div>
+        </div>
+
+        <div class="shelf" aria-label="Tools">
+          <button class="tile feat" type="button" id="featTile" aria-expanded="true" aria-controls="whereami">
+            <span class="num">01</span>
+            <span class="status">Private beta</span>
+            <span class="sym">Wa</span>
+            <span class="name">whereami</span>
+            <span class="q">Is this IP a residential proxy?</span>
+            <span class="meta"><span>POST /v1/whereami</span><span>$0.40 / 1k <span class="ph-tag">Placeholder price</span></span><span class="open">Details</span></span>
+          </button>
+          <div class="tile br">
+            <span class="num">02</span><span class="status">Planned</span>
+            <span class="sym">Br</span><span class="name">breached</span>
+            <span class="q">Has this password appeared in a breach? Hashes only.</span>
+          </div>
+          <div class="tile di">
+            <span class="num">03</span><span class="status">Planned</span>
+            <span class="sym">Di</span><span class="name">disposable</span>
+            <span class="q">Is this email on a burner domain?</span>
+          </div>
+          <div class="tile sug">
+            <span class="plus">+</span>
+            <p>Missing a tool you need? Tell us what to build next.</p>
+            <a href="mailto:access@securitylab.example?subject=Tool%20suggestion">Suggest a tool</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="drawer" id="whereami">
+      <div class="wrap">
+        <div>
+          <div class="k">01 · whereami · residential proxy detection</div>
+          <h2>One question, answered well.</h2>
+          <p>Attackers now rent real home internet connections so their logins look like your users: the right ISP, the right country, one attempt per address. Data-center blocklists and geo rules wave them through. whereami tells you whether a login’s IP is one of those rented exits. What you do about it stays in your code.</p>
+
+          <div class="strip" aria-label="Attacker rents a proxy network, which relays the login through a hijacked device on a real customer's home connection, so your login sees an ordinary home user. whereami flags that IP.">
+            <div class="n"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M4.5 21c0-4.1 3.4-7 7.5-7s7.5 2.9 7.5 7"/></svg><b>Attacker</b><span>Stolen passwords</span></div>
+            <div class="ar" aria-hidden="true">→</div>
+            <div class="n"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="2.4"/><circle cx="4.5" cy="5" r="1.8"/><circle cx="19.5" cy="5" r="1.8"/><circle cx="4.5" cy="19" r="1.8"/><circle cx="19.5" cy="19" r="1.8"/><path d="M6 6.4l4.2 4M18 6.4l-4.2 4M6 17.6l4.2-4M18 17.6l-4.2-4"/></svg><b>Proxy network</b><span>Home IPs for hire</span></div>
+            <div class="ar" aria-hidden="true">→</div>
+            <div class="n hot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6.5" y="2.8" width="10" height="18.4" rx="2.2"/><path d="M10.5 18h2"/><path d="M18.8 3.2l1.4 1.4M20.9 2.2v2M22 5.4h-2"/></svg><b>Hijacked device</b><span>whereami flags this IP</span></div>
+            <div class="ar" aria-hidden="true">→</div>
+            <div class="n"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.2 10.5V7.8a3.8 3.8 0 0 1 7.6 0v2.7"/><path d="M12 14.5v2.5"/></svg><b>Your login</b><span>Sees a normal user</span></div>
+          </div>
+
+          <div class="try">
+            <h3>Try it <span>Sample data only · no request is sent</span></h3>
+            <div class="chips" role="group" aria-label="Sample IP addresses">
+              <button type="button" data-ip="91.240.118.172">91.240.118.172</button>
+              <button type="button" data-ip="73.162.48.201">73.162.48.201</button>
+              <button type="button" data-ip="185.107.56.88">185.107.56.88</button>
+              <button type="button" data-ip="172.58.12.9">172.58.12.9</button>
+              <button type="button" data-ip="2a02:c7f:8e1a::1">2a02:c7f:8e1a::1</button>
+            </div>
+            <p class="answer" id="answer" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <div class="code" aria-label="Example request and response">
+          <div class="bar"><b>POST /v1/whereami</b><button type="button" id="copyCode">Copy</button></div>
+          <div class="h"><span>Request</span></div>
+          <pre id="req"></pre>
+          <div class="sep"></div>
+          <div class="h"><span>Response</span><b id="status">200 OK</b></div>
+          <pre id="res"></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="pricing">
+      <div class="wrap receipt-row">
+        <div>
+          <div class="sec-k">Pricing</div>
+          <h2 class="big">The whole bill fits on a receipt.</h2>
+          <p class="sec-lead">You pay for the calls you make, per tool. That’s it. Here’s what a typical month looks like for an app checking 25,000 logins.</p>
+          <ul class="notes">
+            <li><span class="ix">1</span><div><b>Per call, per tool</b><span>Each tool is metered on its own. Use one or several on the same key.</span></div></li>
+            <li><span class="ix">2</span><div><b>A free tier every month</b><span>The first 1,000 lookups are on us, and a monthly cap you set means no surprises.</span></div></li>
+            <li><span class="ix">3</span><div><b>The zeros are the point</b><span>No contract, no minimum, no setup fee. Plain REST, so leaving is a config change.</span></div></li>
+          </ul>
+        </div>
+
+        <div class="receipt" role="img" aria-label="Sample monthly receipt: 25,000 whereami lookups cost $9.60 after the free tier; contract, minimum commitment and setup fee are all $0.00; no lock-in; cancel any time. Placeholder prices.">
+          <span class="stamp">PLACEHOLDER PRICES</span>
+          <div class="shop"><div class="logo">security<b>Lab</b></div><small>Statement · Oct 2026 · sample</small></div>
+          <hr>
+          <div class="ln"><span>whereami lookups</span><i></i><span>25,000</span></div>
+          <div class="sub">@ $0.40 per 1,000</div>
+          <div class="ln"><span>Usage</span><i></i><span>$10.00</span></div>
+          <div class="ln"><span>Free tier (1,000)</span><i></i><span>−$0.40</span></div>
+          <hr>
+          <div class="ln"><span>Subtotal</span><i></i><span>$9.60</span></div>
+          <div class="ln zero"><span>Contract</span><i></i><span>$0.00</span></div>
+          <div class="ln zero"><span>Minimum commitment</span><i></i><span>$0.00</span></div>
+          <div class="ln zero"><span>Setup fee</span><i></i><span>$0.00</span></div>
+          <div class="ln zero"><span>Lock-in</span><i></i><span>none</span></div>
+          <div class="ln zero"><span>Cancel</span><i></i><span>any time</span></div>
+          <hr>
+          <div class="ln total"><span>TOTAL</span><i></i><span>$9.60</span></div>
+          <div class="beta">During the private beta: $0.00</div>
+          <div class="bars" aria-hidden="true"></div>
+          <div class="thanks">Thank you. Come back any time.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band agents" id="agents">
+      <div class="wrap">
+        <div class="sec-k">For AI agents</div>
+        <h2 class="big">Built so your agent can shop the shelf.</h2>
+        <p class="sec-lead">Every tool is designed to be discovered, bought, capped, and called through the API, with no browser and no sales call. Once you have access, hand your coding agent the prompt and the catalog.</p>
+        <div class="grid">
+          <div class="prompt">
+            <div class="bar"><span>PASTE INTO YOUR CODING AGENT</span><button type="button" id="copyPrompt">Copy</button></div>
+            <p id="promptText">PLACEHOLDER EXAMPLE: securityLab is a design prototype and this API does not exist yet. Do not run this prompt. Add residential proxy detection to this app’s login using securityLab whereami. Read https://securitylab.example/llms.txt, list tools with GET /v1/tools, create an API key with a $20 monthly cap, store it as SL_KEY, and call whereami after a successful password check. If residential_proxy is true with confidence above 0.9, require email verification.</p>
+            <div class="tools"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Replit</span></div>
+          </div>
+          <div class="code">
+            <div class="bar"><b>GET /v1/tools</b><span>machine-readable catalog</span></div>
+<pre><span class="c0">// Placeholder example: this API is not live.</span>
+<span class="c1">{</span>
+  <span class="c3">"tools"</span>: [
+    { <span class="c3">"id"</span>: <span class="c2">"whereami"</span>, <span class="c3">"status"</span>: <span class="c2">"private_beta"</span>,
+      <span class="c3">"asks"</span>: <span class="c2">"Is this IP a residential proxy?"</span>,
+      <span class="c3">"endpoint"</span>: <span class="c2">"POST /v1/whereami"</span>,
+      <span class="c3">"price_per_1k_usd"</span>: <span class="c4">0.40</span>, <span class="c3">"free_per_month"</span>: <span class="c4">1000</span> },
+    { <span class="c3">"id"</span>: <span class="c2">"breached"</span>, <span class="c3">"status"</span>: <span class="c2">"planned"</span> },
+    { <span class="c3">"id"</span>: <span class="c2">"disposable"</span>, <span class="c3">"status"</span>: <span class="c2">"planned"</span> }
+  ],
+  <span class="c3">"contract"</span>: <span class="c5">null</span>,
+  <span class="c3">"base_url"</span>: <span class="c2">"https://api.securitylab.example"</span>
+<span class="c1">}</span></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="teams">
+      <div class="wrap teams">
+        <div>
+          <div class="sec-k">Larger teams</div>
+          <h2 class="big">Same shelf, same prices, at any size.</h2>
+          <p class="sec-lead">Big companies get the same tools on the same terms. Volume pricing applies automatically, invoices arrive monthly, and the DPA and security documentation are ready when your reviewers ask.</p>
+        </div>
+        <div class="same" role="table" aria-label="Terms for solo developers and large companies">
+          <div class="hd" role="row"><span role="columnheader">Term</span><span role="columnheader">Solo developer</span><span role="columnheader">Large company</span></div>
+          <div role="row"><span class="k" role="cell">Contract</span><span role="cell">None</span><span role="cell">None</span></div>
+          <div role="row"><span class="k" role="cell">Pricing</span><span role="cell">Per call</span><span role="cell">Per call, volume tiers</span></div>
+          <div role="row"><span class="k" role="cell">Billing</span><span role="cell">Card</span><span role="cell">Card or invoice</span></div>
+          <div role="row"><span class="k" role="cell">Keys</span><span role="cell">Per project</span><span role="cell">Per team, with caps</span></div>
+          <div role="row"><span class="k" role="cell">Leaving</span><span role="cell">Any time</span><span role="cell">Any time</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="access" id="access">
+      <div class="wrap">
+        <div>
+          <h2>Get on the shelf early.</h2>
+          <p>whereami is in private beta and free while it lasts. Tell us what you’re building and roughly how many logins you see a month, and we’ll send a key when your spot opens.</p>
+        </div>
+        <div class="act">
+          <a class="btn big" href="mailto:access@securitylab.example?subject=whereami%20early%20access">Request early access</a>
+          <span class="addr">access@securitylab.example <span class="ph-tag">Placeholder address</span></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="wrap"><span>© 2026 security<b style="color:var(--red)">Lab</b> · Placeholder name; endpoints, prices and figures illustrative</span><span><a href="#">Docs</a><a href="#">Status</a><a href="#">Security</a><a href="#">Privacy</a></span></div></footer>
+
+  <script>
+    const samples = {
+      '91.240.118.172':   { p: true,  c: 0.98, isp: 'Comcast Cable',    cc: 'US', fs: '2026-09-14', ls: '2026-10-04T13:02:11Z', ms: 11, say: 'A residential proxy exit on a Comcast home connection. Someone is relaying traffic through it.' },
+      '73.162.48.201':    { p: false, c: 0.99, isp: 'Comcast Cable',    cc: 'US', fs: null, ls: null, ms: 9,  say: 'An ordinary Comcast home connection. Same ISP as the first sample, but not a proxy.' },
+      '185.107.56.88':    { p: true,  c: 0.95, isp: 'Deutsche Telekom', cc: 'DE', fs: '2026-08-30', ls: '2026-10-04T12:47:55Z', ms: 13, say: 'A residential proxy exit on a German home connection, active within the last hour.' },
+      '172.58.12.9':      { p: false, c: 0.96, isp: 'T-Mobile USA',     cc: 'US', fs: null, ls: null, ms: 10, say: 'A mobile carrier address. Many real users share these, so whereami does not flag them.' },
+      '2a02:c7f:8e1a::1': { p: true,  c: 0.91, isp: 'Sky UK',           cc: 'GB', fs: '2026-09-29', ls: '2026-10-03T22:10:40Z', ms: 12, say: 'An IPv6 residential proxy exit on a UK home broadband line.' },
+    };
+    const $ = id => document.getElementById(id);
+    const val = x => x === null ? '<span class="c1">null</span>'
+      : typeof x === 'boolean' ? `<span class="${x ? 'c4' : 'c5'}">${x}</span>`
+      : typeof x === 'number' ? `<span class="c4">${x}</span>` : `<span class="c2">"${x}"</span>`;
+
+    function lookup(ip) {
+      const d = samples[ip];
+      document.querySelectorAll('.chips button').forEach(b => b.setAttribute('aria-pressed', b.dataset.ip === ip));
+      $('req').innerHTML = `<span class="c0"># Placeholder example: this API is not live.</span>
+curl https://api.securitylab.example/v1/whereami \\
+  -H <span class="c2">"Authorization: Bearer $SL_KEY"</span> \\
+  -d <span class="c2">'{ "ip": "${ip}" }'</span>`;
+      const obj = { ip, residential_proxy: d.p, confidence: d.c, isp: d.isp, country: d.cc, first_seen: d.fs, last_seen: d.ls };
+      $('res').innerHTML = '<span class="c0">// Placeholder example: sample data, not a live API.</span>\n<span class="c1">{</span>\n'
+        + Object.entries(obj).map(([k, x], i, a) => `  <span class="c3">"${k}"</span>: ${val(x)}${i < a.length - 1 ? ',' : ''}`).join('\n')
+        + '\n<span class="c1">}</span>';
+      $('status').textContent = `200 OK · ${d.ms} ms`;
+      $('answer').innerHTML = `<span class="dot" style="background:${d.p ? '#ff8b77' : '#8fe3a8'}"></span><b>${d.p ? 'Residential proxy' : 'Not a residential proxy'}</b> · ${d.say}`;
+    }
+    document.querySelectorAll('.chips button').forEach(b => b.addEventListener('click', () => lookup(b.dataset.ip)));
+    lookup('91.240.118.172');
+
+    // featured tile opens and closes the whereami drawer
+    const tile = $('featTile'), drawer = $('whereami');
+    tile.addEventListener('click', () => {
+      const open = tile.getAttribute('aria-expanded') !== 'true';
+      tile.setAttribute('aria-expanded', open);
+      drawer.hidden = !open;
+      if (open) drawer.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    });
+
+    function copy(btn, text) {
+      navigator.clipboard?.writeText(text);
+      const t = btn.textContent; btn.textContent = 'Copied'; setTimeout(() => btn.textContent = t, 1500);
+    }
+    $('copyPrompt').addEventListener('click', e => copy(e.target, $('promptText').textContent));
+    $('copyCode').addEventListener('click', e => copy(e.target, $('req').innerText + '\n\n' + $('res').innerText));
+  </script>
+</body>
+</html>
