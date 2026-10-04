@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>securityLab — v07</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --soft: #f7f7f5;
+      --ink: #111110;
+      --body: #4a4a46;
+      --mute: #8b8b85;
+      --line: #e8e7e3;
+      --accent: #f2542d;
+      --code: #121212;
+      --sans: "Geist", system-ui, -apple-system, Segoe UI, sans-serif;
+      --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+
+    .proto { background: var(--ink); color: #bdbdb7; font: 12px var(--mono); }
+    .proto .wrap { display: flex; justify-content: space-between; padding-top: 6px; padding-bottom: 6px; }
+    .proto a:hover { color: #fff; }
+
+    header { border-bottom: 1px solid var(--line); position: sticky; top: 0; background: rgba(255,255,255,.88); backdrop-filter: blur(10px); z-index: 5; }
+    header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { font-weight: 700; font-size: 17px; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
+    .logo svg { width: 22px; height: 22px; }
+    .nav { display: flex; gap: 28px; font-size: 14px; color: var(--body); }
+    .nav a:hover { color: var(--ink); }
+    .right { display: flex; align-items: center; gap: 18px; font-size: 14px; }
+    .right .in { color: var(--body); }
+    .btn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 8px; font-weight: 500; font-size: 14px; }
+    .btn.dark { background: var(--ink); color: #fff; }
+    .btn.dark:hover { background: #2b2b29; }
+    .btn.line { border: 1px solid var(--line); background: #fff; }
+    .btn.line:hover { border-color: #cfcdc7; }
+    .btn.big { height: 46px; padding: 0 20px; font-size: 15px; }
+
+    /* hero */
+    .hero { padding: 80px 0 72px; }
+    .hero .wrap { display: grid; grid-template-columns: 1fr 1.08fr; gap: 56px; align-items: center; }
+    .pill { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px 4px 6px; color: var(--body); margin-bottom: 22px; }
+    .pill b { background: #fde8e2; color: #b8361a; font-weight: 600; font-size: 11px; padding: 2px 8px; border-radius: 999px; }
+    h1 { font-size: clamp(40px, 5.4vw, 64px); line-height: 1.02; letter-spacing: -.035em; font-weight: 600; margin: 0 0 20px; }
+    .lead { font-size: 19px; color: var(--body); margin: 0 0 30px; max-width: 30em; }
+    .ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+    .install { margin-top: 26px; display: inline-flex; align-items: center; gap: 12px; font: 14px var(--mono); color: var(--body); background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; }
+    .install span { color: var(--mute); }
+    .install button { all: unset; cursor: pointer; font: 12px var(--sans); color: var(--mute); }
+    .install button:hover { color: var(--ink); }
+
+    .code { background: var(--code); border-radius: 14px; overflow: hidden; box-shadow: 0 30px 60px -20px rgba(0,0,0,.35), 0 0 0 1px rgba(0,0,0,.06); }
+    .tabs { display: flex; gap: 4px; padding: 10px 12px 0; border-bottom: 1px solid #262626; }
+    .tabs button { all: unset; cursor: pointer; font: 500 13px var(--sans); color: #8d8d8d; padding: 8px 12px 10px; border-bottom: 2px solid transparent; }
+    .tabs button[aria-selected="true"] { color: #fff; border-bottom-color: var(--accent); }
+    .code pre { margin: 0; padding: 20px 22px; font: 13px/1.7 var(--mono); color: #e6e6e6; overflow-x: auto; min-height: 196px; }
+    .code .resp { border-top: 1px solid #262626; background: #0c0c0c; }
+    .code .resp .h { display: flex; justify-content: space-between; padding: 10px 22px 0; font: 12px var(--mono); color: #7b7b7b; }
+    .code .resp .h b { color: #7ee2a8; font-weight: 500; }
+    .code .resp pre { min-height: 0; padding-top: 8px; }
+    .c1 { color: #7b7b7b; } .c2 { color: #ffb38a; } .c3 { color: #9ecbff; } .c4 { color: #ff7b72; } .c5 { color: #7ee2a8; }
+
+    /* works with */
+    .with { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--soft); }
+    .with .wrap { display: flex; align-items: center; gap: 40px; padding-top: 22px; padding-bottom: 22px; flex-wrap: wrap; }
+    .with p { margin: 0; font-size: 13px; color: var(--mute); }
+    .with ul { display: flex; gap: 36px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; font-weight: 600; color: #5d5d58; font-size: 15px; letter-spacing: -.01em; }
+
+    section { padding: 100px 0; }
+    .kicker { font: 500 13px var(--mono); color: var(--accent); margin-bottom: 12px; }
+    h2 { font-size: clamp(30px, 3.6vw, 44px); line-height: 1.08; letter-spacing: -.03em; font-weight: 600; margin: 0 0 16px; max-width: 18em; }
+    .sec-lead { color: var(--body); font-size: 18px; margin: 0; max-width: 34em; }
+
+    .flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 52px; }
+    .step { border: 1px solid var(--line); border-radius: 14px; padding: 26px; background: #fff; }
+    .step .n { font: 500 12px var(--mono); color: var(--mute); }
+    .step h3 { margin: 10px 0 8px; font-size: 19px; letter-spacing: -.01em; font-weight: 600; }
+    .step p { margin: 0 0 18px; color: var(--body); font-size: 15px; }
+    .verdicts { display: flex; gap: 6px; flex-wrap: wrap; }
+    .v { font: 500 12px var(--mono); padding: 4px 10px; border-radius: 6px; }
+    .v.allow { background: #e3f6ea; color: #17733e; }
+    .v.chal { background: #fff3d6; color: #8a5a00; }
+    .v.deny { background: #fde4df; color: #b02a12; }
+    .snip { font: 12.5px/1.6 var(--mono); background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; color: var(--body); overflow-x: auto; white-space: pre; }
+
+    .signals { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-top: 52px; }
+    .sig { background: #fff; padding: 24px; }
+    .sig code { font: 500 13px var(--mono); color: var(--ink); background: var(--soft); padding: 2px 6px; border-radius: 4px; }
+    .sig p { margin: 12px 0 0; font-size: 14px; color: var(--body); }
+
+    .pricing { background: var(--soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .pricing .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+    .calc { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 30px; }
+    .calc label { display: flex; justify-content: space-between; font-size: 14px; color: var(--body); }
+    .calc label b { color: var(--ink); font-variant-numeric: tabular-nums; }
+    .calc input[type=range] { width: 100%; margin: 16px 0 26px; accent-color: var(--accent); }
+    .calc .total { display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 20px; }
+    .calc .total span { color: var(--body); font-size: 14px; }
+    .calc .total b { font-size: 44px; letter-spacing: -.03em; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .calc ul { list-style: none; padding: 0; margin: 22px 0 24px; font-size: 14px; color: var(--body); display: grid; gap: 8px; }
+    .calc li::before { content: "✓"; color: var(--accent); margin-right: 10px; font-weight: 700; }
+    .calc .btn { width: 100%; justify-content: center; }
+
+    .faq { display: grid; grid-template-columns: 1fr 1.4fr; gap: 56px; }
+    details { border-bottom: 1px solid var(--line); padding: 18px 0; }
+    details:first-child { border-top: 1px solid var(--line); }
+    summary { cursor: pointer; font-weight: 500; font-size: 16px; list-style: none; display: flex; justify-content: space-between; }
+    summary::after { content: "+"; color: var(--mute); }
+    details[open] summary::after { content: "–"; }
+    details p { margin: 10px 0 0; color: var(--body); font-size: 15px; }
+
+    .final { text-align: center; padding: 110px 0; border-top: 1px solid var(--line); }
+    .final h2 { margin: 0 auto 14px; }
+    .final p { color: var(--body); margin: 0 0 28px; }
+    .final .ctas { justify-content: center; }
+
+    footer { border-top: 1px solid var(--line); padding: 40px 0 56px; font-size: 14px; color: var(--mute); }
+    footer .wrap { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 32px; }
+    footer b { display: block; color: var(--ink); font-weight: 500; margin-bottom: 8px; }
+    footer a { display: block; padding: 3px 0; }
+    footer a:hover { color: var(--ink); }
+
+    @media (max-width: 900px) {
+      .wrap { padding: 0 16px; }
+      .nav, .right .in { display: none; }
+      .hero { padding: 48px 0; }
+      .hero .wrap, .pricing .wrap, .faq { grid-template-columns: 1fr; gap: 40px; }
+      .flow { grid-template-columns: 1fr; }
+      .signals { grid-template-columns: 1fr 1fr; }
+      section { padding: 72px 0; }
+      footer .wrap { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span>v07</span></div></div>
+
+  <header>
+    <div class="wrap">
+      <div class="logo"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#111110" stroke-width="2"/><circle cx="12" cy="12" r="3.2" fill="#f2542d"/></svg>securityLab</div>
+      <nav class="nav"><a href="#how">Product</a><a href="#signals">Signals</a><a href="#pricing">Pricing</a><a href="#">Docs</a><a href="#">Changelog</a></nav>
+      <div class="right"><a class="in" href="#">Sign in</a><a class="btn dark" href="#pricing">Get API key</a></div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <div class="pill"><b>New</b> whereami now scores IPv6 networks</div>
+        <h1>Login risk scoring in one API call.</h1>
+        <p class="lead">whereami tells you whether a sign-in attempt looks like your user or like an attacker, from the IP address and request metadata. Add it to your existing auth in minutes. Pay only for the checks you run.</p>
+        <div class="ctas"><a class="btn dark big" href="#pricing">Start for free</a><a class="btn line big" href="#">Read the docs</a></div>
+        <div class="install"><span>$</span>npm install @securitylab/node <button id="copy" type="button">Copy</button></div>
+      </div>
+
+      <div class="code">
+        <div class="tabs" role="tablist">
+          <button role="tab" aria-selected="true" data-t="node">Node.js</button>
+          <button role="tab" aria-selected="false" data-t="py">Python</button>
+          <button role="tab" aria-selected="false" data-t="curl">cURL</button>
+        </div>
+<pre id="req"></pre>
+        <div class="resp">
+          <div class="h"><span>Response</span><b>200 OK · 19 ms</b></div>
+<pre><span class="c1">{</span>
+  <span class="c3">"risk"</span>: <span class="c4">0.91</span>,
+  <span class="c3">"action"</span>: <span class="c2">"challenge"</span>,
+  <span class="c3">"signals"</span>: [<span class="c2">"residential_proxy"</span>, <span class="c2">"impossible_travel"</span>],
+  <span class="c3">"location"</span>: { <span class="c3">"country"</span>: <span class="c2">"RO"</span>, <span class="c3">"asn"</span>: <span class="c2">"AS9009"</span> }
+<span class="c1">}</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="with">
+    <div class="wrap">
+      <p>Works alongside the auth you already use</p>
+      <ul><li>Clerk</li><li>Auth0</li><li>Supabase</li><li>Auth.js</li><li>Firebase</li><li>Cognito</li></ul>
+    </div>
+  </div>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="kicker">How it works</div>
+      <h2>Check the login before you issue the session.</h2>
+      <p class="sec-lead">Your auth flow stays the same. Add one call after the password or magic link succeeds, and act on the answer.</p>
+      <div class="flow">
+        <div class="step">
+          <div class="n">01</div><h3>Send the attempt</h3>
+          <p>Pass the IP, user agent, and a stable account ID. Nothing else is required.</p>
+          <div class="snip">sl.whereami({ ip, userAgent, accountId })</div>
+        </div>
+        <div class="step">
+          <div class="n">02</div><h3>Get a verdict</h3>
+          <p>A risk score from 0 to 1, a recommended action, and the signals behind it.</p>
+          <div class="verdicts"><span class="v allow">allow</span><span class="v chal">challenge</span><span class="v deny">deny</span></div>
+        </div>
+        <div class="step">
+          <div class="n">03</div><h3>Act on it</h3>
+          <p>Let good users straight in. Step up to MFA or email verification when risk is high.</p>
+          <div class="snip">if (r.action !== "allow") requireMfa()</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="signals" style="padding-top:0">
+    <div class="wrap">
+      <div class="kicker">Signals</div>
+      <h2>What whereami looks at.</h2>
+      <div class="signals">
+        <div class="sig"><code>residential_proxy</code><p>Traffic relayed through hijacked home connections.</p></div>
+        <div class="sig"><code>vpn · tor · hosting</code><p>Anonymizers and data-center ranges.</p></div>
+        <div class="sig"><code>impossible_travel</code><p>Locations no human could move between in time.</p></div>
+        <div class="sig"><code>new_network</code><p>First time this account has signed in from here.</p></div>
+        <div class="sig"><code>ip_velocity</code><p>Many accounts tried from one address.</p></div>
+        <div class="sig"><code>abuse_recent</code><p>Seen in credential stuffing in the last 24 hours.</p></div>
+        <div class="sig"><code>ua_mismatch</code><p>Client claims that don’t match the network.</p></div>
+        <div class="sig"><code>geo_precision</code><p>City-level location with a confidence radius.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <div class="wrap">
+      <div>
+        <div class="kicker">Pricing</div>
+        <h2>Pay per check. Nothing else.</h2>
+        <p class="sec-lead">The first 1,000 checks every month are free. After that, $0.40 per 1,000. No contracts, no minimums, no sales calls. Set a monthly cap so you’re never surprised.</p>
+      </div>
+      <div class="calc">
+        <label for="vol">Logins checked per month <b id="volOut">50,000</b></label>
+        <input id="vol" type="range" min="0" max="100" value="50">
+        <div class="total"><span>Estimated monthly cost</span><b id="cost">$19.60</b></div>
+        <ul><li>Card or API signup, instant key</li><li>Monthly spend cap</li><li>All signals included</li></ul>
+        <a class="btn dark big" href="#">Get your API key</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap faq">
+      <div><div class="kicker">FAQ</div><h2>Questions developers ask.</h2></div>
+      <div>
+        <details open><summary>Does this replace my auth provider?</summary><p>No. whereami adds a risk signal to the authentication you already have. Keep Clerk, Auth0, Supabase, or your own login.</p></details>
+        <details><summary>How fast is it?</summary><p>Median response is under 20 ms from most regions, fast enough to run inline before issuing a session.</p></details>
+        <details><summary>What data do you store?</summary><p>We store the IP and a hashed account ID for 30 days to power account-level signals like new network detection. No passwords, ever.</p></details>
+        <details><summary>Can an AI agent sign up?</summary><p>Yes. Accounts, keys, and spend caps can all be created through the API. See llms.txt for a machine-readable summary.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <h2>Ship login protection today.</h2>
+      <p>Free for your first 1,000 checks every month.</p>
+      <div class="ctas"><a class="btn dark big" href="#">Get API key</a><a class="btn line big" href="#">Read the docs</a></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div><div class="logo" style="color:var(--ink)">securityLab</div><p style="margin:10px 0 0">Placeholder name. Prices and figures are illustrative.</p></div>
+      <div><b>Product</b><a href="#">whereami</a><a href="#">Pricing</a><a href="#">Changelog</a></div>
+      <div><b>Developers</b><a href="#">Docs</a><a href="#">API reference</a><a href="#">Status</a></div>
+      <div><b>Company</b><a href="#">About</a><a href="#">Security</a><a href="#">Privacy</a></div>
+    </div>
+  </footer>
+
+  <script>
+    const snippets = {
+      node: `<span class="c1">import</span> { SecurityLab } <span class="c1">from</span> <span class="c2">"@securitylab/node"</span>;
+
+<span class="c1">const</span> sl = <span class="c1">new</span> <span class="c3">SecurityLab</span>(process.env.<span class="c3">SL_KEY</span>);
+
+<span class="c1">const</span> r = <span class="c1">await</span> sl.<span class="c3">whereami</span>({
+  ip: req.ip,
+  userAgent: req.headers[<span class="c2">"user-agent"</span>],
+  accountId: user.id,
+});`,
+      py: `<span class="c1">from</span> securitylab <span class="c1">import</span> SecurityLab
+
+sl = <span class="c3">SecurityLab</span>(os.environ[<span class="c2">"SL_KEY"</span>])
+
+r = sl.<span class="c3">whereami</span>(
+    ip=request.remote_addr,
+    user_agent=request.headers[<span class="c2">"User-Agent"</span>],
+    account_id=user.id,
+)`,
+      curl: `curl https://api.securitylab.dev/v1/whereami \\
+  -H <span class="c2">"Authorization: Bearer $SL_KEY"</span> \\
+  -d <span class="c2">'{
+    "ip": "185.220.101.34",
+    "user_agent": "Mozilla/5.0 ...",
+    "account_id": "usr_8f2c"
+  }'</span>`
+    };
+    const req = document.getElementById('req');
+    const tabs = document.querySelectorAll('.tabs button');
+    function show(t) { req.innerHTML = snippets[t]; tabs.forEach(b => b.setAttribute('aria-selected', b.dataset.t === t)); }
+    tabs.forEach(b => b.addEventListener('click', () => show(b.dataset.t)));
+    show('node');
+
+    document.getElementById('copy').addEventListener('click', e => {
+      navigator.clipboard?.writeText('npm install @securitylab/node');
+      e.target.textContent = 'Copied'; setTimeout(() => e.target.textContent = 'Copy', 1500);
+    });
+
+    // slider maps 0..100 to 0..2,000,000 on a curve
+    const vol = document.getElementById('vol'), out = document.getElementById('volOut'), cost = document.getElementById('cost');
+    function calc() {
+      const n = Math.round(Math.pow(vol.value / 100, 2.4) * 2000000 / 1000) * 1000;
+      const billable = Math.max(0, n - 1000);
+      out.textContent = n.toLocaleString();
+      cost.textContent = '$' + (billable / 1000 * 0.40).toFixed(2);
+    }
+    vol.addEventListener('input', calc); calc();
+  </script>
+</body>
+</html>
