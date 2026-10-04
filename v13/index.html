@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>securityLab — v13</title>
+  <meta name="description" content="whereami detects residential proxy IP addresses at login time. One of securityLab's modular, pay-as-you-go security tools for developers and AI agents.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --soft: #f7f7f5;
+      --ink: #111110;
+      --body: #4a4a46;
+      --mute: #8b8b85;
+      --line: #e8e7e3;
+      --accent: #f2542d;
+      --code: #121212;
+      --sans: "Geist", system-ui, -apple-system, Segoe UI, sans-serif;
+      --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { background: var(--bg); color: var(--ink); font: 400 17px/1.7 var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+    .col { max-width: 720px; margin: 0 auto; padding: 0 32px; }
+    .wide { max-width: 980px; margin: 0 auto; padding: 0 32px; }
+
+    .proto { background: var(--ink); color: #bdbdb7; font: 12px var(--mono); }
+    .proto .wrap { display: flex; justify-content: space-between; padding-top: 6px; padding-bottom: 6px; }
+    .proto a:hover { color: #fff; }
+
+    header { border-bottom: 1px solid var(--line); position: sticky; top: 0; background: rgba(255,255,255,.88); backdrop-filter: blur(10px); z-index: 5; }
+    header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { font-weight: 700; font-size: 17px; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
+    .logo svg { width: 22px; height: 22px; }
+    .right { display: flex; align-items: center; gap: 20px; font-size: 14px; }
+    .right .lk { color: var(--body); }
+    .right .lk:hover { color: var(--ink); }
+    .btn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 8px; font-weight: 500; font-size: 14px; }
+    .btn.dark { background: var(--ink); color: #fff; }
+    .btn.dark:hover { background: #2b2b29; }
+    .btn.line { border: 1px solid var(--line); background: #fff; }
+    .btn.line:hover { border-color: #cfcdc7; }
+    .btn.big { height: 46px; padding: 0 20px; font-size: 15px; }
+
+    /* article */
+    .top { padding-top: 96px; padding-bottom: 40px; }
+    .meta { font: 500 13px var(--mono); color: var(--accent); margin-bottom: 18px; }
+    h1 { font-size: clamp(42px, 6.2vw, 72px); line-height: 1; letter-spacing: -.04em; font-weight: 600; margin: 0 0 26px; }
+    .dek { font-size: 21px; line-height: 1.55; color: var(--body); margin: 0 0 30px; }
+    .ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+    .byline { margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; gap: 22px; flex-wrap: wrap; font-size: 13px; color: var(--mute); }
+    .byline b { color: var(--ink); font-weight: 500; }
+
+    article p { margin: 0 0 22px; color: var(--body); }
+    article p strong { color: var(--ink); font-weight: 600; }
+    article h2 { font-size: clamp(28px, 3.4vw, 38px); line-height: 1.1; letter-spacing: -.03em; font-weight: 600; margin: 0 0 18px; color: var(--ink); }
+    .step-n { font: 500 13px var(--mono); color: var(--mute); display: block; margin-bottom: 10px; }
+    .block { padding-top: 72px; }
+    code.i { font: 500 .88em var(--mono); background: var(--soft); border: 1px solid var(--line); padding: 1px 6px; border-radius: 5px; color: var(--ink); }
+
+    /* login vignette */
+    .vignette { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin: 8px 0 26px; font-size: 15px; }
+    .vignette .row { display: grid; grid-template-columns: 140px 1fr; gap: 16px; padding: 12px 18px; border-bottom: 1px solid var(--line); }
+    .vignette .row:last-child { border-bottom: 0; }
+    .vignette .k { font: 500 12px var(--mono); color: var(--mute); padding-top: 2px; }
+    .vignette .v { color: var(--ink); }
+    .vignette .ok { color: #17733e; font-weight: 500; }
+    .vignette .bad { background: #fff6f3; }
+    .vignette .bad .v { color: #b02a12; font-weight: 500; }
+
+    /* diagram */
+    figure { margin: 40px 0 44px; }
+    .diagram { background: var(--soft); border: 1px solid var(--line); border-radius: 16px; padding: 28px 24px 20px; }
+    .diagram svg { display: block; width: 100%; height: auto; }
+    figcaption { font-size: 14px; color: var(--mute); margin-top: 12px; text-align: center; }
+
+    /* question card */
+    .question { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px; border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; margin: 8px 0 26px; }
+    .question .q { font-size: 19px; font-weight: 500; letter-spacing: -.01em; }
+    .question .arrow { color: var(--mute); font-family: var(--mono); }
+    .question .a { font: 500 15px var(--mono); background: var(--code); color: #e6e6e6; border-radius: 8px; padding: 10px 14px; justify-self: end; }
+    .question .a span { color: #ff7b72; }
+
+    /* code */
+    .code { background: var(--code); border-radius: 14px; overflow: hidden; box-shadow: 0 30px 60px -24px rgba(0,0,0,.35), 0 0 0 1px rgba(0,0,0,.06); margin: 8px 0 30px; }
+    .code .bar { display: flex; justify-content: space-between; padding: 11px 20px; border-bottom: 1px solid #262626; font: 12px var(--mono); color: #7b7b7b; }
+    .code .bar b { color: #7ee2a8; font-weight: 500; }
+    .code pre { margin: 0; padding: 20px 22px; font: 13px/1.7 var(--mono); color: #e6e6e6; overflow-x: auto; }
+    .code .split { display: grid; grid-template-columns: 1fr 1fr; }
+    .code .split > div + div { border-left: 1px solid #262626; background: #0c0c0c; }
+    .c1 { color: #7b7b7b; } .c2 { color: #ffb38a; } .c3 { color: #9ecbff; } .c4 { color: #ff7b72; } .c5 { color: #7ee2a8; }
+
+    /* rules */
+    .rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 8px 0 30px; }
+    .rule { border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+    .rule .w { font: 500 12px var(--mono); color: var(--mute); }
+    .rule h3 { margin: 6px 0 10px; font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+    .rule pre { margin: 0; font: 11.5px/1.6 var(--mono); background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; color: var(--body); white-space: pre; overflow-x: auto; }
+
+    /* modules */
+    .mods { list-style: none; margin: 8px 0 30px; padding: 0; border-top: 1px solid var(--line); }
+    .mods li { display: grid; grid-template-columns: 120px 1fr auto; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); align-items: baseline; font-size: 15px; }
+    .mods code { font: 500 14px var(--mono); color: var(--ink); }
+    .mods span { color: var(--body); }
+    .st { font: 500 11px var(--mono); padding: 3px 9px; border-radius: 999px; background: var(--soft); color: var(--mute); border: 1px solid var(--line); white-space: nowrap; }
+    .st.on { background: #fde8e2; color: #b8361a; border-color: #f8cfc3; }
+
+    /* agent */
+    .prompt { border: 1px solid var(--line); background: #fff; border-radius: 14px; overflow: hidden; margin: 8px 0 22px; box-shadow: 0 1px 0 rgba(0,0,0,.02); }
+    .prompt .ph { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--soft); font: 500 12px var(--mono); color: var(--mute); }
+    .prompt .ph button { all: unset; cursor: pointer; font: 500 12px var(--sans); color: var(--accent); }
+    .prompt .ph button:hover { color: var(--ink); }
+    .prompt p { margin: 0; padding: 18px; font: 13.5px/1.75 var(--mono); color: var(--ink); }
+    .prompt .tools { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 18px 16px; }
+    .prompt .tools span { font: 12px var(--mono); padding: 2px 8px; border: 1px solid var(--line); border-radius: 6px; color: var(--body); }
+
+    .ztk { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 8px 0 30px; }
+    .ztk > div { border: 1px solid var(--line); border-radius: 12px; padding: 18px; background: #fff; }
+    .ztk .n { font: 500 12px var(--mono); color: var(--accent); }
+    .ztk h3 { margin: 6px 0 10px; font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+    .ztk pre { margin: 0; font: 11.5px/1.65 var(--mono); color: var(--body); white-space: pre; overflow-x: auto; }
+
+    /* spec */
+    table.spec { width: 100%; border-collapse: collapse; font-size: 15px; margin: 8px 0 30px; }
+    .spec th, .spec td { text-align: left; vertical-align: top; padding: 12px 12px 12px 0; border-top: 1px solid var(--line); }
+    .spec tr:last-child th, .spec tr:last-child td { border-bottom: 1px solid var(--line); }
+    .spec th { width: 150px; font: 500 12px var(--mono); color: var(--mute); padding-top: 15px; }
+    .spec td { color: var(--body); }
+    .spec code { font: 13px var(--mono); background: var(--soft); border: 1px solid var(--line); padding: 1px 6px; border-radius: 5px; color: var(--ink); }
+
+    /* pricing */
+    table.price { width: 100%; border-collapse: collapse; font-size: 15px; margin: 8px 0 14px; }
+    .price th { text-align: left; font: 500 12px var(--mono); color: var(--mute); padding: 10px 0; border-bottom: 1px solid var(--ink); }
+    .price th:last-child, .price td:last-child { text-align: right; }
+    .price td { padding: 13px 0; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; color: var(--body); }
+    .price td:last-child { color: var(--ink); font-weight: 600; }
+    .small { font-size: 13px; color: var(--mute); margin: 0 0 30px !important; }
+
+    .teams { background: var(--soft); border: 1px solid var(--line); border-radius: 16px; padding: 28px; margin: 8px 0 0; }
+    .teams ul { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; font-size: 15px; color: var(--body); }
+    .teams li::before { content: "✓"; color: var(--accent); font-weight: 700; margin-right: 10px; }
+
+    .final { text-align: center; padding: 120px 0 110px; margin-top: 96px; border-top: 1px solid var(--line); }
+    .final h2 { font-size: clamp(32px, 4.4vw, 52px); line-height: 1.05; letter-spacing: -.035em; font-weight: 600; margin: 0 0 14px; }
+    .final p { color: var(--body); margin: 0 0 28px; }
+    .final .ctas { justify-content: center; }
+
+    footer { border-top: 1px solid var(--line); padding: 32px 0 48px; font-size: 14px; color: var(--mute); }
+    footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    footer nav { display: flex; gap: 18px; }
+    footer a:hover { color: var(--ink); }
+
+    @media (max-width: 860px) {
+      .wrap, .col, .wide { padding: 0 16px; }
+      .right .lk { display: none; }
+      .top { padding-top: 56px; padding-bottom: 28px; }
+      .dek { font-size: 19px; }
+      .vignette .row { grid-template-columns: 1fr; gap: 2px; }
+      .question { grid-template-columns: 1fr; }
+      .question .arrow { display: none; }
+      .question .a { justify-self: start; }
+      .code .split { grid-template-columns: 1fr; }
+      .code .split > div + div { border-left: 0; border-top: 1px solid #262626; }
+      .rules, .ztk { grid-template-columns: 1fr; }
+      .mods li { grid-template-columns: 1fr auto; }
+      .mods li span:not(.st) { grid-column: 1 / -1; grid-row: 2; }
+      .spec th { width: 96px; }
+      .teams ul { grid-template-columns: 1fr; }
+      .block { padding-top: 56px; }
+      .final { padding: 80px 0; margin-top: 64px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="proto"><div class="wrap"><a href="/">← Gallery</a><span>v13</span></div></div>
+
+  <header>
+    <div class="wrap">
+      <div class="logo"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#111110" stroke-width="2"/><circle cx="12" cy="12" r="3.2" fill="#f2542d"/></svg>securityLab</div>
+      <div class="right"><a class="lk" href="#pricing">Pricing</a><a class="lk" href="#">Docs</a><a class="lk" href="#">llms.txt</a><a class="btn dark" href="#start">Get API key</a></div>
+    </div>
+  </header>
+
+  <article>
+    <div class="col top">
+      <div class="meta">whereami · residential proxy detection</div>
+      <h1>The password was right. The user wasn’t.</h1>
+      <p class="dek">Attackers now log in through hijacked home internet connections, so they look exactly like your customers. whereami answers one question at login time: is this IP address a residential proxy? What you do with the answer is up to you.</p>
+      <div class="ctas"><a class="btn dark big" href="#start">Get an API key</a><a class="btn line big" href="#code">See the code</a></div>
+      <div class="byline"><span><b>12 ms</b> median lookup</span><span><b>0.98</b> precision · <b>0.94</b> recall</span><span><b>1,000</b> free lookups / month</span></div>
+    </div>
+
+    <div class="col block">
+      <span class="step-n">01 — The problem</span>
+      <h2>A login that passes every check.</h2>
+      <p>Here’s a sign-in your system sees every day. The password matches. The IP belongs to a major US cable provider, in the same state as your customer. No data-center range, no Tor exit, nothing on a blocklist.</p>
+      <div class="vignette" aria-label="Example login">
+        <div class="row"><span class="k">ACCOUNT</span><span class="v">jordan@acme-shop.com</span></div>
+        <div class="row"><span class="k">PASSWORD</span><span class="v ok">✓ Correct</span></div>
+        <div class="row"><span class="k">IP ADDRESS</span><span class="v">91.240.118.172 · Comcast Cable · Ohio, US</span></div>
+        <div class="row"><span class="k">BLOCKLISTS</span><span class="v ok">✓ Not listed</span></div>
+        <div class="row bad"><span class="k">ACTUALLY</span><span class="v">An attacker using a leaked password, routed through a stranger’s home router</span></div>
+      </div>
+      <p>This is how most account takeovers now arrive. Attackers rent access to <strong>residential proxy networks</strong>: millions of real home connections, often hijacked through malware or sketchy free apps. Their traffic exits from ordinary consumer IP addresses, so it slips past data-center blocklists and country rules built for an older kind of attack.</p>
+    </div>
+
+    <div class="wide">
+      <figure>
+        <div class="diagram">
+          <svg viewBox="0 0 900 230" role="img" aria-label="Diagram: an attacker rents a proxy pool, which routes traffic through a hijacked home connection to your login page, where it looks like a normal home user">
+            <defs>
+              <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#8b8b85"/></marker>
+            </defs>
+            <g font-family="Geist, sans-serif" text-anchor="middle">
+              <!-- attacker -->
+              <rect x="10" y="62" width="170" height="96" rx="12" fill="#fff" stroke="#e8e7e3"/>
+              <text x="95" y="102" font-size="16" font-weight="600" fill="#111110">Attacker</text>
+              <text x="95" y="126" font-size="12.5" fill="#8b8b85">leaked passwords</text>
+              <!-- pool -->
+              <rect x="240" y="62" width="190" height="96" rx="12" fill="#fff" stroke="#e8e7e3"/>
+              <text x="335" y="102" font-size="16" font-weight="600" fill="#111110">Proxy pool</text>
+              <text x="335" y="126" font-size="12.5" fill="#8b8b85">rented by the hour</text>
+              <!-- home -->
+              <rect x="490" y="62" width="190" height="96" rx="12" fill="#fff6f3" stroke="#f2542d"/>
+              <text x="585" y="102" font-size="16" font-weight="600" fill="#111110">Hijacked home</text>
+              <text x="585" y="126" font-size="12.5" fill="#b02a12">Comcast · Ohio</text>
+              <!-- you -->
+              <rect x="740" y="62" width="150" height="96" rx="12" fill="#111110"/>
+              <text x="815" y="102" font-size="16" font-weight="600" fill="#fff">Your login</text>
+              <text x="815" y="126" font-size="12.5" fill="#bdbdb7">sees a home user</text>
+              <!-- arrows -->
+              <line x1="184" y1="110" x2="234" y2="110" stroke="#8b8b85" stroke-width="1.6" marker-end="url(#ar)"/>
+              <line x1="434" y1="110" x2="484" y2="110" stroke="#8b8b85" stroke-width="1.6" marker-end="url(#ar)"/>
+              <line x1="684" y1="110" x2="734" y2="110" stroke="#8b8b85" stroke-width="1.6" marker-end="url(#ar)"/>
+              <!-- whereami tap -->
+              <path d="M585 162 V196 H815 V162" fill="none" stroke="#f2542d" stroke-width="1.6" stroke-dasharray="5 4"/>
+              <rect x="636" y="182" width="128" height="28" rx="14" fill="#f2542d"/>
+              <text x="700" y="201" font-size="13" font-weight="600" fill="#fff" font-family="Geist Mono, monospace">whereami</text>
+              <text x="335" y="40" font-size="12.5" fill="#8b8b85">Blocklists and geo rules look here, and see nothing wrong</text>
+              <line x1="335" y1="48" x2="585" y2="58" stroke="#e8e7e3" stroke-width="1.2"/>
+            </g>
+          </svg>
+        </div>
+        <figcaption>The attacker never touches your servers directly. Every request exits from someone’s home connection.</figcaption>
+      </figure>
+    </div>
+
+    <div class="col">
+      <span class="step-n">02 — What whereami does</span>
+      <h2>One question. One field.</h2>
+      <p>whereami tracks the exit IPs of residential proxy networks as they rotate. Give it an IP address and it tells you whether that address is currently relaying proxy traffic, with a confidence and the network it belongs to.</p>
+      <div class="question">
+        <span class="q">Is this IP a residential proxy?</span>
+        <span class="arrow">→</span>
+        <span class="a">"residential_proxy": <span>true</span></span>
+      </div>
+      <p>That’s deliberately all it does. It isn’t a login risk score, and it doesn’t make decisions for you. It’s a sharp, well-measured signal you plug into the logic you already have.</p>
+    </div>
+
+    <div class="col block" id="code">
+      <span class="step-n">03 — The code</span>
+      <h2>Add it after the password check.</h2>
+      <p>One request with the IP address. Use the REST API directly, or the Node and Python SDKs.</p>
+    </div>
+    <div class="wide">
+      <div class="code">
+        <div class="bar"><span>POST https://api.securitylab.dev/v1/whereami</span><b>200 OK · 11 ms</b></div>
+        <div class="split">
+<div><pre><span class="c1">import</span> { SecurityLab } <span class="c1">from</span> <span class="c2">"@securitylab/node"</span>;
+
+<span class="c1">const</span> sl = <span class="c1">new</span> <span class="c3">SecurityLab</span>(process.env.<span class="c3">SL_KEY</span>);
+
+<span class="c1">// after the password checks out</span>
+<span class="c1">const</span> r = <span class="c1">await</span> sl.<span class="c3">whereami</span>({ ip: req.ip });
+
+<span class="c1">if</span> (r.residential_proxy) {
+  <span class="c1">return</span> <span class="c3">requireMfa</span>(user);
+}</pre></div>
+<div><pre><span class="c1">{</span>
+  <span class="c3">"ip"</span>: <span class="c2">"91.240.118.172"</span>,
+  <span class="c3">"residential_proxy"</span>: <span class="c4">true</span>,
+  <span class="c3">"confidence"</span>: <span class="c4">0.98</span>,
+  <span class="c3">"isp"</span>: <span class="c2">"Comcast Cable"</span>,
+  <span class="c3">"country"</span>: <span class="c2">"US"</span>,
+  <span class="c3">"first_seen"</span>: <span class="c2">"2026-09-14"</span>,
+  <span class="c3">"last_seen"</span>: <span class="c2">"2026-10-04T13:02:11Z"</span>
+<span class="c1">}</span></pre></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <p>A real customer on their home Wi-Fi comes back clean: <code class="i">73.162.48.201</code> → <code class="i">"residential_proxy": false</code>, confidence 0.99. They never notice you checked.</p>
+    </div>
+
+    <div class="col block">
+      <span class="step-n">04 — Your rules</span>
+      <h2>You decide what happens next.</h2>
+      <p>Because whereami returns a signal instead of a verdict, it fits whatever policy suits your product. A few patterns we see:</p>
+      <div class="rules">
+        <div class="rule"><div class="w">Consumer app</div><h3>Step up</h3><pre>if (r.residential_proxy)
+  requireMfa()</pre></div>
+        <div class="rule"><div class="w">Admin panel</div><h3>Block</h3><pre>if (r.residential_proxy)
+  return deny()</pre></div>
+        <div class="rule"><div class="w">Fraud team</div><h3>Just log it</h3><pre>audit.log({ ...r,
+  user: user.id })</pre></div>
+      </div>
+      <p>Your auth provider stays exactly where it is. whereami works next to Clerk, Auth0, Supabase, Firebase, Cognito, or the login code you wrote yourself.</p>
+    </div>
+
+    <div class="col block">
+      <span class="step-n">05 — Modular by design</span>
+      <h2>Small tools, not a platform.</h2>
+      <p>securityLab builds single-purpose security tools that each do one job well and compose with everything else you run. whereami is the first. Each one is its own small API, priced by the call, with nothing to migrate onto and nothing to migrate off.</p>
+      <ul class="mods">
+        <li><code>whereami</code><span>Is this IP a residential proxy?</span><span class="st on">Available</span></li>
+        <li><code>breached</code><span>Has this password appeared in a breach? (k-anonymity, we never see it)</span><span class="st">Planned</span></li>
+        <li><code>disposable</code><span>Is this email address on a burner domain?</span><span class="st">Planned</span></li>
+      </ul>
+      <p><strong>No lock-in.</strong> It’s plain REST with JSON responses, plus thin SDKs and an MCP server. If you stop using it, you delete a few lines of code. There’s no contract to unwind.</p>
+    </div>
+
+    <div class="col block" id="agents">
+      <span class="step-n">06 — For agents</span>
+      <h2>Your coding agent can set this up end to end.</h2>
+      <p>Signup, payment, keys, and spend caps all work through the API, so an AI agent can go from zero to a working integration without a browser. Paste this into yours:</p>
+      <div class="prompt">
+        <div class="ph"><span>PASTE INTO YOUR CODING AGENT</span><button id="copyPrompt" type="button">Copy</button></div>
+        <p id="promptText">Add residential proxy detection to this app's login using securityLab whereami. Read https://securitylab.dev/llms.txt, create an account and API key through the API with a $20 monthly cap, store the key as SL_KEY, and call whereami with the client IP after a successful password check. If residential_proxy is true, require email verification.</p>
+        <div class="tools"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Replit</span></div>
+      </div>
+      <p>Behind that prompt, it’s three calls:</p>
+      <div class="ztk">
+        <div><div class="n">01</div><h3>Create an account</h3><pre>POST /v1/accounts
+{ "email": "you@example.com",
+  "monthly_cap_usd": 20 }</pre></div>
+        <div><div class="n">02</div><h3>Confirm payment</h3><pre>→ returns checkout_url
+  open once, or pass a
+  payment token directly</pre></div>
+        <div><div class="n">03</div><h3>Look up an IP</h3><pre>POST /v1/whereami
+{ "ip": "91.240.118.172" }
+→ { "residential_proxy": true }</pre></div>
+      </div>
+      <table class="spec">
+        <tr><th>ENDPOINT</th><td><code>POST /v1/whereami</code></td></tr>
+        <tr><th>INPUT</th><td><code>ip</code> (IPv4 or IPv6)</td></tr>
+        <tr><th>OUTPUT</th><td><code>residential_proxy</code>, <code>confidence</code>, <code>isp</code>, <code>country</code>, <code>first_seen</code>, <code>last_seen</code></td></tr>
+        <tr><th>LATENCY</th><td>12 ms median</td></tr>
+        <tr><th>COVERAGE</th><td>40M+ residential proxy exit IPs seen in the last 30 days</td></tr>
+        <tr><th>INTERFACES</th><td>REST, Node and Python SDKs, MCP server (<code>npx @securitylab/mcp</code>)</td></tr>
+      </table>
+    </div>
+
+    <div class="col block" id="pricing">
+      <span class="step-n">07 — Pricing</span>
+      <h2>Pay for lookups. That’s the whole model.</h2>
+      <p>The first 1,000 lookups each month are free; after that it’s $0.40 per 1,000, with a monthly cap you set so there are no surprises.</p>
+      <table class="price">
+        <thead><tr><th>Lookups per month</th><th>You pay</th></tr></thead>
+        <tbody>
+          <tr><td>1,000</td><td>$0</td></tr>
+          <tr><td>25,000</td><td>$9.60</td></tr>
+          <tr><td>250,000</td><td>$99.60</td></tr>
+          <tr><td>2,500,000</td><td>$999.60</td></tr>
+        </tbody>
+      </table>
+      <p class="small">No contract, no minimum, cancel any time.</p>
+
+      <div class="teams">
+        <h2 style="font-size:24px;margin:0">Larger teams, same terms.</h2>
+        <p style="margin:10px 0 0">If you’re a bigger company, you don’t need a different product or a sales cycle. It’s the same API, and the price drops automatically as volume grows.</p>
+        <ul>
+          <li>Automatic volume pricing</li>
+          <li>Monthly invoicing</li>
+          <li>Data processing agreement</li>
+          <li>No contract required</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <section class="final" id="start">
+    <div class="col">
+      <h2>Catch the logins that look like home.</h2>
+      <p>1,000 free lookups every month. A key in under a minute.</p>
+      <div class="ctas"><a class="btn dark big" href="#">Get API key</a><a class="btn line big" href="#">Read the docs</a></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 securityLab · Placeholder name; prices and figures illustrative.</span>
+      <nav><a href="#">Docs</a><a href="#">llms.txt</a><a href="#">Status</a><a href="#">Privacy</a></nav>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('copyPrompt').addEventListener('click', e => {
+      navigator.clipboard?.writeText(document.getElementById('promptText').textContent);
+      e.target.textContent = 'Copied'; setTimeout(() => e.target.textContent = 'Copy', 1500);
+    });
+  </script>
+</body>
+</html>
