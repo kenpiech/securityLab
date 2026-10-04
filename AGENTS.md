@@ -6,9 +6,10 @@ A landing page for securityLab, a cybersecurity company selling modular, pay-as-
 - **What a visitor should understand or do:** try the products. Every product can be registered for and paid for instantly, as needed.
 
 ## The product
-- Focus: supplementing existing authentication systems with threat data.
-- Flagship: **whereami**, login-time detection. For each account login attempt it returns a real-time risk analysis of the observed IP address and other metadata, with high precision and recall.
-- Pricing model: usage-based, no contract. Exact prices are placeholders; label them as such.
+- securityLab makes **modular security tools**: small, single-purpose APIs that developers and AI agents compose into their own systems. Reasonable usage-based prices, no contract admin, no vendor lock-in. Large companies are welcome too, on the same terms.
+- It supplements existing authentication systems with threat data. It is **not** an auth provider and does not issue an overall "risk score" or verdict; the customer decides what to do with each signal.
+- Example product: **whereami**. Detects whether an IP address is a residential proxy (attackers renting hijacked home connections so their traffic looks like real users and slips past data-center blocklists and geo rules). Used at login time, with high precision and recall.
+- Pricing model: usage-based, no contract. Exact prices, endpoints, and figures are placeholders; label them as such.
 
 ## Design direction
 - The bar: every version should pass as a real, production landing page for a real company.
