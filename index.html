@@ -3,10 +3,83 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>securityLab</title>
+  <title>securityLab — Gallery</title>
+  <style>
+    :root {
+      --bg: #f6f5f2;
+      --ink: #1c1c1a;
+      --mute: #6f6d68;
+      --line: #dddad3;
+      --card: #ffffff;
+      --sans: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #161615; --ink: #ecebe7; --mute: #9c9a94; --line: #2d2c2a; --card: #1f1f1d; }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--sans); }
+    a { color: inherit; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 56px 32px 80px; }
+    header { border-bottom: 1px solid var(--line); padding-bottom: 28px; margin-bottom: 36px; }
+    h1 { font-size: clamp(30px, 4vw, 44px); line-height: 1.1; margin: 0 0 12px; letter-spacing: -.01em; }
+    header p { margin: 0; max-width: 46em; color: var(--mute); }
+    h2 { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); margin: 0 0 18px; font-weight: 600; }
+    .phase { margin-bottom: 56px; }
+    .phase > p { margin: -8px 0 20px; color: var(--mute); max-width: 46em; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+    .card { display: block; text-decoration: none; background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; transition: transform .15s, box-shadow .15s; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,.08); }
+    .card img { display: block; width: 100%; aspect-ratio: 8/5; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line); }
+    .card .body { padding: 14px 16px 16px; }
+    .card .top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+    .card b { font-size: 17px; }
+    .card .v { font: 600 12px/1 ui-monospace, Menlo, monospace; color: var(--mute); }
+    .card p { margin: 6px 0 0; font-size: 14px; color: var(--mute); }
+    footer { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13px; color: var(--mute); }
+    @media (max-width: 600px) { .wrap { padding: 32px 16px 56px; } }
+  </style>
 </head>
 <body>
-  <h1>securityLab</h1>
-  <p>Gallery coming soon: 25 landing-page versions for securityLab.</p>
+  <div class="wrap">
+    <header>
+      <h1>securityLab: 25 landing pages</h1>
+      <p>Twenty-five versions of a landing page for a cybersecurity research and products company, built to explore widely and then narrow down. “securityLab” is a placeholder name.</p>
+    </header>
+
+    <section class="phase">
+      <h2>Round 1 · Going wide</h2>
+      <p>Five deliberately different directions in mood, era, and layout.</p>
+      <div class="grid">
+        <a class="card" href="/v01/">
+          <img src="/v01/thumb.jpg" alt="v01 screenshot" loading="lazy">
+          <div class="body"><div class="top"><b>Defense Console</b><span class="v">v01</span></div>
+          <p>Dark operations dashboard: terminal boot sequence, classification banners, sidebar index, red-white-blue accents.</p></div>
+        </a>
+        <a class="card" href="/v02/">
+          <img src="/v02/thumb.jpg" alt="v02 screenshot" loading="lazy">
+          <div class="body"><div class="top"><b>The Herald</b><span class="v">v02</span></div>
+          <p>Old-time broadsheet front page: blackletter masthead, research as news stories, products as period advertisements.</p></div>
+        </a>
+        <a class="card" href="/v03/">
+          <img src="/v03/thumb.jpg" alt="v03 screenshot" loading="lazy">
+          <div class="body"><div class="top"><b>Nordic Studio</b><span class="v">v03</span></div>
+          <p>Scandinavian minimalism: warm off-white, muted palette, geometric print illustration, numbered single-column sections.</p></div>
+        </a>
+        <a class="card" href="/v04/">
+          <img src="/v04/thumb.jpg" alt="v04 screenshot" loading="lazy">
+          <div class="body"><div class="top"><b>Ink &amp; Brass</b><span class="v">v04</span></div>
+          <p>Modern and elegant: split screen with a fixed deep-green panel, refined serif type, ivory content column.</p></div>
+        </a>
+        <a class="card" href="/v05/">
+          <img src="/v05/thumb.jpg" alt="v05 screenshot" loading="lazy">
+          <div class="body"><div class="top"><b>Fire Lookout</b><span class="v">v05</span></div>
+          <p>Nature metaphor: a fire lookout tower watching the forest, park-service signage, elevation markers, a threat “danger dial.”</p></div>
+        </a>
+      </div>
+    </section>
+
+    <footer>Built with Claude Code · Plain HTML &amp; CSS · Deployed on Vercel</footer>
+  </div>
 </body>
 </html>
