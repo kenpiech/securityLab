@@ -1,9 +1,22 @@
 # securityLab — 25 Landing Pages
 
 ## The idea
-A landing page for securityLab, a cybersecurity lab/company. "securityLab" is a placeholder name; keep it easy to find-and-replace.
-- **Who it's for:** TODO
-- **What a visitor should understand or do:** TODO
+A landing page for securityLab, a cybersecurity company selling modular, pay-as-you-go security products. "securityLab" is a placeholder name; keep it easy to find-and-replace.
+- **Who it's for:** any visitor to the site, human or AI agent: small business owners (especially tech), indie software developers, vibe coders, and AI agents acting for them. They want authentication security primitives on reasonable pay-as-you-go terms, without a large contract or a sales call.
+- **What a visitor should understand or do:** try the products. Every product can be registered for and paid for instantly, as needed.
+
+## The product
+- Focus: supplementing existing authentication systems with threat data.
+- Flagship: **whereami**, login-time detection. For each account login attempt it returns a real-time risk analysis of the observed IP address and other metadata, with high precision and recall.
+- Pricing model: usage-based, no contract. Exact prices are placeholders; label them as such.
+
+## Design direction
+- The bar: every version should pass as a real, production landing page for a real company.
+- Tone references: Palantir, Anduril (restraint, confidence). Structure references: developer-first companies like Stripe, Clerk, Resend (code in the hero, visible pricing, instant signup).
+- Anti-references: Mandiant, CrowdStrike (enterprise-sales pages for a very different buyer).
+- A theme is an accent, never a costume. No metaphors running through every button and label.
+- A real page answers within seconds: what it is, who it's for, why trust it, what to do next. Show the product (API calls, responses, dashboards) rather than decoration.
+- AI agents are first-class visitors: key facts (endpoints, pricing, signup) should be easy for an agent to find and parse.
 
 ## Goal
 Build 25 distinct versions of this landing page (`v01`–`v25`), plus a gallery (`index.html`) that tells the story of the process.
