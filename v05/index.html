@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>securityLab — v05</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;800&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --dusk1: #1d2a44;
+      --dusk2: #c9785a;
+      --pine: #1f3a2e;
+      --moss: #4f6b4a;
+      --cream: #f3ead6;
+      --wood: #5b3b22;
+      --wood2: #7a5232;
+      --ink: #26231d;
+      --ember: #e2763b;
+      --slab: "Bitter", Rockwell, Georgia, serif;
+      --sans: "Source Sans 3", "Segoe UI", Helvetica, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { background: var(--cream); color: var(--ink); font: 400 17px/1.6 var(--sans); }
+    a { color: inherit; }
+
+    /* ---------- hero landscape ---------- */
+    .hero { position: relative; height: min(100vh, 940px); min-height: 560px; overflow: hidden; background: linear-gradient(to bottom, var(--dusk1) 0%, #4a4a68 45%, var(--dusk2) 78%, #e9b27e 100%); }
+    .hero svg { position: absolute; left: 0; bottom: 0; width: 100%; height: 78%; }
+    .stars { position: absolute; inset: 0 0 40% 0; background-image:
+      radial-gradient(1px 1px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 28% 8%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 44% 22%, #fff, transparent), radial-gradient(1px 1px at 63% 12%, #fff, transparent),
+      radial-gradient(1px 1px at 78% 26%, #fff, transparent), radial-gradient(1.5px 1.5px at 90% 9%, #fff, transparent),
+      radial-gradient(1px 1px at 6% 34%, #fff, transparent), radial-gradient(1px 1px at 54% 4%, #fff, transparent);
+      opacity: .7; }
+    .beam { transform-origin: 0 0; animation: sweep 9s ease-in-out infinite alternate; }
+    @keyframes sweep { from { transform: rotate(-28deg); } to { transform: rotate(28deg); } }
+    .lamp { animation: glow 2.4s ease-in-out infinite; }
+    @keyframes glow { 50% { opacity: .55; } }
+    @media (prefers-reduced-motion: reduce) { .beam, .lamp { animation: none; } }
+
+    .topnav { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; padding: 20px 32px; color: var(--cream); font: 600 14px var(--sans); letter-spacing: .08em; z-index: 2; }
+    .topnav a { text-decoration: none; opacity: .85; }
+    .topnav a:hover { opacity: 1; }
+
+    .sign {
+      position: absolute; left: 50%; top: 18%; transform: translateX(-50%);
+      background: linear-gradient(var(--wood2), var(--wood));
+      color: var(--cream);
+      border: 3px solid #3d2714;
+      border-radius: 14px;
+      padding: 22px 40px 20px;
+      text-align: center;
+      box-shadow: inset 0 0 0 2px rgba(243,234,214,.35), 0 12px 30px rgba(0,0,0,.35);
+      z-index: 2;
+      max-width: calc(100% - 32px);
+    }
+    .sign small { display: block; font: 600 12px var(--slab); letter-spacing: .3em; text-transform: uppercase; opacity: .8; }
+    .sign h1 { margin: 6px 0 4px; font: 800 clamp(34px, 6vw, 64px)/1 var(--slab); letter-spacing: .02em; }
+    .sign p { margin: 0; font: 400 15px var(--slab); opacity: .9; }
+
+    /* ---------- topographic body ---------- */
+    .topo {
+      background:
+        repeating-radial-gradient(ellipse at 15% 20%, transparent 0 34px, rgba(79,107,74,.12) 34px 35px),
+        repeating-radial-gradient(ellipse at 85% 75%, transparent 0 46px, rgba(91,59,34,.10) 46px 47px),
+        var(--cream);
+    }
+    .wrap { max-width: 1060px; margin: 0 auto; padding: 0 32px; }
+
+    .elev { display: flex; align-items: center; gap: 14px; font: 600 12px var(--slab); letter-spacing: .25em; text-transform: uppercase; color: var(--moss); margin-bottom: 14px; }
+    .elev::before { content: "▲"; font-size: 10px; color: var(--ember); letter-spacing: 0; }
+    .elev::after { content: ""; flex: 1; border-top: 2px dotted rgba(79,107,74,.5); }
+    section { padding: 88px 0 24px; }
+    h2 { font: 800 clamp(30px, 3.6vw, 44px)/1.1 var(--slab); margin: 0 0 18px; color: var(--pine); }
+    .intro { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: start; }
+    .intro p { margin: 0 0 14px; }
+
+    /* fire-danger style threat dial */
+    .dial { background: var(--wood); color: var(--cream); border-radius: 12px; padding: 22px; text-align: center; border: 3px solid #3d2714; }
+    .dial b { display: block; font: 800 15px var(--slab); letter-spacing: .12em; text-transform: uppercase; }
+    .dial svg { width: 100%; max-width: 280px; display: block; margin: 12px auto 4px; }
+    .dial .now { font: 800 26px var(--slab); color: #f5c04a; text-transform: uppercase; letter-spacing: .06em; }
+    .dial small { display: block; font-size: 12px; opacity: .75; margin-top: 4px; }
+
+    .trails { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .trail { background: #fbf6ea; border: 2px solid var(--pine); border-radius: 10px; padding: 24px; position: relative; }
+    .trail .blaze { width: 18px; height: 28px; border-radius: 3px; margin-bottom: 14px; }
+    .trail h3 { font: 800 21px/1.2 var(--slab); margin: 0 0 8px; color: var(--pine); }
+    .trail p { margin: 0; font-size: 15.5px; }
+    .trail .dist { position: absolute; top: 22px; right: 22px; font: 600 12px var(--slab); color: var(--moss); letter-spacing: .1em; }
+
+    .guide { list-style: none; padding: 0; margin: 0; border-top: 2px solid var(--pine); }
+    .guide li { display: grid; grid-template-columns: 120px 1fr auto; gap: 20px; padding: 16px 4px; border-bottom: 1px solid rgba(31,58,46,.25); align-items: baseline; }
+    .guide .d { font: 600 13px var(--slab); color: var(--moss); }
+    .guide .t { font: 600 18px/1.3 var(--slab); }
+    .guide .k { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--wood2); }
+    .fine { font-size: 13px; color: #6b6355; margin-top: 10px; }
+
+    .gear { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+    .item { display: grid; grid-template-columns: 56px 1fr; gap: 16px; padding: 20px; border-radius: 10px; background: rgba(31,58,46,.06); }
+    .item svg { width: 56px; height: 56px; }
+    .item h3 { font: 800 19px/1.2 var(--slab); margin: 2px 0 6px; color: var(--pine); }
+    .item p { margin: 0; font-size: 15.5px; }
+
+    .station { margin: 96px 0 0; background: var(--pine); color: var(--cream); }
+    .station .wrap { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-top: 56px; padding-bottom: 56px; }
+    .station h2 { color: var(--cream); margin: 0 0 6px; }
+    .station p { margin: 0; opacity: .8; }
+    .btn { display: inline-block; font: 800 15px var(--slab); padding: 14px 26px; background: var(--ember); color: #1d140b; text-decoration: none; border-radius: 8px; white-space: nowrap; }
+    .btn:hover { background: #f08c52; }
+
+    footer { background: #172b22; color: rgba(243,234,214,.6); font-size: 13px; }
+    footer .wrap { display: flex; justify-content: space-between; padding-top: 18px; padding-bottom: 18px; gap: 12px; }
+
+    @media (max-width: 860px) {
+      .topnav { padding: 16px; }
+      .sign { padding: 16px 20px; top: 14%; width: max-content; }
+      .sign small { letter-spacing: .18em; }
+      .sign p { font-size: 13px; }
+      .wrap { padding: 0 16px; }
+      .intro, .trails, .gear { grid-template-columns: 1fr; }
+      .guide li { grid-template-columns: 1fr; gap: 2px; }
+      .station .wrap { flex-direction: column; align-items: flex-start; }
+      footer .wrap { flex-direction: column; }
+      section { padding-top: 64px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="stars"></div>
+    <nav class="topnav"><a href="/">← Gallery</a><span>v05</span></nav>
+    <div class="sign">
+      <small>Lookout Station No. 1</small>
+      <h1>securityLab</h1>
+      <p>Security research &amp; defense · Watching since 2026</p>
+    </div>
+
+    <svg viewBox="0 0 1440 700" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <!-- far range -->
+      <path d="M0 420 L120 330 L230 390 L360 280 L470 360 L560 300 L700 380 L820 270 L960 360 L1080 300 L1200 370 L1320 290 L1440 350 L1440 700 L0 700Z" fill="#5d5f7c" opacity=".75"/>
+      <!-- lookout peak -->
+      <path d="M0 520 L180 430 L330 470 L520 330 L640 250 L760 320 L900 420 L1060 380 L1240 450 L1440 410 L1440 700 L0 700Z" fill="#3b4a5c"/>
+      <!-- beam from lamp -->
+      <g transform="translate(640 160)">
+        <polygon class="beam" points="0,0 -60,-640 60,-640" fill="url(#beamg)"/>
+      </g>
+      <defs>
+        <linearGradient id="beamg" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stop-color="#ffe6a8" stop-opacity=".55"/>
+          <stop offset="1" stop-color="#ffe6a8" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- lookout tower -->
+      <g stroke="#1b1f27" stroke-width="3" fill="none">
+        <path d="M618 252 L628 180 M662 252 L652 180 M621 230 L659 230 M624 206 L656 206 M618 252 L656 206 M662 252 L624 206"/>
+      </g>
+      <rect x="616" y="150" width="48" height="32" fill="#1b1f27"/>
+      <rect class="lamp" x="624" y="157" width="32" height="14" fill="#ffd27a"/>
+      <polygon points="610,150 640,132 670,150" fill="#1b1f27"/>
+      <!-- forest ridge -->
+      <path d="M0 600 L80 560 L200 590 L340 540 L480 580 L620 530 L780 575 L940 535 L1100 580 L1260 545 L1440 575 L1440 700 L0 700Z" fill="#26392f"/>
+      <!-- tree line -->
+      <g fill="#162920">
+        <path d="M0 700 L0 610 L20 580 L40 610 L55 570 L75 612 L95 585 L115 615 L135 575 L160 618 L185 590 L205 620 L230 578 L255 622 L280 592 L300 624 L325 582 L350 626 L380 596 L405 628 L430 586 L460 630 L490 600 L515 632 L545 590 L575 634 L600 604 L630 636 L660 594 L690 638 L720 606 L750 640 L780 598 L810 640 L840 608 L870 642 L900 600 L930 642 L960 610 L990 644 L1020 602 L1050 644 L1080 612 L1110 646 L1140 604 L1170 646 L1200 614 L1230 648 L1260 606 L1290 648 L1320 616 L1350 650 L1380 608 L1410 650 L1440 620 L1440 700Z"/>
+      </g>
+    </svg>
+  </header>
+
+  <main class="topo">
+    <div class="wrap">
+      <section id="lookout">
+        <div class="elev">Elev. 7,240 ft · The Lookout</div>
+        <div class="intro">
+          <div>
+            <h2>Spot the smoke before the fire spreads.</h2>
+            <p>For a century, fire lookouts kept watch over the backcountry from towers on the highest peaks. One person, a map, and a good view could save a whole forest by seeing trouble early.</p>
+            <p>securityLab works the same way for networks. Our researchers study the terrain, learn how intrusions start, and build tools that raise the alarm at the first wisp of smoke.</p>
+          </div>
+          <div class="dial">
+            <b>Threat Danger Today</b>
+            <svg viewBox="0 0 200 116" aria-label="Threat dial pointing to high">
+              <path d="M20 100 A80 80 0 0 1 36 52" stroke="#3f8f4a" stroke-width="22" fill="none"/>
+              <path d="M38 49 A80 80 0 0 1 76 23" stroke="#3b6fb6" stroke-width="22" fill="none"/>
+              <path d="M79 22 A80 80 0 0 1 121 22" stroke="#e8c33a" stroke-width="22" fill="none"/>
+              <path d="M124 23 A80 80 0 0 1 162 49" stroke="#e2763b" stroke-width="22" fill="none"/>
+              <path d="M164 52 A80 80 0 0 1 180 100" stroke="#c0392b" stroke-width="22" fill="none"/>
+              <line x1="100" y1="100" x2="148" y2="44" stroke="#f3ead6" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="100" cy="100" r="9" fill="#f3ead6"/>
+            </svg>
+            <div class="now">High</div>
+            <small>Illustrative reading</small>
+          </div>
+        </div>
+      </section>
+
+      <section id="ranges">
+        <div class="elev">Elev. 6,100 ft · What we watch</div>
+        <h2>Three ranges of work</h2>
+        <div class="trails">
+          <div class="trail"><span class="dist">TRAIL 1</span><div class="blaze" style="background:var(--ember)"></div><h3>Research</h3><p>We survey software, devices, and AI systems for weak ground: vulnerabilities, reported responsibly.</p></div>
+          <div class="trail"><span class="dist">TRAIL 2</span><div class="blaze" style="background:#3b6fb6"></div><h3>Intelligence</h3><p>We track the groups that start fires, how they move, and the tools they carry.</p></div>
+          <div class="trail"><span class="dist">TRAIL 3</span><div class="blaze" style="background:#e8c33a"></div><h3>Firebreaks</h3><p>Red team exercises and response work that contain damage before it spreads.</p></div>
+        </div>
+      </section>
+
+      <section id="guide">
+        <div class="elev">Elev. 4,880 ft · Field guide</div>
+        <h2>Recent field notes</h2>
+        <ul class="guide">
+          <li><span class="d">Sep 28, 2026</span><span class="t">Authentication bypass in an industrial gateway</span><span class="k">Advisory</span></li>
+          <li><span class="d">Sep 11, 2026</span><span class="t">Hidden instructions that hijack AI assistants</span><span class="k">Research</span></li>
+          <li><span class="d">Aug 22, 2026</span><span class="t">A new loader from a long-running espionage group</span><span class="k">Intel</span></li>
+          <li><span class="d">Aug 3, 2026</span><span class="t">Firmware signing weakness in satellite modems</span><span class="k">Advisory</span></li>
+        </ul>
+        <div class="fine">Field notes are illustrative.</div>
+      </section>
+
+      <section id="gear">
+        <div class="elev">Elev. 3,200 ft · Gear</div>
+        <h2>Equipment for your own lookout</h2>
+        <div class="gear">
+          <div class="item">
+            <svg viewBox="0 0 56 56" fill="none" stroke="#1f3a2e" stroke-width="2.5"><circle cx="18" cy="30" r="10"/><circle cx="38" cy="30" r="10"/><path d="M28 28v4M12 21l4-9h6l2 8M44 21l-4-9h-6l-2 8"/></svg>
+            <div><h3>Threat Intelligence Platform</h3><p>Our field notes as a live feed: indicators, actor profiles, and detection rules.</p></div>
+          </div>
+          <div class="item">
+            <svg viewBox="0 0 56 56" fill="none" stroke="#1f3a2e" stroke-width="2.5"><path d="M6 46 20 20l10 14 6-8 14 20z"/><circle cx="42" cy="12" r="5"/></svg>
+            <div><h3>Attack Surface Monitor</h3><p>A living map of every exposed ridge and trailhead in your environment.</p></div>
+          </div>
+          <div class="item">
+            <svg viewBox="0 0 56 56" fill="none" stroke="#1f3a2e" stroke-width="2.5"><rect x="8" y="16" width="40" height="28" rx="3"/><path d="M20 16v-6h16v6M8 28h40"/></svg>
+            <div><h3>Firmware Analysis Kit</h3><p>The tools our researchers carry to open up devices and read what’s inside.</p></div>
+          </div>
+          <div class="item">
+            <svg viewBox="0 0 56 56" fill="none" stroke="#1f3a2e" stroke-width="2.5"><path d="M28 6c6 10 14 14 14 26a14 14 0 0 1-28 0c0-8 6-12 8-20 2 6 6 8 6 14"/></svg>
+            <div><h3>Red Team Engagements</h3><p>Controlled burns: we test your defenses the way a real adversary would.</p></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="station" id="contact">
+      <div class="wrap">
+        <div><h2>Ranger station</h2><p>Report smoke, or talk with our researchers.</p></div>
+        <a class="btn" href="#contact">Radio the lookout →</a>
+      </div>
+    </div>
+  </main>
+  <footer><div class="wrap"><span>© 2026 securityLab</span><span>Placeholder name and content</span></div></footer>
+</body>
+</html>
